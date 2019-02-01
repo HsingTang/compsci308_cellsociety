@@ -1,3 +1,5 @@
+package CellSociety;
+
 import javafx.scene.*;
 import javafx.scene.image.ImageView;
 import org.w3c.dom.*;
