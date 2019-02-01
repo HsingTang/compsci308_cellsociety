@@ -1,0 +1,20 @@
+<Simulation>
+    <Type>Percolation</Type>
+    <Width>20</Width>
+    <Height>10</Height>
+    <State>
+        <StateName>Open</StateName>
+        <StateImage>White</StateImage>
+        <StatePercentage>0.7</StatePercentage>
+    </State>
+    <State>
+        <StateName>Blocked</StateName>
+        <StateImage>Black</StateImage>
+        <StatePercentage>0.2</StatePercentage>
+    </State>
+    <State>
+        <StateName>Percolated</StateName>
+        <StateImage>Blue</StateImage>
+        <StatePercentage>0.1</StatePercentage>
+    </State>
+</Simulation>
