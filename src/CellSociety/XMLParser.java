@@ -1,30 +1,31 @@
 package CellSociety;
 
-import javafx.scene.*;
-import javafx.scene.image.ImageView;
 import org.w3c.dom.*;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.*;
 
 public class XMLParser {
-    public static final String SIM_TAG = "Simulation Type";
+    public static final String SIM_TYPE_TAG = "Type";
+    public static final String WIDTH_TAG = "Width";
+    public static final String HEIGHT_TAG = "Height";
     public static final String STATE_TAG = "State";
-    public static final String STATE_NAME_TAG = "State Name";
-    public static final String STATE_IMG_TAG = "State Image";
-    public static final String STATE_PERCENT_TAG = "State Percentage";
-    public static final String PARAMETER_TAG = "Parameters";
+    public static final String STATE_NAME_TAG = "StateName";
+    public static final String STATE_IMG_TAG = "StateImage";
+    public static final String STATE_PERCENT_TAG = "StatePercentage";
+    public static final String PARAMETER_TAG = "Parameter";
     private File myFile;
     private DocumentBuilder myDBuilder;
     private Document myDoc;
     private String mySimulationType;
-    private Element myFileRoot;
-    public HashMap<String, String> stateImage = new HashMap<>();
-    public HashMap<String, Double> statePercent = new HashMap<>();
-    public ArrayList<Double> parameters = new ArrayList<>();
+    private Element mySimRoot;
+    private Integer myWidth;
+    private Integer myHeight;
+    private HashMap<String, String> stateImage = new HashMap<>();
+    private HashMap<String, Double> statePercent = new HashMap<>();
+    private ArrayList<Double> parameters = new ArrayList<>();
 
 
 
@@ -35,8 +36,10 @@ public class XMLParser {
         }catch (Exception e){
             throw new XMLException(e);
         }
-        this.myFileRoot = getRootElement(f);
-
+        this.mySimRoot = getRootElement(f);
+        this.parseSimConfig();
+        this.parseState();
+        this.parseParam();
     }
 
     // Get root element of an XML file
@@ -51,24 +54,27 @@ public class XMLParser {
         }
     }
 
-    private void parseSimType(){
-        this.mySimulationType = this.myFileRoot.getElementsByTagName(SIM_TAG).item(0).getTextContent();
+    private void parseSimConfig(){
+        mySimulationType = mySimRoot.getElementsByTagName(SIM_TYPE_TAG).item(0).getTextContent();
+        myWidth = Integer.valueOf(mySimRoot.getElementsByTagName(WIDTH_TAG).item(0).getTextContent());
+        myHeight = Integer.valueOf(mySimRoot.getElementsByTagName(HEIGHT_TAG).item(0).getTextContent());
     }
 
     private void parseState(){
-        NodeList stateList = this.myDoc.getElementsByTagName(STATE_TAG);
+        NodeList stateList = this.mySimRoot.getElementsByTagName(STATE_TAG);
         for(int i = 0; i<stateList.getLength(); i++){
             Node stateNode = stateList.item(i);
-            this.stateImage.put(((Element)stateNode).getElementsByTagName(STATE_NAME_TAG).item(0).getTextContent(),((Element)stateNode).getElementsByTagName(STATE_IMG_TAG).item(0).getTextContent());
-            this.statePercent.put(((Element)stateNode).getElementsByTagName(STATE_NAME_TAG).item(0).getTextContent(),Double.valueOf(((Element)stateNode).getElementsByTagName(STATE_PERCENT_TAG).item(0).getTextContent()));
+            String currStateName = ((Element)stateNode).getElementsByTagName(STATE_NAME_TAG).item(0).getTextContent();
+            stateImage.put(currStateName,((Element)stateNode).getElementsByTagName(STATE_IMG_TAG).item(0).getTextContent());
+            statePercent.put(currStateName,Double.valueOf(((Element)stateNode).getElementsByTagName(STATE_PERCENT_TAG).item(0).getTextContent()));
         }
     }
 
     private void parseParam(){
-        NodeList paramList = this.myDoc.getElementsByTagName(PARAMETER_TAG);
+        NodeList paramList = this.mySimRoot.getElementsByTagName(PARAMETER_TAG);
         for(int i = 0; i<paramList.getLength(); i++){
             Node paramNode = paramList.item(i);
-            this.parameters.add(Double.valueOf(paramNode.getTextContent()));
+            parameters.add(Double.valueOf(paramNode.getTextContent()));
         }
     }
 

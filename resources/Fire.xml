@@ -1,0 +1,21 @@
+<Simulation>
+    <Type>Fire</Type>
+    <Width>20</Width>
+    <Height>10</Height>
+    <State>
+        <StateName>Burning</StateName>
+        <StateImage>Red</StateImage>
+        <StatePercentage>0.2</StatePercentage>
+    </State>
+    <State>
+        <StateName>Tree</StateName>
+        <StateImage>Green</StateImage>
+        <StatePercentage>0.7</StatePercentage>
+    </State>
+    <State>
+        <StateName>Empty</StateName>
+        <StateImage>Yellow</StateImage>
+        <StatePercentage>0.1</StatePercentage>
+    </State>
+    <Parameter>0.75</Parameter>
+</Simulation>
