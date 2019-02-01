@@ -1,3 +1,5 @@
+package CellSociety;
+
 import javafx.scene.Group;
 import javafx.scene.Scene;
 
