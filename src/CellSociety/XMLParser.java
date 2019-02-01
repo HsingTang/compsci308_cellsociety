@@ -94,6 +94,14 @@ public class XMLParser {
         return this.parameters;
     }
 
+    public Integer getWidth(){
+        return this.myWidth;
+    }
+
+    public Integer getHeight(){
+        return this.myHeight;
+    }
+
 
 
 
