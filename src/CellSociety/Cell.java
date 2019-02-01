@@ -10,9 +10,11 @@ abstract class Cell {
     private String myNextState;
     private int myCol;
     private int myRow;
-    private List<Integer> myParams;
+    private List<Double> myParams;
+    private List<Cell> myNeighbors;
+    private Cell[][] myGrid;
 
-    Cell(int row, int col, String initialState, ArrayList<Integer> parameters){
+    Cell(int row, int col, String initialState, ArrayList<Double> parameters){
         myRow = row;
         myCol = col;
         myCurrentState = initialState;
@@ -41,8 +43,22 @@ abstract class Cell {
 
 
     /**
-     * it will take in the 2D array and then locate and set its neighbors
+     * This method finds and sets the Cell's neighbors based on the 2D Cell array passed as an argument.
      * @param Cell 2D int array of Cell objects
      */
-    abstract public void findNeighbors(int[][] Cell);
+    //Note: it will be set in each implementation so the concrete classes can choose if they want to call
+    //a method for 4 or 8 neighbors, or they can call another method entirely.
+    abstract public void findNeighbors(Cell[][] Cell);
+
+    //generates and sets 4 neighbors
+    //can be called by concrete class implementations
+    private void generateFourNeighbors(){
+
+    }
+
+    //generates and sets 8 neighbors
+    //can be called by concrete class implementations
+    private void generateEightNeighbors(){
+
+    }
 }
