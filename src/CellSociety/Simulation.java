@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Simulation extends Application{
 
@@ -18,15 +20,19 @@ public class Simulation extends Application{
     public static final String PERC_XML = "Percolation.xml";
 
     private Stage myStage;
-    private double delay;
+    private double delay = 1000;
     private Cell[][] grid;
     private Scene myIntroScene;
     private UI myUIScene;
     private Group myRoot;
     private double myWidth = DEFAULT_WIDTH;
     private double myHeight = DEFAULT_HEIGHT;
-    private String SIM_TYPE;
+    private String SIM_TYPE = "Fire.xml";
     private boolean pause = false;
+    private XMLParser myParser;
+    private HashMap<String, String> stateImageMap;
+    private HashMap<String, Double> statePercentMap;
+    private ArrayList<Double> parametersList;
 
 
 
@@ -55,9 +61,12 @@ public class Simulation extends Application{
 
 
     private void readXML(){
-        File f = new File(SIM_TYPE);
-
-
+        File f = new File("resources/"+SIM_TYPE);
+        myParser = new XMLParser(f);
+        assert ((myParser.getSimType()+".xml").equals(SIM_TYPE));
+        this.stateImageMap = myParser.getStateImg();
+        this.statePercentMap = myParser.getStatePercent();
+        this.parametersList = myParser.getParameters();
     }
 
 

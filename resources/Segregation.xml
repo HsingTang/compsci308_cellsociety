@@ -1,0 +1,21 @@
+<Simulation>
+    <Type>Segregation</Type>
+    <Width>20</Width>
+    <Height>10</Height>
+    <State>
+        <StateName>Group1</StateName>
+        <StateImage>Red</StateImage>
+        <StatePercentage>0.4</StatePercentage>
+    </State>
+    <State>
+        <StateName>Group2</StateName>
+        <StateImage>Blue</StateImage>
+        <StatePercentage>0.4</StatePercentage>
+    </State>
+    <State>
+        <StateName>Empty</StateName>
+        <StateImage>White</StateImage>
+        <StatePercentage>0.2</StatePercentage>
+    </State>
+    <Parameter>0.6</Parameter>
+</Simulation>
