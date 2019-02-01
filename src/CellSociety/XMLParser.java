@@ -16,20 +16,15 @@ public class XMLParser {
     public static final String STATE_NAME_TAG = "State Name";
     public static final String STATE_IMG_TAG = "State Image";
     public static final String STATE_PERCENT_TAG = "State Percentage";
-    public static final List<String> FILE_DATA_FIELDS = List.of(
-            "Simulation Type",
-            "State",
-            "State Name",
-            "State Image"
-    );
+    public static final String PARAMETER_TAG = "Parameters";
     private File myFile;
     private DocumentBuilder myDBuilder;
     private Document myDoc;
     private String mySimulationType;
     private Element myFileRoot;
-    private Element myStateRoot;
     public HashMap<String, String> stateImage = new HashMap<>();
     public HashMap<String, Double> statePercent = new HashMap<>();
+    public ArrayList<Double> parameters = new ArrayList<>();
 
 
 
@@ -56,7 +51,11 @@ public class XMLParser {
         }
     }
 
-    private void getState(){
+    private void parseSimType(){
+        this.mySimulationType = this.myFileRoot.getElementsByTagName(SIM_TAG).item(0).getTextContent();
+    }
+
+    private void parseState(){
         NodeList stateList = this.myDoc.getElementsByTagName(STATE_TAG);
         for(int i = 0; i<stateList.getLength(); i++){
             Node stateNode = stateList.item(i);
@@ -65,6 +64,29 @@ public class XMLParser {
         }
     }
 
+    private void parseParam(){
+        NodeList paramList = this.myDoc.getElementsByTagName(PARAMETER_TAG);
+        for(int i = 0; i<paramList.getLength(); i++){
+            Node paramNode = paramList.item(i);
+            this.parameters.add(Double.valueOf(paramNode.getTextContent()));
+        }
+    }
+
+    public String getSimType(){
+        return this.mySimulationType;
+    }
+
+    public HashMap<String, String> getStateImg(){
+        return this.stateImage;
+    }
+
+    public HashMap<String,Double> getStatePercent(){
+        return this.statePercent;
+    }
+
+    public ArrayList<Double> getParameters(){
+        return this.parameters;
+    }
 
 
 
