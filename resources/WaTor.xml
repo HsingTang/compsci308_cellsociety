@@ -1,0 +1,23 @@
+<Simulation>
+    <Type>WaTor</Type>
+    <Width>20</Width>
+    <Height>10</Height>
+    <State>
+        <StateName>Fish</StateName>
+        <StateImage>Blue</StateImage>
+        <StatePercentage>0.8</StatePercentage>
+    </State>
+    <State>
+        <StateName>Shark</StateName>
+        <StateImage>Red</StateImage>
+        <StatePercentage>0.1</StatePercentage>
+    </State>
+    <State>
+        <StateName>Empty</StateName>
+        <StateImage>White</StateImage>
+        <StatePercentage>0.1</StatePercentage>
+    </State>
+    <Parameter>3</Parameter>
+    <Parameter>20</Parameter>
+    <Parameter>1</Parameter>
+</Simulation>

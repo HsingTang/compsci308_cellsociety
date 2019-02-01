@@ -1,0 +1,15 @@
+<Simulation>
+    <Type>Game of Life</Type>
+    <Width>20</Width>
+    <Height>10</Height>
+    <State>
+        <StateName>Dead</StateName>
+        <StateImage>Blue</StateImage>
+        <StatePercentage>0.1</StatePercentage>
+    </State>
+    <State>
+        <StateName>Alive</StateName>
+        <StateImage>Green</StateImage>
+        <StatePercentage>0.9</StatePercentage>
+    </State>
+</Simulation>
