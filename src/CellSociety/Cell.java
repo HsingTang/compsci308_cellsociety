@@ -6,20 +6,27 @@ import java.util.List;
 
 
 abstract class Cell {
-    private String myCurrentState;
-    private String myNextState;
+    protected String myCurrentState;
+    protected String myNextState;
     private int myCol;
     private int myRow;
-    private List<Double> myParams;
-    private List<Cell> myNeighbors;
-    private Cell[][] myGrid;
+    protected List<Double> myParams;
+    protected List<Cell> myNeighbors;
+    protected Cell[][] myGrid;
+    protected List<String> myStates;
 
     Cell(int row, int col, String initialState, ArrayList<Double> parameters){
         myRow = row;
         myCol = col;
         myCurrentState = initialState;
         myParams = parameters;
+
+        myStates = new ArrayList<>();
+        initializeStatesList();
     }
+
+    //each implementation has to create a List of possible states
+    abstract protected void initializeStatesList();
 
     /**
      * Calls the cell to use its neighbors and its rules to determine what its next state should be
@@ -39,6 +46,7 @@ abstract class Cell {
      */
     public void updateState(){
         myCurrentState = myNextState;
+        myNextState = "";       //can be used in concrete classes to check if a nextState has been set
     }
 
 
@@ -52,7 +60,7 @@ abstract class Cell {
 
     //generates and sets 4 neighbors
     //can be called by concrete class implementations
-    private void generateFourNeighbors(){
+    protected void generateFourNeighbors(){
         int[] dRow = new int[] {0, 0, 1, -1};
         int[] dCol = new int[] {1, -1, 0, 0};
 
@@ -68,7 +76,7 @@ abstract class Cell {
 
     //generates and sets 8 neighbors
     //can be called by concrete class implementations
-    private void generateEightNeighbors(){
+    protected void generateEightNeighbors(){
         int[] dRow = new int[] {-1, 0, 1};
         int[] dCol = new int[] {-1, 0, 1};
 
