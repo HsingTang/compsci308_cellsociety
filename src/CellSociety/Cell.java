@@ -98,6 +98,23 @@ abstract class Cell {
         }
     }
 
+    /**
+     * Used in WATOR and Segregation to determine if a cell has been claimed for the
+     * following step.
+     * @return String of the cell's next state.
+     */
+    public String getNextState(){
+        return myNextState;
+    }
+
+    /**
+     * Used in WATOR and Segregation to handle the movement of people/animals.
+     * @param state String of the desired next state;
+     */
+    public void setNextState(String state){
+        myNextState = state;
+    }
+
     //checks if indices are within the grid
     private boolean inBounds(int row, int col){
         if(row < 0 || row > myGrid.length){
