@@ -26,7 +26,8 @@ public class CellSegregation extends Cell {
     }
 
     /**
-     * 
+     * Finds and sets the next state of the cell by checking neighbors
+     * and following the rules set.
      */
     @Override
     public void findNextState() {
@@ -112,6 +113,10 @@ public class CellSegregation extends Cell {
         }
     }
 
+    /**
+     * Finds and sets up to eight neighbors.
+     * @param cell 2D int array of Cell objects
+     */
     @Override
     public void findNeighbors(Cell[][] cell) {
         myGrid = cell;

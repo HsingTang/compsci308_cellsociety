@@ -42,6 +42,10 @@ public class CellWATOR extends Cell {
         myStates.add(SHARK);
     }
 
+    /**
+     * Finds and sets the next state of the cell by checking neighbors
+     * and following the rules set.
+     */
     @Override
     public void findNextState() {
         myFishNeighbors.clear();
