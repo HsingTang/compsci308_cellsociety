@@ -6,18 +6,27 @@ import java.util.List;
 
 
 abstract class Cell {
-    private String myCurrentState;
-    private String myNextState;
+    protected String myCurrentState;
+    protected String myNextState;
     private int myCol;
     private int myRow;
-    private List<Integer> myParams;
+    protected List<Double> myParams;
+    protected List<Cell> myNeighbors;
+    protected Cell[][] myGrid;
+    protected List<String> myStates;
 
-    Cell(int row, int col, String initialState, ArrayList<Integer> parameters){
+    Cell(int row, int col, String initialState, ArrayList<Double> parameters){
         myRow = row;
         myCol = col;
         myCurrentState = initialState;
         myParams = parameters;
+
+        myStates = new ArrayList<>();
+        initializeStatesList();
     }
+
+    //each implementation has to create a List of possible states
+    abstract protected void initializeStatesList();
 
     /**
      * Calls the cell to use its neighbors and its rules to determine what its next state should be
@@ -37,12 +46,66 @@ abstract class Cell {
      */
     public void updateState(){
         myCurrentState = myNextState;
+        myNextState = "";       //can be used in concrete classes to check if a nextState has been set
     }
 
 
     /**
-     * it will take in the 2D array and then locate and set its neighbors
+     * This method finds and sets the Cell's neighbors based on the 2D Cell array passed as an argument.
      * @param Cell 2D int array of Cell objects
      */
-    abstract public void findNeighbors(int[][] Cell);
+    //Note: it will be set in each implementation so the concrete classes can choose if they want to call
+    //a method for 4 or 8 neighbors, or they can call another method entirely.
+    abstract public void findNeighbors(Cell[][] Cell);
+
+    //generates and sets 4 neighbors
+    //can be called by concrete class implementations
+    protected void generateFourNeighbors(){
+        int[] dRow = new int[] {0, 0, 1, -1};
+        int[] dCol = new int[] {1, -1, 0, 0};
+
+        for(int k = 0; k < dRow.length; k++){
+            int tempRow = dRow[k] + myRow;
+            int tempCol = dCol[k] + myCol;
+
+            if(inBounds(tempRow, tempCol)){
+                myNeighbors.add(myGrid[tempRow][tempCol]);
+            }
+        }
+    }
+
+    //generates and sets 8 neighbors
+    //can be called by concrete class implementations
+    protected void generateEightNeighbors(){
+        int[] dRow = new int[] {-1, 0, 1};
+        int[] dCol = new int[] {-1, 0, 1};
+
+        for(int k = 0; k < dRow.length; k++){
+            for(int i = 0; i < dCol.length; i++){
+                int tempRow = dRow[k] + myRow;
+                int tempCol = dCol[i] + myCol;
+
+                //ensures not to add self
+                if(tempRow == 0 && tempCol == 0){
+                    continue;
+                }
+                else{
+                    if(inBounds(tempRow, tempCol)){
+                        myNeighbors.add(myGrid[tempRow][tempCol]);
+                    }
+                }
+            }
+        }
+    }
+
+    //checks if indices are within the grid
+    private boolean inBounds(int row, int col){
+        if(row < 0 || row > myGrid.length){
+            return false;
+        }
+        else if(col < 0 || col > myGrid[0].length){
+            return false;
+        }
+        return true;
+    }
 }

@@ -14,7 +14,7 @@
     "Empty"            Empty
 
     Params                  Type    Description
-    Threshold               float   between 0 and 1 representing % threshold
+    Threshold               double   between 0 and 1 representing % threshold
 
 
 //Predator/Prey  aka WaTor
@@ -24,9 +24,9 @@
     "Empty"            Empty
 
     Params                  Type    Description
-    Fish reproduction time  Int     Number of rounds it takes the fish to reproduce
-    Shark starting energy   Int     Amount of energy starts with
-    Shark energy from eating Int    Amount of energy the shark gains from eating a fish
+    Fish reproduction time  double     Number of rounds it takes the fish to reproduce
+    Shark starting energy   double     Amount of energy starts with
+    Shark energy from eating double    Amount of energy the shark gains from eating a fish
 
 //Fire
     String             Description
@@ -35,7 +35,7 @@
     "Empty"            No tree
 
     Params                  Type    Description
-    Probability of catching float   between 0 and 1 representing % chance of catching fire
+    Probability of catching double   between 0 and 1 representing % chance of catching fire
 
 //Percolation
     String             Description
