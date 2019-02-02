@@ -61,11 +61,11 @@ public class CellGameOfLife extends Cell {
     /**
      * Finds and sets neighbors.
      * Assumes the cell can have up to eight neighbors.
-     * @param Cell 2D int array of Cell objects
+     * @param cell 2D int array of Cell objects
      */
     @Override
-    public void findNeighbors(Cell[][] Cell) {
-        myGrid = Cell;
+    public void findNeighbors(Cell[][] cell) {
+        myGrid = cell;
         generateEightNeighbors();
     }
 }
