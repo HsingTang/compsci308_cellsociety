@@ -188,7 +188,7 @@ public class CellWATOR extends Cell {
     //locates and stores empty neighbors
     private void findEmptyNeighbors(){
         for(Cell c: myNeighbors){
-            if(c.getNextState().equals("")){
+            if(c.getNextState().equals("") || c.getNextState().equals(EMPTY)){
 
                 myEmptyNeighbors.add((CellWATOR)c);
             }

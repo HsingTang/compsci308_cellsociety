@@ -8,8 +8,8 @@ import java.util.List;
 abstract class Cell {
     protected String myCurrentState;
     protected String myNextState;
-    private int myCol;
-    private int myRow;
+    protected int myCol;
+    protected int myRow;
     protected List<Double> myParams;
     protected List<Cell> myNeighbors;
     protected Cell[][] myGrid;
