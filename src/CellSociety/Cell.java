@@ -8,8 +8,8 @@ import java.util.List;
 abstract class Cell {
     protected String myCurrentState;
     protected String myNextState;
-    private int myCol;
-    private int myRow;
+    protected int myCol;
+    protected int myRow;
     protected List<Double> myParams;
     protected List<Cell> myNeighbors;
     protected Cell[][] myGrid;
@@ -96,6 +96,23 @@ abstract class Cell {
                 }
             }
         }
+    }
+
+    /**
+     * Used in WATOR and Segregation to determine if a cell has been claimed for the
+     * following step.
+     * @return String of the cell's next state.
+     */
+    public String getNextState(){
+        return myNextState;
+    }
+
+    /**
+     * Used in WATOR and Segregation to handle the movement of people/animals.
+     * @param state String of the desired next state;
+     */
+    public void setNextState(String state){
+        myNextState = state;
     }
 
     //checks if indices are within the grid
