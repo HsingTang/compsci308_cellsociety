@@ -2,9 +2,9 @@ package CellSociety;
 
 import java.util.ArrayList;
 
-public class CellSegregation extends Cell {
+public class CellWATOR extends Cell {
 
-    CellSegregation(int row, int col, String initialState, ArrayList<Double> parameters){
+    CellWATOR(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
     }
 
