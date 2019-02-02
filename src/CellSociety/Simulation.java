@@ -53,7 +53,7 @@ public class Simulation extends Application{
         // somewhere in the scene's method of handling button,
         // when a button is pressed, SIM_TYPE will be updated to corresponding file name
         readXML();
-        myUIScene = new UI(myIntroRoot,DEFAULT_WIDTH,DEFAULT_HEIGHT,this);
+        myUIScene = new UI(myUIRoot,DEFAULT_WIDTH,DEFAULT_HEIGHT,this);
     }
 
 
