@@ -91,19 +91,19 @@ public class Simulation extends Application{
                 int randIdx = myRandom.nextInt(stateList.size());
                 switch (SIM_TYPE){
                     case GOL_XML:
-                        newCell = new GOLCell(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellGameOfLife(i,j,stateList.get(randIdx),parametersList);
                         break;
                     case WATOR_XML:
-                        newCell = new WATORCell(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellWATOR(i,j,stateList.get(randIdx),parametersList);
                         break;
                     case FIRE_XML:
-                        newCell = new FireCell(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellFire(i,j,stateList.get(randIdx),parametersList);
                         break;
                     case SEG_XML:
-                        newCell = new SegCell(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellSegregation(i,j,stateList.get(randIdx),parametersList);
                         break;
                     case PERC_XML:
-                        newCell = new PercCell(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellPercolation(i,j,stateList.get(randIdx),parametersList);
                         break;
                 }
                 myGrid[i][j] = newCell;
