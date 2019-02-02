@@ -52,11 +52,11 @@ abstract class Cell {
 
     /**
      * This method finds and sets the Cell's neighbors based on the 2D Cell array passed as an argument.
-     * @param Cell 2D int array of Cell objects
+     * @param cell 2D int array of Cell objects
      */
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
-    abstract public void findNeighbors(Cell[][] Cell);
+    abstract public void findNeighbors(Cell[][] cell);
 
     //generates and sets 4 neighbors
     //can be called by concrete class implementations
