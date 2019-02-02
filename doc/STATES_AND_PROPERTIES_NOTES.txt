@@ -25,6 +25,7 @@
 
     Params                  Type    Description
     Fish reproduction time  double     Number of rounds it takes the fish to reproduce
+    Shark reproduction time double    Number of rounds it takes the shark to reproduce
     Shark starting energy   double     Amount of energy starts with
     Shark energy from eating double    Amount of energy the shark gains from eating a fish
 

@@ -15,7 +15,7 @@ import java.util.Random;
 
 import static java.lang.Math.ceil;
 
-public class Simulation extends Application{
+public class Simulation extends Application {
 
     public static final int DEFAULT_WIDTH = 20;
     public static final int DEFAULT_HEIGHT = 20;
@@ -45,72 +45,70 @@ public class Simulation extends Application{
     private ArrayList<String> stateList;
 
 
-
-
-    public void start (Stage stage) {
+    public void start(Stage stage) {
         this.myStage = stage;
         initIntroScene();
         // somewhere in the scene's method of handling button,
         // when a button is pressed, SIM_TYPE will be updated to corresponding file name
         readXML();
-        myUIScene = new UI(myUIRoot,DEFAULT_WIDTH,DEFAULT_HEIGHT,this);
+        myUIScene = new UI(myUIRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
     }
 
 
-    private void initIntroScene(){
+    private void initIntroScene() {
         myIntroRoot = new Group();
-        myIntroScene = new IntroScene(myIntroRoot,DEFAULT_WIDTH,DEFAULT_HEIGHT,this);
+        myIntroScene = new IntroScene(myIntroRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
         myStage.setScene(myIntroScene);
         myStage.setTitle("Cell Society");
         myStage.show();
     }
 
 
-    public void setSimType(String s){
+    public void setSimType(String s) {
         this.SIM_TYPE = s;
     }
 
 
-    private void initStateList(){
+    private void initStateList() {
         stateList = new ArrayList<>();
-        for(String state:statePercentMap.keySet()){
-            for(int i = 0; i<ceil(statePercentMap.get(state)*10); i++){
+        for (String state : statePercentMap.keySet()) {
+            for (int i = 0; i < ceil(statePercentMap.get(state) * 10); i++) {
                 stateList.add(state);
             }
         }
     }
 
-    public void initGrid(){
+    public void initGrid() {
         readXML();
         initStateList();
         myGrid = new Cell[myHeight][myWidth];
         Random myRandom = new Random();
-        for(int i = 0; i<myGrid.length; i++){
-            for(int j = 0; j<myGrid[0].length; j++){
+        for (int i = 0; i < myGrid.length; i++) {
+            for (int j = 0; j < myGrid[0].length; j++) {
                 Cell newCell = null;
                 int randIdx = myRandom.nextInt(stateList.size());
-                switch (SIM_TYPE){
+                switch (SIM_TYPE) {
                     case GOL_XML:
-                        newCell = new CellGameOfLife(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellGameOfLife(i, j, stateList.get(randIdx), parametersList);
                         break;
                     case WATOR_XML:
-                        newCell = new CellWATOR(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellWATOR(i, j, stateList.get(randIdx), parametersList);
                         break;
                     case FIRE_XML:
-                        newCell = new CellFire(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellFire(i, j, stateList.get(randIdx), parametersList);
                         break;
                     case SEG_XML:
-                        newCell = new CellSegregation(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellSegregation(i, j, stateList.get(randIdx), parametersList);
                         break;
                     case PERC_XML:
-                        newCell = new CellPercolation(i,j,stateList.get(randIdx),parametersList);
+                        newCell = new CellPercolation(i, j, stateList.get(randIdx), parametersList);
                         break;
                 }
                 myGrid[i][j] = newCell;
             }
         }
-        for(int i = 0; i<myGrid.length; i++){
-            for (int j = 0; j<myGrid[0].length; j++){
+        for (int i = 0; i < myGrid.length; i++) {
+            for (int j = 0; j < myGrid[0].length; j++) {
                 myGrid[i][j].findNeighbors(myGrid);
             }
         }
@@ -118,7 +116,7 @@ public class Simulation extends Application{
     }
 
 
-    private void initUI(){
+    private void initUI() {
         myUIRoot = new Group();
         myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
         myStage.setScene(myUIScene);
@@ -126,8 +124,8 @@ public class Simulation extends Application{
     }
 
 
-    private void initTimeline(){
-        var frame = new KeyFrame(Duration.millis(delay),e->updateGrid());
+    private void initTimeline() {
+        var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
         this.myTimeline = new Timeline();
         this.myTimeline.setCycleCount(Timeline.INDEFINITE);
         this.myTimeline.getKeyFrames().add(frame);
@@ -135,10 +133,10 @@ public class Simulation extends Application{
     }
 
 
-    private void readXML(){
-        File f = new File("resources/"+SIM_TYPE);
+    private void readXML() {
+        File f = new File("resources/" + SIM_TYPE);
         myParser = new XMLParser(f);
-        assert ((myParser.getSimType()+".xml").equals(SIM_TYPE));
+        assert ((myParser.getSimType() + ".xml").equals(SIM_TYPE));
         this.stateImageMap = myParser.getStateImg();
         this.statePercentMap = myParser.getStatePercent();
         this.parametersList = myParser.getParameters();
@@ -147,82 +145,77 @@ public class Simulation extends Application{
     }
 
 
-    public Cell[][] getGrid(){
+    public Cell[][] getGrid() {
         return this.myGrid;
     }
 
 
-    private void updateGrid(){
-        if(!this.pause) {
-            for (int i = 0; i < myGrid.length; i++) {
-                for (int j = 0; j < myGrid[0].length; j++) {
-                    Cell currCell = myGrid[i][j];
-                    currCell.findNextState();
-                }
+    private void updateGrid() {
+        for (int i = 0; i < myGrid.length; i++) {
+            for (int j = 0; j < myGrid[0].length; j++) {
+                Cell currCell = myGrid[i][j];
+                currCell.findNextState();
             }
-            for (int i = 0; i < myGrid.length; i++) {
-                for (int j = 0; j < myGrid[0].length; j++) {
-                    Cell currCell = myGrid[i][j];
-                    currCell.updateState();
-                }
+        }
+        for (int i = 0; i < myGrid.length; i++) {
+            for (int j = 0; j < myGrid[0].length; j++) {
+                Cell currCell = myGrid[i][j];
+                currCell.updateState();
             }
         }
     }
 
 
-    public void pauseSimulation(){
+    public void pauseSimulation() {
         this.myTimeline.pause();
     }
 
 
-    public void resumeSimulation(){
+    public void resumeSimulation() {
         this.myTimeline.play();
     }
 
 
-    public void stepSimulation(){
+    public void stepSimulation() {
         this.myTimeline.pause();
         updateGrid();
     }
 
 
-    public void resetSimulation(){
+    public void resetSimulation() {
         initGrid();
     }
 
 
-    public void switchSimulation(String newSimType){
+    public void switchSimulation(String newSimType) {
         this.setSimType(newSimType);
         initGrid();
     }
 
 
-    public void slowdown(){
+    public void slowdown() {
         this.myTimeline.stop();
-        this.delay*=2;
+        this.delay *= 2;
         initTimeline();
     }
 
 
-    public void speedup(){
+    public void speedup() {
         this.myTimeline.stop();
-        this.delay/=2;
+        this.delay /= 2;
         initTimeline();
     }
 
 
-    public String getSimulationType(){
+    public String getSimulationType() {
         return this.SIM_TYPE;
     }
-
-
-
 
 
     /**
      * Main method to launch the Breakout game program.
      */
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         launch(args);
     }
 }
