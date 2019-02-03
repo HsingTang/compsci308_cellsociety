@@ -140,6 +140,7 @@ public class Simulation extends Application {
         myUIRoot = new Group();
         myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
         myStage.setScene(myUIScene);
+        myStage.show();
         initTimeline();
     }
 
