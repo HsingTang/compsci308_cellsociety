@@ -1,7 +1,7 @@
 <Simulation>
     <Type>Fire</Type>
-    <Width>20</Width>
-    <Height>10</Height>
+    <Width>100</Width>
+    <Height>100</Height>
     <State>
         <StateName>Burning</StateName>
         <StateImage>Red</StateImage>
