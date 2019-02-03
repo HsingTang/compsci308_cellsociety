@@ -8,8 +8,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Button;
 
-import java.awt.*;
+import javax.swing.text.html.ImageView;
 
 public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 600;
@@ -59,7 +60,6 @@ public class UI extends Scene {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(WINDOW_HEIGHT, WINDOW_WIDTH);
         borderPane.setRight(addVBox());
-        myRoot.getChildren().add(borderPane);
     }
 
     private VBox addVBox(){
@@ -67,11 +67,17 @@ public class UI extends Scene {
         vbox.setPadding(new Insets(VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE, VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE));
         vbox.setSpacing(VBOX_BUFFER_BUTTON);
         vbox.setStyle("-fx-background-color: #40E0D0");
+        //vbox.getChildren().add(resetButton());
         return vbox;
     }
 
     private Button resetButton(){
-        Button resetButton = new Button();
+        Button resetButton= new Button("Reset");
+        resetButton.setOnMouseClicked(e -> mySimulation.resetSimulation());
         return resetButton;
+    }
+
+    private void handleMouseInput(double x, double y){
+
     }
 }
