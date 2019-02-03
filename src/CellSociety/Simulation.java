@@ -151,6 +151,11 @@ public class Simulation extends Application {
     }
 
 
+    public HashMap<String, String> getStateImageMap(){
+        return this.stateImageMap;
+    }
+
+
     private void updateGrid() {
         for (int i = 0; i < myGrid.length; i++) {
             for (int j = 0; j < myGrid[0].length; j++) {
