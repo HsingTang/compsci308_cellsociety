@@ -206,7 +206,6 @@ public class Simulation extends Application {
 
 
     public void playSimulation() {
-        System.out.println("play button clicked");
         this.myTimeline.play();
     }
 
@@ -218,6 +217,7 @@ public class Simulation extends Application {
 
 
     public void resetSimulation() {
+        this.myTimeline.pause();
         initGrid();
     }
 
