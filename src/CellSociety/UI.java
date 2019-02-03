@@ -37,7 +37,7 @@ public class UI extends Scene {
             "Game of Life",
             "Percolation",
             "Segregation",
-            "Wa-Tor World"
+            "WaTor World"
     );
 
     private final int GRID_ROW_NUM;
@@ -151,7 +151,9 @@ public class UI extends Scene {
         ComboBox switchSimulationDropdown = new ComboBox(SIM_OPTIONS);
         switchSimulationDropdown.setOnAction(e -> {
             String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
-            mySimulation.switchSimulation(simulationType);
+            String simFileName = "resources/" + simulationType + ".xml";
+            mySimulation.setSimType(simFileName);
+            mySimulation.initGrid();
         });
         return switchSimulationDropdown;
     }
