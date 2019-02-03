@@ -21,6 +21,7 @@ abstract class Cell {
         myCurrentState = initialState;
         myNeighbors = new ArrayList<>();
         myParams = parameters;
+        myNextState = "";
 
         myStates = new ArrayList<>();
         initializeStatesList();
