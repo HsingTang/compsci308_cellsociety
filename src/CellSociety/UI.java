@@ -62,6 +62,7 @@ public class UI extends Scene {
 
     public void drawGrid(){
         HashMap<String, String> map = mySimulation.getStateImageMap();
+        myRoot.getChildren().clear();
         for (int i = 0; i < GRID_ROW_NUM; i++){
             for (int j = 0; j < GRID_COL_NUM; j++){
                 Cell cellData = mySimulation.getGrid()[i][j];
