@@ -47,11 +47,12 @@ public class Simulation extends Application {
 
     public void start(Stage stage) {
         this.myStage = stage;
-        initIntroScene();
+        //initIntroScene();
         // somewhere in the scene's method of handling button,
         // when a button is pressed, SIM_TYPE will be updated to corresponding file name
-        readXML();
-        myUIScene = new UI(myUIRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
+        //readXML();
+        //myUIScene = new UI(myUIRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
+        initUI();
     }
 
 
@@ -115,14 +116,14 @@ public class Simulation extends Application {
         initUI();
     }
 
-
     private void initUI() {
         myUIRoot = new Group();
         myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
+        myUIScene.drawGrid();
         myStage.setScene(myUIScene);
-        initTimeline();
+        myStage.show();
+        //initTimeline();
     }
-
 
     private void initTimeline() {
         var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
@@ -183,9 +184,9 @@ public class Simulation extends Application {
 
 
     public void resetSimulation() {
-        initGrid();
+        //initGrid();
+        System.out.println("reset simulation");
     }
-
 
     public void switchSimulation(String newSimType) {
         this.setSimType(newSimType);
@@ -210,7 +211,6 @@ public class Simulation extends Application {
     public String getSimulationType() {
         return this.SIM_TYPE;
     }
-
 
     /**
      * Main method to launch the Breakout game program.
