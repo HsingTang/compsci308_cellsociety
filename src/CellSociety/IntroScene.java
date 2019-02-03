@@ -61,30 +61,35 @@ public class IntroScene extends Scene {
     private Button fireSimButton(){
         Button fireSimButton = new Button("Fire");
         fireSimButton.setOnMouseClicked(e -> mySimulation.setSimType(mySimulation.FIRE_XML));
+        mySimulation.initGrid();
         return fireSimButton;
     }
 
     private Button GOLSimButton(){
         Button GOLSimButton = new Button("Game of Life");
-        GOLSimButton.setOnMouseClicked(e -> mySimulation.switchSimulation(mySimulation.GOL_XML));
+        GOLSimButton.setOnMouseClicked(e -> mySimulation.setSimType(mySimulation.GOL_XML));
+        mySimulation.initGrid();
         return GOLSimButton;
     }
 
     private Button PercSimButton(){
         Button PercSimButton = new Button("Percolation");
-        PercSimButton.setOnMouseClicked(e -> mySimulation.switchSimulation(mySimulation.PERC_XML));
+        PercSimButton.setOnMouseClicked(e -> mySimulation.setSimType(mySimulation.PERC_XML));
+        mySimulation.initGrid();
         return PercSimButton;
     }
 
     private Button SegSimButton(){
         Button SegSimButton = new Button("Segregation");
-        SegSimButton.setOnMouseClicked(e -> mySimulation.switchSimulation(mySimulation.SEG_XML));
+        SegSimButton.setOnMouseClicked(e -> mySimulation.setSimType(mySimulation.SEG_XML));
+        mySimulation.initGrid();
         return SegSimButton;
     }
 
     private Button WaTorSimButton(){
         Button WaTorSimButton = new Button("Wa-Tor World");
-        WaTorSimButton.setOnMouseClicked(e -> mySimulation.switchSimulation(mySimulation.WATOR_XML));
+        WaTorSimButton.setOnMouseClicked(e -> mySimulation.setSimType(mySimulation.WATOR_XML));
+        mySimulation.initGrid();
         return WaTorSimButton;
     }
 
