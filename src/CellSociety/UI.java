@@ -1,14 +1,18 @@
 package CellSociety;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 
 public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 600;
@@ -19,9 +23,20 @@ public class UI extends Scene {
     private static final int CELL_BUFFER = 2;
 
     private static final int VBOX_BUFFER_TOP = 45;
-    private static final int VBOX_BUFFER_SIDE = 75;
-    private static final int VBOX_BUFFER_BUTTON = 30;
+    private static final int VBOX_BUFFER_SIDE = 30;
+    private static final int VBOX_BUFFER_BUTTON = 25;
 
+    private static final int HBOX_BUFFER_TOP = 50;
+    private static final int HBOX_BUFFER_SIDE = 50;
+    private static final int HBOX_BUFFER_BUTTON = 50;
+
+    private static final ObservableList<String> SIM_OPTIONS = FXCollections.observableArrayList(
+            "Fire",
+            "Game of Life",
+            "Percolation",
+            "Segregation",
+            "Wa-Tor World"
+    );
 
     private final int GRID_ROW_NUM;
     private final int GRID_COL_NUM;
@@ -39,6 +54,7 @@ public class UI extends Scene {
         GRID_ROW_NUM = height;
         CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
         CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
+
         setupButtons();
     }
 
@@ -59,6 +75,7 @@ public class UI extends Scene {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(WINDOW_HEIGHT, WINDOW_WIDTH);
         borderPane.setRight(addVBox());
+        borderPane.setBottom(addHBox());
         myRoot.getChildren().add(borderPane);
     }
 
@@ -67,17 +84,70 @@ public class UI extends Scene {
         vbox.setPadding(new Insets(VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE, VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE));
         vbox.setSpacing(VBOX_BUFFER_BUTTON);
         vbox.setStyle("-fx-background-color: #6ae2c2");
-        vbox.getChildren().add(resetButton());
+        vbox.getChildren().addAll(
+                resetButton(),
+                startButton(),
+                pauseButton(),
+                resumeButton(),
+                slowDownButton(),
+                speedUpButton(),
+                switchSimulationDropdown()
+        );
         return vbox;
     }
 
+    private HBox addHBox(){
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(HBOX_BUFFER_TOP, HBOX_BUFFER_SIDE, HBOX_BUFFER_TOP, HBOX_BUFFER_SIDE));
+        hbox.setSpacing(HBOX_BUFFER_BUTTON);
+        hbox.setStyle("-fx-background-color: #84eeff");
+        return hbox;
+    }
+
     private Button resetButton(){
-        Button resetButton= new Button("Reset");
+        Button resetButton = new Button("Reset");
         resetButton.setOnMouseClicked(e -> mySimulation.resetSimulation());
         return resetButton;
     }
 
-    private void handleMouseInput(double x, double y){
-
+    private Button startButton(){
+        Button startButton = new Button("Start");
+        startButton.setOnMouseClicked(e -> mySimulation.initTimeline());
+        return startButton;
     }
+
+    private Button pauseButton(){
+        Button pauseButton = new Button("Pause");
+        pauseButton.setOnMouseClicked(e -> mySimulation.pauseSimulation());
+        return pauseButton;
+    }
+
+    private Button resumeButton(){
+        Button stopButton = new Button("Resume");
+        stopButton.setOnMouseClicked(e -> mySimulation.resumeSimulation());
+        return stopButton;
+    }
+
+    private Button slowDownButton(){
+        Button slowDownButton = new Button("Slow Down");
+        slowDownButton.setOnMouseClicked(e -> mySimulation.slowdown());
+        return slowDownButton;
+    }
+
+    private Button speedUpButton(){
+        Button speedUpButton = new Button("Speed Up");
+        speedUpButton.setOnMouseClicked(e -> mySimulation.speedup());
+        return speedUpButton;
+    }
+
+    private ComboBox switchSimulationDropdown(){
+        ComboBox switchSimulationDropdown = new ComboBox(SIM_OPTIONS);
+        switchSimulationDropdown.setOnAction(e -> {
+            String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
+            mySimulation.switchSimulation(simulationType);
+        });
+        return switchSimulationDropdown;
+    }
+
+
 }
