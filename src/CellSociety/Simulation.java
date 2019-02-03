@@ -287,7 +287,7 @@ public class Simulation extends Application {
     }
 
 
-    
+
     /**
      * Main method to launch the Breakout game program.
      */
