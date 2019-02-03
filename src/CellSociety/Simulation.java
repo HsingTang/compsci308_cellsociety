@@ -19,11 +19,11 @@ public class Simulation extends Application {
 
     public static final int DEFAULT_WIDTH = 20;
     public static final int DEFAULT_HEIGHT = 20;
-    public static final String GOL_XML = "Game of Life.xml";
-    public static final String WATOR_XML = "WaTor.xml";
-    public static final String FIRE_XML = "Fire.xml";
-    public static final String SEG_XML = "Segregation.xml";
-    public static final String PERC_XML = "Percolation.xml";
+    public static final String GOL_XML = "resources/Game of Life.xml";
+    public static final String WATOR_XML = "resources/WaTor.xml";
+    public static final String FIRE_XML = "resources/Fire.xml";
+    public static final String SEG_XML = "resources/Segregation.xml";
+    public static final String PERC_XML = "resources/Percolation.xml";
 
     private Timeline myTimeline;
     private Stage myStage;
@@ -162,7 +162,7 @@ public class Simulation extends Application {
      * Read XML file containing simulation parameters
      */
     private void readXML() {
-        File f = new File("resources/" + SIM_TYPE);
+        File f = new File(SIM_TYPE);
         myParser = new XMLParser(f);
         assert ((myParser.getSimType() + ".xml").equals(SIM_TYPE));
         this.stateImageMap = myParser.getStateImg();
