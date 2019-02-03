@@ -50,6 +50,7 @@ public class Simulation extends Application {
         //initIntroScene();
         // somewhere in the scene's method of handling button,
         // when a button is pressed, SIM_TYPE will be updated to corresponding file name
+
         //readXML();
         //myUIScene = new UI(myUIRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
         initUI();
@@ -69,7 +70,7 @@ public class Simulation extends Application {
         this.SIM_TYPE = s;
     }
 
-
+    /*
     private void initStateList() {
         stateList = new ArrayList<>();
         for (String state : statePercentMap.keySet()) {
@@ -115,26 +116,27 @@ public class Simulation extends Application {
         }
         initUI();
     }
-
+*/
     private void initUI() {
         myUIRoot = new Group();
         myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
-        myUIScene.drawGrid();
+        //myUIScene.drawGrid();
         myStage.setScene(myUIScene);
         myStage.show();
         //initTimeline();
     }
 
-    private void initTimeline() {
-        var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
+    public void initTimeline() {
+        /*var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
         this.myTimeline = new Timeline();
         this.myTimeline.setCycleCount(Timeline.INDEFINITE);
         this.myTimeline.getKeyFrames().add(frame);
         this.myTimeline.play();
+        */
+        System.out.println("init timeline");
     }
 
-
-    private void readXML() {
+    /*private void readXML() {
         File f = new File("resources/" + SIM_TYPE);
         myParser = new XMLParser(f);
         assert ((myParser.getSimType() + ".xml").equals(SIM_TYPE));
@@ -144,18 +146,15 @@ public class Simulation extends Application {
         this.myWidth = myParser.getWidth();
         this.myHeight = myParser.getHeight();
     }
-
-
+*/
     public Cell[][] getGrid() {
         return this.myGrid;
     }
 
-
     public HashMap<String, String> getStateImageMap(){
         return this.stateImageMap;
     }
-
-
+/*
     private void updateGrid() {
         for (int i = 0; i < myGrid.length; i++) {
             for (int j = 0; j < myGrid[0].length; j++) {
@@ -171,20 +170,23 @@ public class Simulation extends Application {
         }
     }
 
-
+*/
     public void pauseSimulation() {
-        this.myTimeline.pause();
+        //this.myTimeline.pause();
+        System.out.println("pause simulation");
     }
 
 
     public void resumeSimulation() {
-        this.myTimeline.play();
+        //this.myTimeline.play();
+        System.out.println("resume simulation");
     }
 
 
     public void stepSimulation() {
-        this.myTimeline.pause();
-        updateGrid();
+        //this.myTimeline.pause();
+        //updateGrid();
+        System.out.println("step Simulation");
     }
 
 
@@ -194,24 +196,25 @@ public class Simulation extends Application {
     }
 
     public void switchSimulation(String newSimType) {
-        this.setSimType(newSimType);
-        initGrid();
+        //this.setSimType(newSimType);
+        //initGrid();
+        System.out.println(newSimType);
     }
 
-
     public void slowdown() {
-        this.myTimeline.stop();
-        this.delay *= 2;
-        initTimeline();
+        //this.myTimeline.stop();
+        //this.delay *= 2;
+        //initTimeline();
+        System.out.println("slow down");
     }
 
 
     public void speedup() {
-        this.myTimeline.stop();
-        this.delay /= 2;
-        initTimeline();
+        //this.myTimeline.stop();
+        //this.delay /= 2;
+        //initTimeline();
+        System.out.println("speed up");
     }
-
 
     public String getSimulationType() {
         return this.SIM_TYPE;
