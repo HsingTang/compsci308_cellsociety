@@ -196,6 +196,7 @@ public class Simulation extends Application {
                 currCell.updateState();
             }
         }
+        this.myUIScene.drawGrid();
     }
 
 
@@ -205,6 +206,7 @@ public class Simulation extends Application {
 
 
     public void playSimulation() {
+        System.out.println("play button clicked");
         this.myTimeline.play();
     }
 
