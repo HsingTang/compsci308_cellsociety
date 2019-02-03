@@ -14,6 +14,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 
+import java.util.HashMap;
+
 public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 600;
     private static final int WINDOW_WIDTH = 600;
@@ -48,7 +50,7 @@ public class UI extends Scene {
 
     public UI(Group root, int width, int height, Simulation s){
         super(root, WINDOW_HEIGHT, WINDOW_WIDTH, BACKGROUND_FILL);
-        mySimulation = s;
+        this.mySimulation = s;
         myRoot = root;
         GRID_COL_NUM = width;
         GRID_ROW_NUM = height;
@@ -59,10 +61,14 @@ public class UI extends Scene {
     }
 
     public void drawGrid(){
+        HashMap<String, String> map = mySimulation.getStateImageMap();
         for (int i = 0; i < GRID_ROW_NUM; i++){
             for (int j = 0; j < GRID_COL_NUM; j++){
+                Cell cellData = mySimulation.getGrid()[i][j];
+                String cellState = cellData.getState();
+                String cellColor = map.get(cellState);
                 Rectangle cell = new Rectangle(CELL_WIDTH - CELL_BUFFER, CELL_HEIGHT - CELL_BUFFER);
-                cell.setFill(Color.GRAY);
+                cell.setFill(Color.web(cellColor)); //
                 cell.setX(j * CELL_WIDTH);
                 cell.setY(i * CELL_HEIGHT);
                 myRoot.getChildren().add(cell);
@@ -73,7 +79,7 @@ public class UI extends Scene {
 
     private void setupButtons(){
         BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(WINDOW_HEIGHT, WINDOW_WIDTH);
+        borderPane.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         borderPane.setRight(addVBox());
         borderPane.setBottom(addHBox());
         myRoot.getChildren().add(borderPane);
@@ -148,6 +154,5 @@ public class UI extends Scene {
         });
         return switchSimulationDropdown;
     }
-
 
 }
