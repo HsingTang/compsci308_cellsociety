@@ -111,6 +111,7 @@ public class UI extends Scene {
                 resumeButton(),
                 slowDownButton(),
                 speedUpButton(),
+                stepButton(),
                 switchSimulationDropdown()
         );
         return vbox;
@@ -158,6 +159,12 @@ public class UI extends Scene {
         Button speedUpButton = new Button("Speed Up");
         speedUpButton.setOnMouseClicked(e -> mySimulation.speedup());
         return speedUpButton;
+    }
+
+    private Button stepButton(){
+        Button stepButton = new Button("Step");
+        stepButton.setOnMouseClicked(e -> mySimulation.stepSimulation());
+        return stepButton;
     }
 
     private ComboBox switchSimulationDropdown(){
