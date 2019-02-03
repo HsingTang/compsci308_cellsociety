@@ -1,6 +1,6 @@
 <Simulation>
     <Type>Game of Life</Type>
-    <Width>20</Width>
+    <Width>50</Width>
     <Height>10</Height>
     <State>
         <StateName>Dead</StateName>
