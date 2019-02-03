@@ -20,6 +20,7 @@ public class CellWATOR extends Cell {
     private Random myRand;
     private List<CellWATOR> myEmptyNeighbors;
     private List<CellWATOR> myFishNeighbors;
+    private CellWATOR myNextLocCell;
 
     CellWATOR(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
@@ -33,6 +34,8 @@ public class CellWATOR extends Cell {
         myNewSharkEnergy = parameters.get(1);
         mySharkEatingEnergy = parameters.get(2);
         mySharkReproTime = parameters.get(3);
+
+        myTurnsSurvived = 0;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class CellWATOR extends Cell {
         myFishNeighbors.clear();
         myEmptyNeighbors.clear();
 
+        myNextLocCell = null;
 
         switch(myCurrentState){
             case FISH:
@@ -61,11 +65,12 @@ public class CellWATOR extends Cell {
                     //can't move
                     if(myEmptyNeighbors.size() == 0){
                         fishStays();
-                        break;
+                        return;
                     }
                     else{
                         moveFish();
                         checkForBaby(FISH);
+                        return;
                     }
                 }
             case SHARK:
@@ -81,21 +86,21 @@ public class CellWATOR extends Cell {
                 //eating fish
                 if(myFishNeighbors.size() != 0){
                     eatFish();
-
                     checkForBaby(SHARK);
+                    return;
                 }
                 //no fish to eat
                 else{
                     //moves to empty space
                     if(myEmptyNeighbors.size() != 0){
                         moveSharkToEmptyNeighbor();
-
                         checkForBaby(SHARK);
-
+                        return;
                     }
                     //can't move
                     else{
                         sharkStays();
+                        return;
                     }
                 }
 
@@ -125,6 +130,11 @@ public class CellWATOR extends Cell {
         int nextLocationIndex;
         nextLocationIndex = myRand.nextInt(myFishNeighbors.size());
         CellWATOR nextCell = myFishNeighbors.get(nextLocationIndex);
+
+        //make sure if fish had already planned on moving, that cell will be empty instead
+        if(nextCell.getNextLocCell() != null){
+            nextCell.getNextLocCell().setNextState(EMPTY);
+        }
         nextCell.setNextState(SHARK);
         nextCell.setSharkEnergy(mySharkEnergy - 1 + mySharkEatingEnergy);
         nextCell.setTurnsSurvived(myTurnsSurvived + 1);
@@ -136,11 +146,16 @@ public class CellWATOR extends Cell {
         return;
     }
 
+    public CellWATOR getNextLocCell(){
+        return myNextLocCell;
+    }
+
     //moves fish to empty spot
     private void moveFish() {
         int numEmptyNeighbors = myEmptyNeighbors.size();
         int nextLocationIndex = myRand.nextInt(numEmptyNeighbors);
         CellWATOR nextCell = myEmptyNeighbors.get(nextLocationIndex);
+        myNextLocCell = nextCell;
         nextCell.setNextState(FISH);
         nextCell.setTurnsSurvived(myTurnsSurvived++);
     }
@@ -193,7 +208,6 @@ public class CellWATOR extends Cell {
     private void findEmptyNeighbors(){
         for(Cell c: myNeighbors){
             if(c.getNextState().equals("") || c.getNextState().equals(EMPTY)){
-
                 myEmptyNeighbors.add((CellWATOR)c);
             }
         }
