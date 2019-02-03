@@ -10,8 +10,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 
-import javax.swing.text.html.ImageView;
-
 public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 600;
     private static final int WINDOW_WIDTH = 600;
@@ -20,9 +18,9 @@ public class UI extends Scene {
     private static final int GRID_WIDTH = 400;
     private static final int CELL_BUFFER = 2;
 
-    private static final int VBOX_BUFFER_TOP = 25;
-    private static final int VBOX_BUFFER_SIDE = 25;
-    private static final int VBOX_BUFFER_BUTTON = 15;
+    private static final int VBOX_BUFFER_TOP = 45;
+    private static final int VBOX_BUFFER_SIDE = 75;
+    private static final int VBOX_BUFFER_BUTTON = 30;
 
 
     private final int GRID_ROW_NUM;
@@ -52,6 +50,7 @@ public class UI extends Scene {
                 cell.setX(j * CELL_WIDTH);
                 cell.setY(i * CELL_HEIGHT);
                 myRoot.getChildren().add(cell);
+                setupButtons();
             }
         }
     }
@@ -60,14 +59,15 @@ public class UI extends Scene {
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(WINDOW_HEIGHT, WINDOW_WIDTH);
         borderPane.setRight(addVBox());
+        myRoot.getChildren().add(borderPane);
     }
 
     private VBox addVBox(){
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE, VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE));
         vbox.setSpacing(VBOX_BUFFER_BUTTON);
-        vbox.setStyle("-fx-background-color: #40E0D0");
-        //vbox.getChildren().add(resetButton());
+        vbox.setStyle("-fx-background-color: #6ae2c2");
+        vbox.getChildren().add(resetButton());
         return vbox;
     }
 
