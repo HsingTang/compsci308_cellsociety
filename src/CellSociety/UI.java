@@ -119,7 +119,7 @@ public class UI extends Scene {
 
     private Button startButton(){
         Button startButton = new Button("Start");
-        startButton.setOnMouseClicked(e -> mySimulation.playSimulation());
+        startButton.setOnMouseClicked(e -> mySimulation.initTimeline());
         return startButton;
     }
 
