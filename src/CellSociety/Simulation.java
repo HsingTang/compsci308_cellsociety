@@ -92,6 +92,7 @@ public class Simulation extends Application {
 
 
     /**
+     * This is a public method that's expected to be called from UI class each time a new simulation is initialized
      * Initialize the grid of Cells and set each Cell's initial state
      * and then pipeline to the next step of creating UI scene for displaying visualization
      */
@@ -173,16 +174,25 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * @return the 2D array of Cells for this simulation
+     */
     public Cell[][] getGrid() {
         return this.myGrid;
     }
 
 
+    /**
+     * @return a map associating state and corresponding image visualization
+     */
     public HashMap<String, String> getStateImageMap(){
         return this.stateImageMap;
     }
 
 
+    /**
+     * Update all Cells' states in the grid
+     */
     private void updateGrid() {
         for (int i = 0; i < myGrid.length; i++) {
             for (int j = 0; j < myGrid[0].length; j++) {
@@ -200,33 +210,58 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * Pause the simulation
+     * Expected to be called by UI when a pause button is pressed
+     */
     public void pauseSimulation() {
         this.myTimeline.pause();
     }
 
 
+    /**
+     * Run the simulation
+     * Expected to be called by UI when a start/resume button is pressed
+     */
     public void playSimulation() {
         this.myTimeline.play();
     }
 
 
+    /**
+     * Update Cell states to the next generation and then pause
+     * Expected to be called by UI when a step button is pressed
+     */
     public void stepSimulation() {
         this.myTimeline.pause();
         updateGrid();
     }
 
 
+    /**
+     * Reset all cell states according to XML file's configuration
+     * and still remain in the same simulation model
+     */
     public void resetSimulation() {
         this.myTimeline.pause();
         initGrid();
     }
 
+
+    /**
+     * Switch to the other simulation model by reading the corresponding XML file
+     * and reinitializing all Cells in the grid
+     * @param newSimType path to the XML file for the new Simulation
+     */
     public void switchSimulation(String newSimType) {
         this.setSimType(newSimType);
         initGrid();
     }
 
 
+    /**
+     * Slow down the simulation by increasing the delay time interval by twice
+     */
     public void slowdown() {
         this.myTimeline.stop();
         this.delay *= 2;
@@ -234,6 +269,9 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * Speed up the simulation by reducing the delay time interval to its half
+     */
     public void speedup() {
         this.myTimeline.stop();
         this.delay /= 2;
@@ -241,9 +279,14 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * @return the current simulation model's XML file path
+     */
     public String getSimulationType() {
         return this.SIM_TYPE;
     }
+
+
 
     /**
      * Main method to launch the Breakout game program.

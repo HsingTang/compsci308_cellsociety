@@ -1,6 +1,6 @@
 <Simulation>
     <Type>Percolation</Type>
-    <Width>20</Width>
+    <Width>50</Width>
     <Height>10</Height>
     <State>
         <StateName>Open</StateName>
