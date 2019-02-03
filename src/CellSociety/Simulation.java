@@ -51,12 +51,6 @@ public class Simulation extends Application {
      */
     public void start(Stage stage) {
         this.myStage = stage;
-        // somewhere in the scene's method of handling button,
-        // when a button is pressed, SIM_TYPE will be updated to corresponding file name
-
-        readXML();
-        myUIScene = new UI(myUIRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
-        initUI();
         initIntroScene();
     }
 
@@ -82,6 +76,7 @@ public class Simulation extends Application {
     public void setSimType(String s) {
         this.SIM_TYPE = s;
     }
+
 
     /**
      * Initialize a list of states with the percentage distribution read from XML file
@@ -137,6 +132,7 @@ public class Simulation extends Application {
         initUI();
     }
 
+
     /**
      * Initialize the UI class for creating visualization of the simulation
      */
@@ -149,6 +145,11 @@ public class Simulation extends Application {
         initTimeline();
     }
 
+
+    /**
+     * Initialize a new timeline for the simulation
+     * updateGrid() is called by eventHandler of the frame each 'delay' interval
+     */
     private void initTimeline() {
         var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
         this.myTimeline = new Timeline();
@@ -171,13 +172,16 @@ public class Simulation extends Application {
         this.myHeight = myParser.getHeight();
     }
 
+
     public Cell[][] getGrid() {
         return this.myGrid;
     }
 
+
     public HashMap<String, String> getStateImageMap(){
         return this.stateImageMap;
     }
+
 
     private void updateGrid() {
         for (int i = 0; i < myGrid.length; i++) {
@@ -196,14 +200,9 @@ public class Simulation extends Application {
 
 
     public void pauseSimulation() {
-        //this.myTimeline.pause();
-        System.out.println("pause simulation");
+        this.myTimeline.pause();
     }
 
-
-    public void resumeSimulation() {
-        this.myTimeline.play();
-    }
 
     public void playSimulation() {
         this.myTimeline.play();
@@ -211,9 +210,8 @@ public class Simulation extends Application {
 
 
     public void stepSimulation() {
-        //this.myTimeline.pause();
-        //updateGrid();
-        System.out.println("step Simulation");
+        this.myTimeline.pause();
+        updateGrid();
     }
 
 
@@ -222,25 +220,24 @@ public class Simulation extends Application {
     }
 
     public void switchSimulation(String newSimType) {
-        //this.setSimType(newSimType);
-        //initGrid();
-        System.out.println(newSimType);
+        this.setSimType(newSimType);
+        initGrid();
     }
 
+
     public void slowdown() {
-        //this.myTimeline.stop();
-        //this.delay *= 2;
-        //initTimeline();
-        System.out.println("slow down");
+        this.myTimeline.stop();
+        this.delay *= 2;
+        initTimeline();
     }
 
 
     public void speedup() {
-        //this.myTimeline.stop();
-        //this.delay /= 2;
-        //initTimeline();
-        System.out.println("speed up");
+        this.myTimeline.stop();
+        this.delay /= 2;
+        initTimeline();
     }
+
 
     public String getSimulationType() {
         return this.SIM_TYPE;
