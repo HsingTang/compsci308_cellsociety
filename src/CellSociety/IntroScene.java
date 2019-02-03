@@ -118,19 +118,32 @@ public class IntroScene extends Scene {
                 super.show(window);
             }
         });
-        //TODO: implement chooseFile with XML parsing and init new simulation
-        //use alert.showAndWait() to display alert
+        if (file.toString().equals(
+                mySimulation.GOL_XML)
+            || file.toString().equals(mySimulation.WATOR_XML)
+            || file.toString().equals(mySimulation.FIRE_XML)
+                || file.toString().equals(mySimulation.SEG_XML)
+                || file.toString().equals(mySimulation.PERC_XML
+    )){
+            mySimulation.setSimType(file.toString());
+            mySimulation.initGrid();
+        }
+        else {
+            badDataAlert();
+        }
     }
 
     private void emptyDataAlert(){
         Alert emptyAlert = new Alert(Alert.AlertType.ERROR);
         emptyAlert.setTitle("Empty Data");
         emptyAlert.setContentText("Please choose another file.");
+        emptyAlert.showAndWait();
     }
 
     private void badDataAlert(){
         Alert badAlert = new Alert(Alert.AlertType.ERROR);
         badAlert.setTitle("Bad Data");
         badAlert.setContentText("Please choose another file.");
+        badAlert.showAndWait();
     }
 }
