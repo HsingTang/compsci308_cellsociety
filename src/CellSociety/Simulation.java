@@ -45,18 +45,26 @@ public class Simulation extends Application {
     private ArrayList<String> stateList;
 
 
+    /**
+     * Entry point of the program
+     * @param stage where scene shall be displayed
+     */
     public void start(Stage stage) {
         this.myStage = stage;
-        //initIntroScene();
         // somewhere in the scene's method of handling button,
         // when a button is pressed, SIM_TYPE will be updated to corresponding file name
 
-        //readXML();
-        //myUIScene = new UI(myUIRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
+        readXML();
+        myUIScene = new UI(myUIRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
         initUI();
+        initIntroScene();
     }
 
 
+    /**
+     * Initialize the introduction scene where user can choose type of simulation to run
+     * Set stage to the initialized IntroScene
+     */
     private void initIntroScene() {
         myIntroRoot = new Group();
         myIntroScene = new IntroScene(myIntroRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
@@ -66,11 +74,18 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * External classes can call this method to change the simulation type
+     * The corresponding XML file should be available in resources folder
+     * @param s name of the new simulation's XML file
+     */
     public void setSimType(String s) {
         this.SIM_TYPE = s;
     }
 
-    /*
+    /**
+     * Initialize a list of states with the percentage distribution read from XML file
+     */
     private void initStateList() {
         stateList = new ArrayList<>();
         for (String state : statePercentMap.keySet()) {
@@ -80,6 +95,11 @@ public class Simulation extends Application {
         }
     }
 
+
+    /**
+     * Initialize the grid of Cells and set each Cell's initial state
+     * and then pipeline to the next step of creating UI scene for displaying visualization
+     */
     public void initGrid() {
         readXML();
         initStateList();
@@ -116,27 +136,31 @@ public class Simulation extends Application {
         }
         initUI();
     }
-*/
+
+    /**
+     * Initialize the UI class for creating visualization of the simulation
+     */
     private void initUI() {
         myUIRoot = new Group();
         myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
-        //myUIScene.drawGrid();
+        myUIScene.drawGrid();
         myStage.setScene(myUIScene);
         myStage.show();
-        //initTimeline();
+        initTimeline();
     }
 
-    public void initTimeline() {
-        /*var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
+    private void initTimeline() {
+        var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
         this.myTimeline = new Timeline();
         this.myTimeline.setCycleCount(Timeline.INDEFINITE);
         this.myTimeline.getKeyFrames().add(frame);
-        this.myTimeline.play();
-        */
-        System.out.println("init timeline");
     }
 
-    /*private void readXML() {
+
+    /**
+     * Read XML file containing simulation parameters
+     */
+    private void readXML() {
         File f = new File("resources/" + SIM_TYPE);
         myParser = new XMLParser(f);
         assert ((myParser.getSimType() + ".xml").equals(SIM_TYPE));
@@ -146,7 +170,7 @@ public class Simulation extends Application {
         this.myWidth = myParser.getWidth();
         this.myHeight = myParser.getHeight();
     }
-*/
+
     public Cell[][] getGrid() {
         return this.myGrid;
     }
@@ -154,7 +178,7 @@ public class Simulation extends Application {
     public HashMap<String, String> getStateImageMap(){
         return this.stateImageMap;
     }
-/*
+
     private void updateGrid() {
         for (int i = 0; i < myGrid.length; i++) {
             for (int j = 0; j < myGrid[0].length; j++) {
@@ -170,7 +194,7 @@ public class Simulation extends Application {
         }
     }
 
-*/
+
     public void pauseSimulation() {
         //this.myTimeline.pause();
         System.out.println("pause simulation");
@@ -178,8 +202,11 @@ public class Simulation extends Application {
 
 
     public void resumeSimulation() {
-        //this.myTimeline.play();
-        System.out.println("resume simulation");
+        this.myTimeline.play();
+    }
+
+    public void playSimulation() {
+        this.myTimeline.play();
     }
 
 
@@ -191,8 +218,7 @@ public class Simulation extends Application {
 
 
     public void resetSimulation() {
-        //initGrid();
-        System.out.println("reset simulation");
+        initGrid();
     }
 
     public void switchSimulation(String newSimType) {
