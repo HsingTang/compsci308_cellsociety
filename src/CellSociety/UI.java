@@ -131,7 +131,7 @@ public class UI extends Scene {
 
     private Button resumeButton(){
         Button stopButton = new Button("Resume");
-        stopButton.setOnMouseClicked(e -> mySimulation.resumeSimulation());
+        stopButton.setOnMouseClicked(e -> mySimulation.playSimulation());
         return stopButton;
     }
 
