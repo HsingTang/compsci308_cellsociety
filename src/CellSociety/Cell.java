@@ -19,6 +19,7 @@ abstract class Cell {
         myRow = row;
         myCol = col;
         myCurrentState = initialState;
+        myNeighbors = new ArrayList<>();
         myParams = parameters;
 
         myStates = new ArrayList<>();
@@ -117,10 +118,10 @@ abstract class Cell {
 
     //checks if indices are within the grid
     private boolean inBounds(int row, int col){
-        if(row < 0 || row > myGrid.length){
+        if(row < 0 || row >= myGrid.length){
             return false;
         }
-        else if(col < 0 || col > myGrid[0].length){
+        else if(col < 0 || col >= myGrid[0].length){
             return false;
         }
         return true;

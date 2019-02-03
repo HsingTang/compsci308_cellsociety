@@ -31,8 +31,14 @@ public class CellSegregation extends Cell {
      */
     @Override
     public void findNextState() {
+        //if it's empty and hasn't had anything overwrite it yet
         if(myCurrentState.equals(EMPTY) && myNextState.equals("")){
             myNextState = EMPTY;
+            return;
+        }
+        //if it's nextstate has already been set externally by another cell
+        else if(!myNextState.equals("")){
+            return;
         }
         calcSatisfaction();
 
