@@ -139,6 +139,7 @@ public class Simulation extends Application {
     private void initUI() {
         myUIRoot = new Group();
         myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
+        myUIScene.drawGrid();
         myStage.setScene(myUIScene);
         myStage.show();
         initTimeline();
@@ -203,7 +204,7 @@ public class Simulation extends Application {
     }
 
 
-    public void resumeSimulation() {
+    public void playSimulation() {
         this.myTimeline.play();
     }
 
@@ -217,7 +218,6 @@ public class Simulation extends Application {
     public void resetSimulation() {
         initGrid();
     }
-
 
     public void switchSimulation(String newSimType) {
         this.setSimType(newSimType);
@@ -242,7 +242,6 @@ public class Simulation extends Application {
     public String getSimulationType() {
         return this.SIM_TYPE;
     }
-
 
     /**
      * Main method to launch the Breakout game program.
