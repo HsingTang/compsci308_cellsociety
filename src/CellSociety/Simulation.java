@@ -45,16 +45,20 @@ public class Simulation extends Application {
     private ArrayList<String> stateList;
 
 
+    /**
+     * Entry point of the program
+     * @param stage where scene shall be displayed
+     */
     public void start(Stage stage) {
         this.myStage = stage;
         initIntroScene();
-        // somewhere in the scene's method of handling button,
-        // when a button is pressed, SIM_TYPE will be updated to corresponding file name
-        readXML();
-        myUIScene = new UI(myUIRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
     }
 
 
+    /**
+     * Initialize the introduction scene where user can choose type of simulation to run
+     * Set stage to the initialized IntroScene
+     */
     private void initIntroScene() {
         myIntroRoot = new Group();
         myIntroScene = new IntroScene(myIntroRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
@@ -64,11 +68,19 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * External classes can call this method to change the simulation type
+     * The corresponding XML file should be available in resources folder
+     * @param s name of the new simulation's XML file
+     */
     public void setSimType(String s) {
         this.SIM_TYPE = s;
     }
 
 
+    /**
+     * Initialize a list of states with the percentage distribution read from XML file
+     */
     private void initStateList() {
         stateList = new ArrayList<>();
         for (String state : statePercentMap.keySet()) {
@@ -78,6 +90,11 @@ public class Simulation extends Application {
         }
     }
 
+
+    /**
+     * Initialize the grid of Cells and set each Cell's initial state
+     * and then pipeline to the next step of creating UI scene for displaying visualization
+     */
     public void initGrid() {
         readXML();
         initStateList();
@@ -116,6 +133,9 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * Initialize the UI class for creating visualization of the simulation
+     */
     private void initUI() {
         myUIRoot = new Group();
         myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
@@ -124,15 +144,21 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * Initialize a new timeline for the simulation
+     * updateGrid() is called by eventHandler of the frame each 'delay' interval
+     */
     private void initTimeline() {
         var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
         this.myTimeline = new Timeline();
         this.myTimeline.setCycleCount(Timeline.INDEFINITE);
         this.myTimeline.getKeyFrames().add(frame);
-        this.myTimeline.play();
     }
 
 
+    /**
+     * Read XML file containing simulation parameters
+     */
     private void readXML() {
         File f = new File("resources/" + SIM_TYPE);
         myParser = new XMLParser(f);
