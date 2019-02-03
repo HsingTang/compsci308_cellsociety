@@ -3,6 +3,7 @@ package CellSociety;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -102,5 +103,19 @@ public class IntroScene extends Scene {
                 super.show(window);
             }
         });
+        //TODO: implement chooseFile with XML parsing and init new simulation
+        //use alert.showAndWait() to display alert
+    }
+
+    private void emptyDataAlert(){
+        Alert emptyAlert = new Alert(Alert.AlertType.ERROR);
+        emptyAlert.setTitle("Empty Data");
+        emptyAlert.setContentText("Please choose another file.");
+    }
+
+    private void badDataAlert(){
+        Alert badAlert = new Alert(Alert.AlertType.ERROR);
+        badAlert.setTitle("Bad Data");
+        badAlert.setContentText("Please choose another file.");
     }
 }

@@ -154,5 +154,4 @@ public class UI extends Scene {
         });
         return switchSimulationDropdown;
     }
-
 }
