@@ -19,6 +19,7 @@ abstract class Cell {
         myRow = row;
         myCol = col;
         myCurrentState = initialState;
+        myNeighbors = new ArrayList<>();
         myParams = parameters;
 
         myStates = new ArrayList<>();
