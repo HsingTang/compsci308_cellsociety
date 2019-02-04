@@ -18,9 +18,9 @@ import static java.lang.Math.ceil;
 /**
  * @author Hsingchih Tang
  * Trunk of the cell society project
- * Control the simulation flow by invoking and connecting XMLParser, IntroScene, UI and Cell classes
+ * Run the simulation by invoking and connecting XMLParser, IntroScene, UI and Cell classes
  * Retrieve simulation configuration parameters from XMLParser and pass arguments into UI and Cells
- * Respond to user action of playing/resuming/stepping/switching simulation
+ * Control the simulation flow by responding to user action of playing/resuming/stepping/switching simulation
  */
 public class Simulation extends Application {
 
