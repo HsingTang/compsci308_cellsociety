@@ -25,6 +25,18 @@ public class CellWATOR extends Cell {
     private List<CellWATOR> myFishNeighbors;
     private CellWATOR myNextLocCell;
 
+    /**
+     * @author Carrie Hunner (clh87)
+     *
+     * @param row int index of the row of the cell in a grid of cells that will be passed through
+     *            when setting neighbors
+     * @param col int index of the column of the cell in a grid of cells that will be passed through when]
+     *            setting the neighbors
+     * @param initialState String indicating the initial state of the cell
+     * @param parameters ArrayList of doubles containing the turns it takes for a fish to reproduce,
+     *                   the turns it takes for a shark to reproduce, the initial energy of a shark,
+     *                   and the energy a shark gets by eating a fish
+     */
     CellWATOR(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
 

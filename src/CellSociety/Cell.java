@@ -15,6 +15,17 @@ abstract class Cell {
     protected Cell[][] myGrid;
     protected List<String> myStates;
 
+    /**
+     * @author Carrie Hunner (clh87)
+     *
+     * @param row int index of the row of the cell in a grid of cells that will be passed through
+     *            when setting neighbors
+     * @param col int index of the column of the cell in a grid of cells that will be passed through when]
+     *            setting the neighbors
+     * @param initialState String indicating the initial state of the cell
+     * @param parameters ArrayList of doubles containing any extra parameters needed e.g. probability
+     *                   of catching fire or the health of a shark
+     */
     Cell(int row, int col, String initialState, ArrayList<Double> parameters){
         myRow = row;
         myCol = col;
