@@ -59,12 +59,15 @@ public class CellWATOR extends Cell {
         switch(myCurrentState){
             case FISH:
                 //making sure fish wasn't eaten
+                System.out.println(myCurrentState + "at Row: " + myRow + " Col: " + myCol);
                 if(!myNextState.equals(EMPTY)){
                     findEmptyNeighbors();
+                    System.out.println("Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
 
                     //can't move
                     if(myEmptyNeighbors.size() == 0){
                         fishStays();
+                        System.out.println("Above can't move");
                         return;
                     }
                     else{
@@ -74,8 +77,11 @@ public class CellWATOR extends Cell {
                     }
                 }
             case SHARK:
+                System.out.println(myCurrentState + "at Row: " + myRow + " Col: " + myCol);
                 findFishNeighbors();
                 findEmptyNeighbors();
+                System.out.println("Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
+                System.out.println("Above has " + myFishNeighbors.size() + " Fish Neighbors");
 
                 //shark died
                 if(mySharkEnergy <= 0){
@@ -121,6 +127,7 @@ public class CellWATOR extends Cell {
         int nextLocationIndex;
         nextLocationIndex = myRand.nextInt(myEmptyNeighbors.size());
         CellWATOR nextCell = myEmptyNeighbors.get(nextLocationIndex);
+        System.out.println("Above wants to move to empty row: " + nextCell.myRow + " Col: " + nextCell.myCol);
         nextCell.setNextState(SHARK);
         nextCell.setSharkEnergy(mySharkEnergy - 1);
         nextCell.setTurnsSurvived(myTurnsSurvived + 1);
@@ -130,6 +137,8 @@ public class CellWATOR extends Cell {
         int nextLocationIndex;
         nextLocationIndex = myRand.nextInt(myFishNeighbors.size());
         CellWATOR nextCell = myFishNeighbors.get(nextLocationIndex);
+        System.out.println("Above going to eat: " + nextCell.myRow + " Col: " + nextCell.myCol);
+        System.out.println("Fish Health: " + mySharkEnergy);
 
         //make sure if fish had already planned on moving, that cell will be empty instead
         if(nextCell.getNextLocCell() != null){
@@ -138,10 +147,13 @@ public class CellWATOR extends Cell {
         nextCell.setNextState(SHARK);
         nextCell.setSharkEnergy(mySharkEnergy - 1 + mySharkEatingEnergy);
         nextCell.setTurnsSurvived(myTurnsSurvived + 1);
+        myNextState = EMPTY;
+        System.out.println("Set above to EMPTY cuz eating fish");
     }
 
     private void fishStays() {
         myNextState = FISH;
+        System.out.println("Fish Stayed row: " + myRow + "");
         myTurnsSurvived++;
         return;
     }
@@ -155,6 +167,7 @@ public class CellWATOR extends Cell {
         int numEmptyNeighbors = myEmptyNeighbors.size();
         int nextLocationIndex = myRand.nextInt(numEmptyNeighbors);
         CellWATOR nextCell = myEmptyNeighbors.get(nextLocationIndex);
+        System.out.println("Above wants to move to row: " + nextCell.myRow + " Col: " + nextCell.myCol);
         myNextLocCell = nextCell;
         nextCell.setNextState(FISH);
         nextCell.setTurnsSurvived(myTurnsSurvived++);
@@ -180,8 +193,14 @@ public class CellWATOR extends Cell {
 
     private void findFishNeighbors(){
         for(Cell c: myNeighbors){
-            if(c.getNextState().equals(FISH)){
-                myFishNeighbors.add((CellWATOR)c);
+            if(c.getState().equals(FISH)){
+                //make sure not claimed by other shark
+                if(!c.getNextState().equals(SHARK)){
+                    myFishNeighbors.add((CellWATOR)c);
+                }
+                else{
+                    System.out.println("Fish neighbor claimed by other shark");
+                }
             }
         }
     }
@@ -207,8 +226,14 @@ public class CellWATOR extends Cell {
     //locates and stores empty neighbors
     private void findEmptyNeighbors(){
         for(Cell c: myNeighbors){
-            if(c.getNextState().equals("") || c.getNextState().equals(EMPTY)){
-                myEmptyNeighbors.add((CellWATOR)c);
+            if(c.getState().equals(EMPTY)){
+                if(c.getNextState().equals("") || c.getNextState().equals(EMPTY)){
+                    myEmptyNeighbors.add((CellWATOR)c);
+                }
+                else{
+                    System.out.println("Above has a claimed neighbor: " + c.getNextState());
+                }
+
             }
         }
     }
