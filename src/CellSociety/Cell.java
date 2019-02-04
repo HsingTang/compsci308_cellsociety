@@ -81,7 +81,7 @@ abstract class Cell {
     protected void generateEightNeighbors(){
         int[] dRow = new int[] {-1, 0, 1};
         int[] dCol = new int[] {-1, 0, 1};
-
+        System.out.println("Row: " + myRow + " Col: " + myCol);
         for(int k = 0; k < dRow.length; k++){
             for(int i = 0; i < dCol.length; i++){
                 int tempRow = dRow[k] + myRow;
@@ -94,10 +94,13 @@ abstract class Cell {
                 else{
                     if(inBounds(tempRow, tempCol)){
                         myNeighbors.add(myGrid[tempRow][tempCol]);
+                        System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
                     }
                 }
             }
+
         }
+        System.out.println();
     }
 
     /**

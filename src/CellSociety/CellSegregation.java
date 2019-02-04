@@ -44,6 +44,8 @@ public class CellSegregation extends Cell {
         System.out.println("Satisfaction: " + mySatisfaction + " Row: " + myRow + " Col: " + myCol);
         if(mySatisfaction >= myThreshold){
             myNextState = myCurrentState;
+            System.out.println("Above stayed put");
+            System.out.println();
             return;
         }
         else{
@@ -57,16 +59,20 @@ public class CellSegregation extends Cell {
         int tempCol;
 
         //dealing with getting to the end of the current row
-        for(tempCol = myCol; tempCol < myGrid.length; tempCol++){
+        for(tempCol = myCol; tempCol < myGrid[0].length; tempCol++){
             if(foundAndSetNextLoc(tempRow, tempCol)){
+                System.out.println("Above moved to Col: " + tempCol + " Row: " + tempRow);
+                System.out.println();
                 return;
             }
         }
 
         //dealing with getting to end of grid
-        for(tempCol = myCol + 1; tempCol < myGrid.length; tempCol++){
-            for(tempRow = 0; tempRow < myGrid[0].length; tempRow++){
+        for(tempCol = myCol + 1; tempCol < myGrid[0].length; tempCol++){
+            for(tempRow = 0; tempRow < myGrid.length; tempRow++){
                 if(foundAndSetNextLoc(tempRow, tempCol)){
+                    System.out.println("Above moved to Col: " + tempCol + " Row: " + tempRow);
+                    System.out.println();
                     return;
                 }
             }
@@ -76,11 +82,14 @@ public class CellSegregation extends Cell {
         for(tempCol = 0; tempCol < myCol; tempCol++){
             for(tempRow = 0; tempRow < myRow; tempRow++){
                 if(foundAndSetNextLoc(tempRow, tempCol)){
+                    System.out.println("Above moved to Col: " + tempCol + " Row: " + tempRow);
+                    System.out.println();
                     return;
                 }
             }
         }
-
+        System.out.println("Above couldn't move");
+        System.out.println();
         myNextState = myCurrentState;
     }
 
@@ -106,22 +115,32 @@ public class CellSegregation extends Cell {
     private void calcSatisfaction() {
         double numPop1 = 0;
         double numPop2 = 0;
+        int index = 0;
         for(Cell c : myNeighbors){
             switch(c.getState()){
                 case GROUP1:
                     numPop1 += 1.0;
+                    System.out.println("Neighbor " + index + " is Red and state is " + c.getState());
+                    break;
                 case GROUP2:
+                    System.out.println("Group2 is currently stored as: " + GROUP2);
                     numPop2 += 1.0;
+                    System.out.println("Neighbor " + index + " is Blue and state is " + c.getState());
+                    break;
             }
+            index++;
         }
+        System.out.println("Below Num Group1: " + numPop1 + " Num Group2: " + numPop2);
         double tot = numPop1 + numPop2;
         switch(myCurrentState){
             case GROUP1:
                 mySatisfaction = numPop1/tot;
+                break;
 
 
             case GROUP2:
                 mySatisfaction = numPop2/tot;
+                break;
         }
         if(!(mySatisfaction >= 0)){
             mySatisfaction = 0.0;
