@@ -1,7 +1,9 @@
 <Simulation>
     <Type>Percolation</Type>
-    <Width>50</Width>
-    <Height>10</Height>
+    <Title>Perc_01</Title>
+    <Author>Hsingchih Tang</Author>
+    <Width>100</Width>
+    <Height>100</Height>
     <State>
         <StateName>Open</StateName>
         <StateImage>White</StateImage>

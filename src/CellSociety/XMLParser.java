@@ -9,6 +9,8 @@ import java.util.*;
 
 public class XMLParser {
     public static final String SIM_TYPE_TAG = "Type";
+    public static final String TITLE_TAG = "Title";
+    public static final String AUTHOR_TAG = "Author";
     public static final String WIDTH_TAG = "Width";
     public static final String HEIGHT_TAG = "Height";
     public static final String STATE_TAG = "State";
@@ -20,6 +22,8 @@ public class XMLParser {
     private DocumentBuilder myDBuilder;
     private Document myDoc;
     private String mySimulationType;
+    private String mySimulationTitle;
+    private String myAuthor;
     private Element mySimRoot;
     private Integer myWidth;
     private Integer myHeight;
@@ -38,6 +42,8 @@ public class XMLParser {
         }
         this.mySimRoot = getRootElement(f);
         this.parseSimConfig();
+        this.parseTitle();
+        this.parseAuthor();
         this.parseState();
         this.parseParam();
     }
@@ -55,10 +61,22 @@ public class XMLParser {
     }
 
     private void parseSimConfig(){
-        mySimulationType = mySimRoot.getElementsByTagName(SIM_TYPE_TAG).item(0).getTextContent();
-        myWidth = Integer.valueOf(mySimRoot.getElementsByTagName(WIDTH_TAG).item(0).getTextContent());
-        myHeight = Integer.valueOf(mySimRoot.getElementsByTagName(HEIGHT_TAG).item(0).getTextContent());
+        mySimulationType = this.mySimRoot.getElementsByTagName(SIM_TYPE_TAG).item(0).getTextContent();
+        myWidth = Integer.valueOf(this.mySimRoot.getElementsByTagName(WIDTH_TAG).item(0).getTextContent());
+        myHeight = Integer.valueOf(this.mySimRoot.getElementsByTagName(HEIGHT_TAG).item(0).getTextContent());
     }
+
+
+    private void parseTitle(){
+        mySimulationTitle = this.mySimRoot.getElementsByTagName(TITLE_TAG).item(0).getTextContent();
+    }
+
+
+    private void parseAuthor(){
+        myAuthor = this.mySimRoot.getElementsByTagName(AUTHOR_TAG).item(0).getTextContent();
+    }
+
+
 
     private void parseState(){
         NodeList stateList = this.mySimRoot.getElementsByTagName(STATE_TAG);

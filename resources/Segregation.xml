@@ -1,7 +1,9 @@
 <Simulation>
     <Type>Segregation</Type>
-    <Width>20</Width>
-    <Height>10</Height>
+    <Title>Seg_01</Title>
+    <Author>Hsingchih Tang</Author>
+    <Width>100</Width>
+    <Height>100</Height>
     <State>
         <StateName>Group1</StateName>
         <StateImage>Red</StateImage>
