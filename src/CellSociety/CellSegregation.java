@@ -47,6 +47,7 @@ public class CellSegregation extends Cell {
         }
         else{
             findAndSetNewLocation();
+            myNextState = EMPTY;
         }
     }
 
