@@ -172,7 +172,7 @@ public class UI extends Scene {
         switchSimulationDropdown.setOnAction(e -> {
             String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
             String simFileName = "resources/" + simulationType + ".xml";
-            mySimulation.setSimType(simFileName);
+            mySimulation.switchSimulation(simFileName);
             mySimulation.initGrid();
         });
         return switchSimulationDropdown;
