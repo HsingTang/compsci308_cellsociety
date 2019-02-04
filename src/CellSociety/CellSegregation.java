@@ -3,8 +3,8 @@ package CellSociety;
 import java.util.ArrayList;
 
 public class CellSegregation extends Cell {
-    private final String POPULATION1 = "Population1";
-    private final String POPULATION2 = "Population2";
+    private final String GROUP1 = "Group1";
+    private final String GROUP2 = "Group2";
     private final String EMPTY = "Empty";
 
     private double myThreshold;
@@ -20,8 +20,8 @@ public class CellSegregation extends Cell {
 
     @Override
     protected void initializeStatesList() {
-        myStates.add(POPULATION1);
-        myStates.add(POPULATION2);
+        myStates.add(GROUP1);
+        myStates.add(GROUP2);
         myStates.add(EMPTY);
     }
 
@@ -34,6 +34,8 @@ public class CellSegregation extends Cell {
         //if it's empty and hasn't had anything overwrite it yet
         if(myCurrentState.equals(EMPTY) && myNextState.equals("")){
             myNextState = EMPTY;
+            //System.out.println("Empty:" + " Row: " + myRow + " Col: " + myCol);
+            //System.out.println();
             return;
         }
         //if it's nextstate has already been set externally by another cell
@@ -41,50 +43,72 @@ public class CellSegregation extends Cell {
             return;
         }
         calcSatisfaction();
-
-        if(mySatisfaction > myThreshold){
+        //System.out.println("Satisfaction: " + mySatisfaction + " Row: " + myRow + " Col: " + myCol);
+        if(mySatisfaction >= myThreshold){
             myNextState = myCurrentState;
+            //System.out.println("Above stayed put");
+            //System.out.println();
+            return;
         }
         else{
             findAndSetNewLocation();
-            myNextState = EMPTY;
+            //myNextState = EMPTY;
         }
+        System.out.println();
     }
 
     private void findAndSetNewLocation() {
-        int tempRow;
-        int tempCol = myCol;
+        int tempRow = myRow;
+        int tempCol;
 
         //dealing with getting to the end of the current row
-        for(tempRow = myRow; tempRow < myGrid.length; tempRow++){
+        for(tempCol = myCol; tempCol < myGrid[0].length; tempCol++){
             if(foundAndSetNextLoc(tempRow, tempCol)){
+                //System.out.println("Above moved in row to Row: " + tempRow + " Col: " + tempCol);
+                //System.out.println();
                 return;
             }
         }
 
         //dealing with getting to end of grid
-        for(tempCol += 1; tempCol < myGrid[0].length; tempCol++){
-            for(tempRow = 0; tempRow < myGrid.length; tempRow++){
+        for(tempRow += 1; tempRow < myGrid.length; tempRow++){
+            for(tempCol = 0; tempCol < myGrid[0].length; tempCol++){
                 if(foundAndSetNextLoc(tempRow, tempCol)){
+                    //System.out.println("Above moved down row to Row: " + tempRow + " Col: " + tempCol);
+                    //System.out.println();
                     return;
                 }
             }
         }
 
         //going to end of grid
-        for(tempCol = 0; tempCol < myCol; tempCol++){
-            for(tempRow = 0; tempRow < myRow; tempRow++){
+        for(tempRow = 0; tempRow < myRow; tempRow++){
+            for(tempCol = 0; tempCol < myCol; tempCol++){
                 if(foundAndSetNextLoc(tempRow, tempCol)){
+                    //System.out.println("Above moved to Row: " + tempRow + " Col: " + tempCol);
+                    //System.out.println();
                     return;
                 }
             }
         }
+        //System.out.println("Above couldn't move");
+        //System.out.println();
+        switch(myCurrentState){
+            case GROUP1:
+                myNextState = GROUP1;
+                //System.out.println("Above should stay " + GROUP1);
+                break;
+            case GROUP2:
+                myNextState = GROUP2;
+                //System.out.println("Above should stay " + GROUP2);
+                break;
 
-        myNextState = myCurrentState;
+        }
     }
 
     private boolean isEmpty(Cell c){
         if(c.getState().equals(EMPTY)){
+            //makes sure it's not already claimed
             if(c.getNextState().equals("") || c.getNextState().equals(EMPTY)){
                 return true;
             }
@@ -96,27 +120,44 @@ public class CellSegregation extends Cell {
         Cell temp = myGrid[row][col];
         if(isEmpty(temp)){
             temp.setNextState(myCurrentState);
+            myNextState = EMPTY;
             return true;
         }
         return false;
     }
 
     private void calcSatisfaction() {
-        float numPop1 = 0;
-        float numPop2 = 0;
+        double numPop1 = 0;
+        double numPop2 = 0;
+        int index = 0;
         for(Cell c : myNeighbors){
             switch(c.getState()){
-                case POPULATION1:
-                    numPop1++;
-                case POPULATION2:
-                    numPop2++;
+                case GROUP1:
+                    numPop1 += 1.0;
+                    //System.out.println("Neighbor " + index + " is Red and state is " + c.getState());
+                    break;
+                case GROUP2:
+                    //System.out.println("Group2 is currently stored as: " + GROUP2);
+                    numPop2 += 1.0;
+                    //System.out.println("Neighbor " + index + " is Blue and state is " + c.getState());
+                    break;
             }
+            index++;
         }
+        //System.out.println("Below Num Group1: " + numPop1 + " Num Group2: " + numPop2);
+        double tot = numPop1 + numPop2;
         switch(myCurrentState){
-            case POPULATION1:
-                mySatisfaction = numPop1/numPop2;
-            case POPULATION2:
-                mySatisfaction = numPop2/numPop1;
+            case GROUP1:
+                mySatisfaction = numPop1/tot;
+                break;
+
+
+            case GROUP2:
+                mySatisfaction = numPop2/tot;
+                break;
+        }
+        if(!(mySatisfaction >= 0)){
+            mySatisfaction = 0.0;
         }
     }
 
