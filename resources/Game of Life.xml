@@ -2,16 +2,16 @@
     <Type>Game of Life</Type>
     <Title>GOL_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>100</Width>
-    <Height>100</Height>
+    <Width>50</Width>
+    <Height>50</Height>
     <State>
         <StateName>Dead</StateName>
         <StateImage>Blue</StateImage>
-        <StatePercentage>0.01</StatePercentage>
+        <StatePercentage>0.75</StatePercentage>
     </State>
     <State>
         <StateName>Alive</StateName>
         <StateImage>Green</StateImage>
-        <StatePercentage>0.99</StatePercentage>
+        <StatePercentage>0.25</StatePercentage>
     </State>
 </Simulation>
