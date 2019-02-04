@@ -88,7 +88,7 @@ abstract class Cell {
                 int tempCol = dCol[i] + myCol;
 
                 //ensures not to add self
-                if(tempRow == 0 && tempCol == 0){
+                if(tempRow == myRow && tempCol == myCol){
                     continue;
                 }
                 else{

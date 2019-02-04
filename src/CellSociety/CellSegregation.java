@@ -41,9 +41,10 @@ public class CellSegregation extends Cell {
             return;
         }
         calcSatisfaction();
-        if(mySatisfaction > myThreshold){
+        System.out.println("Satisfaction: " + mySatisfaction + " Row: " + myRow + " Col: " + myCol);
+        if(mySatisfaction >= myThreshold){
             myNextState = myCurrentState;
-            //System.out.println("Stayed Put" + myNextState);
+            return;
         }
         else{
             findAndSetNewLocation();
@@ -52,19 +53,19 @@ public class CellSegregation extends Cell {
     }
 
     private void findAndSetNewLocation() {
-        int tempRow;
-        int tempCol = myCol;
+        int tempRow = myRow;
+        int tempCol;
 
         //dealing with getting to the end of the current row
-        for(tempRow = myRow; tempRow < myGrid.length; tempRow++){
+        for(tempCol = myCol; tempCol < myGrid.length; tempCol++){
             if(foundAndSetNextLoc(tempRow, tempCol)){
                 return;
             }
         }
 
         //dealing with getting to end of grid
-        for(tempCol += 1; tempCol < myGrid[0].length; tempCol++){
-            for(tempRow = 0; tempRow < myGrid.length; tempRow++){
+        for(tempCol = myCol + 1; tempCol < myGrid.length; tempCol++){
+            for(tempRow = 0; tempRow < myGrid[0].length; tempRow++){
                 if(foundAndSetNextLoc(tempRow, tempCol)){
                     return;
                 }
@@ -117,8 +118,13 @@ public class CellSegregation extends Cell {
         switch(myCurrentState){
             case GROUP1:
                 mySatisfaction = numPop1/tot;
+
+
             case GROUP2:
                 mySatisfaction = numPop2/tot;
+        }
+        if(!(mySatisfaction >= 0)){
+            mySatisfaction = 0.0;
         }
     }
 
