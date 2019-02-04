@@ -1,5 +1,7 @@
 <Simulation>
     <Type>Segregation</Type>
+    <Title>Seg_01</Title>
+    <Author>Hsingchih Tang</Author>
     <Width>20</Width>
     <Height>10</Height>
     <State>

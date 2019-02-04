@@ -266,6 +266,7 @@ public class Simulation extends Application {
         this.myTimeline.stop();
         this.delay *= 2;
         initTimeline();
+        playSimulation();
     }
 
 
@@ -276,6 +277,7 @@ public class Simulation extends Application {
         this.myTimeline.stop();
         this.delay /= 2;
         initTimeline();
+        playSimulation();
     }
 
 

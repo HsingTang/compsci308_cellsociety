@@ -1,6 +1,8 @@
 <Simulation>
     <Type>Fire</Type>
-    <Width>20</Width>
+    <Title>Fire_01</Title>
+    <Author>Hsingchih Tang</Author>
+    <Width>200</Width>
     <Height>10</Height>
     <State>
         <StateName>Burning</StateName>
