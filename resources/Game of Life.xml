@@ -2,8 +2,8 @@
     <Type>Game of Life</Type>
     <Title>GOL_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>50</Width>
-    <Height>10</Height>
+    <Width>100</Width>
+    <Height>100</Height>
     <State>
         <StateName>Dead</StateName>
         <StateImage>Blue</StateImage>

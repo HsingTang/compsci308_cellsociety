@@ -2,8 +2,8 @@
     <Type>Percolation</Type>
     <Title>Perc_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>50</Width>
-    <Height>10</Height>
+    <Width>100</Width>
+    <Height>100</Height>
     <State>
         <StateName>Open</StateName>
         <StateImage>White</StateImage>

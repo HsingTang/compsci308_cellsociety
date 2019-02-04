@@ -215,7 +215,7 @@ public class Simulation extends Application {
      * Expected to be called by UI when a pause button is pressed
      */
     public void pauseSimulation() {
-        this.myTimeline.pause();
+        this.myTimeline.stop();
     }
 
 
@@ -254,6 +254,7 @@ public class Simulation extends Application {
      * @param newSimType path to the XML file for the new Simulation
      */
     public void switchSimulation(String newSimType) {
+        this.myTimeline.stop();
         this.setSimType(newSimType);
         initGrid();
     }

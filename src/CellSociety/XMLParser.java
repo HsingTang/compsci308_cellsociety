@@ -46,7 +46,6 @@ public class XMLParser {
         this.parseAuthor();
         this.parseState();
         this.parseParam();
-        System.out.println("Simulation "+this.mySimulationTitle+" by "+this.myAuthor);
     }
 
     // Get root element of an XML file

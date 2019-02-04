@@ -2,8 +2,8 @@
     <Type>Segregation</Type>
     <Title>Seg_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>20</Width>
-    <Height>10</Height>
+    <Width>100</Width>
+    <Height>100</Height>
     <State>
         <StateName>Group1</StateName>
         <StateImage>Red</StateImage>

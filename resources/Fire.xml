@@ -2,8 +2,8 @@
     <Type>Fire</Type>
     <Title>Fire_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>200</Width>
-    <Height>10</Height>
+    <Width>100</Width>
+    <Height>100</Height>
     <State>
         <StateName>Burning</StateName>
         <StateImage>Red</StateImage>
