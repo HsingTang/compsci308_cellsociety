@@ -15,6 +15,13 @@ import java.util.Random;
 
 import static java.lang.Math.ceil;
 
+/**
+ * @author Hsingchih Tang
+ * Trunk of the cell society project
+ * Control the simulation flow by invoking and connecting XMLParser, IntroScene, UI and Cell classes
+ * Retrieve simulation configuration parameters from XMLParser and pass arguments into UI and Cells
+ * Respond to user action of playing/resuming/stepping/switching simulation
+ */
 public class Simulation extends Application {
 
     public static final int DEFAULT_WIDTH = 20;
@@ -84,7 +91,7 @@ public class Simulation extends Application {
     private void initStateList() {
         stateList = new ArrayList<>();
         for (String state : statePercentMap.keySet()) {
-            for (int i = 0; i < ceil(statePercentMap.get(state) * 10); i++) {
+            for (int i = 0; i < ceil(statePercentMap.get(state) * 100); i++) {
                 stateList.add(state);
             }
         }
