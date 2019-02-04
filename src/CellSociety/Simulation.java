@@ -84,7 +84,7 @@ public class Simulation extends Application {
     private void initStateList() {
         stateList = new ArrayList<>();
         for (String state : statePercentMap.keySet()) {
-            for (int i = 0; i < ceil(statePercentMap.get(state) * 10); i++) {
+            for (int i = 0; i < ceil(statePercentMap.get(state) * 100); i++) {
                 stateList.add(state);
             }
         }
