@@ -13,7 +13,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import org.w3c.dom.css.Rect;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UI extends Scene {
@@ -22,7 +24,7 @@ public class UI extends Scene {
     private static final Paint BACKGROUND_FILL = Color.WHITE;
     private static final int GRID_HEIGHT = 400;
     private static final int GRID_WIDTH = 400;
-    private static final int CELL_BUFFER = 2;
+    private static final int CELL_BUFFER = 1;
 
     private static final int VBOX_BUFFER_TOP = 45;
     private static final int VBOX_BUFFER_SIDE = 30;
@@ -47,6 +49,9 @@ public class UI extends Scene {
 
     private Group myRoot;
     private Simulation mySimulation;
+    private HashMap<Cell, Rectangle> cellVisMap;
+    HashMap<String, String> stateMap;
+
 
     public UI(Group root, int width, int height, Simulation s){
         super(root, WINDOW_HEIGHT, WINDOW_WIDTH, BACKGROUND_FILL);
@@ -56,25 +61,33 @@ public class UI extends Scene {
         GRID_ROW_NUM = height;
         CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
         CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
-
+        initCellVisMap();
         setupButtons();
     }
 
     public void drawGrid(){
-        HashMap<String, String> map = mySimulation.getStateImageMap();
-        myRoot.getChildren().clear();
+        for (Cell key: cellVisMap.keySet()){
+            String stateVis = stateMap.get(key.getState());
+            cellVisMap.get(key).setFill(Color.web(stateVis));
+        }
+    }
+
+    private void initCellVisMap(){
+        stateMap = mySimulation.getStateImageMap();
+        Cell[][] cells = mySimulation.getGrid();
+        cellVisMap = new HashMap<>();
         for (int i = 0; i < GRID_ROW_NUM; i++){
             for (int j = 0; j < GRID_COL_NUM; j++){
-                Cell cellData = mySimulation.getGrid()[i][j];
-                String cellState = cellData.getState();
-                String cellColor = map.get(cellState);
-                Rectangle cell = new Rectangle(CELL_WIDTH - CELL_BUFFER, CELL_HEIGHT - CELL_BUFFER);
-                cell.setFill(Color.web(cellColor)); //
-                cell.setX(j * CELL_WIDTH);
-                cell.setY(i * CELL_HEIGHT);
-                myRoot.getChildren().add(cell);
-                setupButtons();
+                Cell cell = cells[i][j];
+                Rectangle cellRect = new Rectangle(CELL_WIDTH - CELL_BUFFER, CELL_HEIGHT - CELL_BUFFER);
+                cellRect.setFill(Color.web(stateMap.get(cell.getState())));
+                cellRect.setX(j * CELL_WIDTH);
+                cellRect.setY(i * CELL_HEIGHT);
+                cellVisMap.put(cell, cellRect);
             }
+        }
+        for (Cell key: cellVisMap.keySet()){
+            myRoot.getChildren().add(cellVisMap.get(key));
         }
     }
 
@@ -98,6 +111,7 @@ public class UI extends Scene {
                 resumeButton(),
                 slowDownButton(),
                 speedUpButton(),
+                stepButton(),
                 switchSimulationDropdown()
         );
         return vbox;
@@ -145,6 +159,12 @@ public class UI extends Scene {
         Button speedUpButton = new Button("Speed Up");
         speedUpButton.setOnMouseClicked(e -> mySimulation.speedup());
         return speedUpButton;
+    }
+
+    private Button stepButton(){
+        Button stepButton = new Button("Step");
+        stepButton.setOnMouseClicked(e -> mySimulation.stepSimulation());
+        return stepButton;
     }
 
     private ComboBox switchSimulationDropdown(){

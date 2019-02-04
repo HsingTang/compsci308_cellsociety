@@ -1,7 +1,9 @@
 <Simulation>
     <Type>WaTor</Type>
-    <Width>20</Width>
-    <Height>10</Height>
+    <Title>WaTor_01</Title>
+    <Author>Hsingchih Tang</Author>
+    <Width>100</Width>
+    <Height>100</Height>
     <State>
         <StateName>Fish</StateName>
         <StateImage>Blue</StateImage>
