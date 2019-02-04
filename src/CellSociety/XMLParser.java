@@ -7,6 +7,15 @@ import javax.xml.parsers.*;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author Robert C. Duvall
+ * @author Rhondu Smithwick
+ * @author Hsingchih Tang
+ * Parser for XML files. Built based on XMLParser.java and XMLException.java in sample project
+ * Read the simulation's size, type and initial configuration parameters from certain files
+ * Has private methods for parsing contents in the file
+ * and public methods for returning information to caller
+ */
 public class XMLParser {
     public static final String SIM_TYPE_TAG = "Type";
     public static final String TITLE_TAG = "Title";
