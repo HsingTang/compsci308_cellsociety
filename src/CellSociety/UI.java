@@ -39,7 +39,7 @@ public class UI extends Scene {
             "Game of Life",
             "Percolation",
             "Segregation",
-            "WaTor World"
+            "WaTor"
     );
 
     private final int GRID_ROW_NUM;
