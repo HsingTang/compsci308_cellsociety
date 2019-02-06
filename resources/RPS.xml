@@ -1,0 +1,23 @@
+<Simulation>
+    <Type>RPS</Type>
+    <Title>Fire_01</Title>
+    <Author>Hsingchih Tang</Author>
+    <Width>50</Width>
+    <Height>50</Height>
+    <State>
+        <StateName>Burning</StateName>
+        <StateImage>Red</StateImage>
+        <StatePercentage>0.2</StatePercentage>
+    </State>
+    <State>
+        <StateName>Tree</StateName>
+        <StateImage>Green</StateImage>
+        <StatePercentage>0.7</StatePercentage>
+    </State>
+    <State>
+        <StateName>Empty</StateName>
+        <StateImage>Yellow</StateImage>
+        <StatePercentage>0.1</StatePercentage>
+    </State>
+    <Parameter>0.75</Parameter>
+</Simulation>

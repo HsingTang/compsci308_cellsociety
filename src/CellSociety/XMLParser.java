@@ -1,5 +1,6 @@
 package CellSociety;
 
+import javafx.scene.control.Alert;
 import org.w3c.dom.*;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -30,7 +31,7 @@ public class XMLParser {
     private File myFile;
     private DocumentBuilder myDBuilder;
     private Document myDoc;
-    private String mySimulationType;
+    private String mySimulationType = "";
     private String mySimulationTitle;
     private String myAuthor;
     private Element mySimRoot;
@@ -39,6 +40,7 @@ public class XMLParser {
     private HashMap<String, String> stateImage = new HashMap<>();
     private HashMap<String, Double> statePercent = new HashMap<>();
     private ArrayList<Double> parameters = new ArrayList<>();
+    private XMLAlert myAlert;
 
 
 
@@ -46,27 +48,37 @@ public class XMLParser {
         this.myFile = f;
         try{
             this.myDBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        }catch (Exception e){
-            throw new XMLException(e);
+        }catch (ParserConfigurationException e){
+            this.myAlert = XMLAlert.ParserConfigAlert;
+            this.myAlert.showAlert();
+            return;
         }
         this.mySimRoot = getRootElement(f);
-        this.parseSimConfig();
-        this.parseTitle();
-        this.parseAuthor();
-        this.parseState();
-        this.parseParam();
+        if(this.mySimRoot!=null){
+            this.parseSimConfig();
+            this.parseTitle();
+            this.parseAuthor();
+            this.parseState();
+            this.parseParam();
+        }
+
     }
 
     // Get root element of an XML file
     private Element getRootElement (File xmlFile) {
+        myDBuilder.reset();
         try {
-            myDBuilder.reset();
             this.myDoc = myDBuilder.parse(xmlFile);
             return this.myDoc.getDocumentElement();
         }
-        catch (SAXException | IOException e) {
-            throw new XMLException(e);
+        catch (SAXException e) {
+            this.myAlert = XMLAlert.SAXAlert;
+            this.myAlert.showAlert();
+        }catch(IOException e){
+            this.myAlert = XMLAlert.FileNotFoundAlert;
+            this.myAlert.showAlert();
         }
+        return null;
     }
 
     private void parseSimConfig(){
@@ -107,6 +119,18 @@ public class XMLParser {
 
     public String getSimType(){
         return this.mySimulationType;
+    }
+
+    public Element getSimRoot(){
+        return this.mySimRoot;
+    }
+
+    public String getSimTitle(){
+        return this.mySimulationTitle;
+    }
+
+    public String getAuthor(){
+        return this.myAuthor;
     }
 
     public HashMap<String, String> getStateImg(){

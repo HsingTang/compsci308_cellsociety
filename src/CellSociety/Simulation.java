@@ -9,11 +9,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Math.ceil;
+import static java.util.Map.entry;
 
 /**
  * @author Hsingchih Tang
@@ -26,11 +25,26 @@ public class Simulation extends Application {
 
     public static final int DEFAULT_WIDTH = 20;
     public static final int DEFAULT_HEIGHT = 20;
-    public static final String GOL_XML = "resources/Game of Life.xml";
-    public static final String WATOR_XML = "resources/WaTor.xml";
-    public static final String FIRE_XML = "resources/Fire.xml";
-    public static final String SEG_XML = "resources/Segregation.xml";
-    public static final String PERC_XML = "resources/Percolation.xml";
+    public static final String GOL_XML = "Game of Life";
+    public static final String WATOR_XML = "WaTor";
+    public static final String FIRE_XML = "Fire";
+    public static final String SEG_XML = "Segregation";
+    public static final String PERC_XML = "Percolation";
+    public static final List<String> SIM_TYPE_LIST = Arrays.asList(GOL_XML,WATOR_XML,FIRE_XML,SEG_XML,PERC_XML);
+    public static final Map<String,Integer> SIM_PARAM_NUM = Map.ofEntries(
+            entry(GOL_XML,0),
+            entry(WATOR_XML,4),
+            entry(FIRE_XML,1),
+            entry(SEG_XML,1),
+            entry(PERC_XML,0)
+    );
+    public static final Map<String,Integer> SIM_STATE_NUM = Map.ofEntries(
+            entry(GOL_XML,2),
+            entry(WATOR_XML,3),
+            entry(FIRE_XML,3),
+            entry(SEG_XML,3),
+            entry(PERC_XML,3)
+    );
 
     private Timeline myTimeline;
     private Stage myStage;
@@ -50,6 +64,7 @@ public class Simulation extends Application {
     private HashMap<String, Double> statePercentMap;
     private ArrayList<Double> parametersList;
     private ArrayList<String> stateList;
+    private XMLAlert myAlert;
 
 
     /**
@@ -98,13 +113,16 @@ public class Simulation extends Application {
     }
 
 
+
     /**
      * This is a public method that's expected to be called from UI class each time a new simulation is initialized
      * Initialize the grid of Cells and set each Cell's initial state
      * and then pipeline to the next step of creating UI scene for displaying visualization
      */
     public void initGrid() {
-        readXML();
+        if(!readXML()){
+            return;
+        }
         initStateList();
         myGrid = new Cell[myHeight][myWidth];
         Random myRandom = new Random();
@@ -141,6 +159,8 @@ public class Simulation extends Application {
     }
 
 
+
+
     /**
      * Initialize the UI class for creating visualization of the simulation
      */
@@ -166,18 +186,45 @@ public class Simulation extends Application {
     }
 
 
+
+
+    public boolean verifySimulation(XMLParser parser){
+        if(!SIM_TYPE_LIST.contains(parser.getSimType())){
+            this.myAlert = XMLAlert.SimTypeAlert;
+            this.myAlert.showAlert();
+            return false;
+        }else if(SIM_PARAM_NUM.get(parser.getSimType())!=parser.getParameters().size()){
+            this.myAlert = XMLAlert.SimParamAlert;
+            this.myAlert.showAlert();
+            return false;
+        }else if(SIM_STATE_NUM.get(parser.getSimType())!=parser.getStateImg().keySet().size()){
+            this.myAlert = XMLAlert.SimStateAlert;
+            this.myAlert.showAlert();
+            return false;
+        }
+        return true;
+    }
+
+
+
+
     /**
      * Read XML file containing simulation parameters
      */
-    private void readXML() {
-        File f = new File(SIM_TYPE);
+    private boolean readXML() {
+        File f = new File("resources/"+SIM_TYPE+".xml");
         myParser = new XMLParser(f);
-        assert ((myParser.getSimType() + ".xml").equals(SIM_TYPE));
+        if(myParser.getSimRoot()==null){
+            return false;
+        }else if(!verifySimulation(myParser)) {
+            return false;
+        }
         this.stateImageMap = myParser.getStateImg();
         this.statePercentMap = myParser.getStatePercent();
         this.parametersList = myParser.getParameters();
         this.myWidth = myParser.getWidth();
         this.myHeight = myParser.getHeight();
+        return true;
     }
 
 
