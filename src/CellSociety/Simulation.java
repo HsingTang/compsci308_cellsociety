@@ -57,6 +57,7 @@ public class Simulation extends Application {
     private int myWidth = DEFAULT_WIDTH;
     private int myHeight = DEFAULT_HEIGHT;
     private String SIM_TYPE;
+    private String myFilePath;
     private boolean pause = false;
     private boolean step = true;
     private XMLParser myParser;
@@ -212,7 +213,12 @@ public class Simulation extends Application {
      * Read XML file containing simulation parameters
      */
     private boolean readXML() {
-        File f = new File("resources/"+SIM_TYPE+".xml");
+        if(SIM_TYPE_LIST.contains(SIM_TYPE)){
+            this.myFilePath = "resources/"+SIM_TYPE+".xml";
+        }else{
+            this.myFilePath = SIM_TYPE;
+        }
+        File f = new File(this.myFilePath);
         myParser = new XMLParser(f);
         if(myParser.getSimRoot()==null){
             return false;
