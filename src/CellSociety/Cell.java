@@ -71,7 +71,8 @@ abstract class Cell {
     //a method for 4 or 8 neighbors, or they can call another method entirely.
 
     //edgeType capitalized
-    abstract public void findNeighbors(ArrayList<ArrayList<Cell>> cell, ArrayList<Integer> desiredNeighbors, String edgeType);
+    //, ArrayList<Integer> desiredNeighbors, String edgeType
+    abstract public void findNeighbors(Cell[][] cell);
 
     //generates and sets 4 neighbors
     //can be called by concrete class implementations
@@ -147,7 +148,7 @@ abstract class Cell {
     /**
      * Sets the state of the cell.
      * Used in UI for user input to switch cell states.
-     * @param newState String indicating the desired state.
+     *
      */
     public void setUserSwitchState(){
 
