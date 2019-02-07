@@ -4,6 +4,7 @@
     <Author>Hsingchih Tang</Author>
     <Width>50</Width>
     <Height>50</Height>
+    <SpecifiedConfig>false</SpecifiedConfig>
     <State>
         <StateName>Fish</StateName>
         <StateImage>Blue</StateImage>
@@ -21,6 +22,6 @@
     </State>
     <Parameter>3</Parameter>
     <Parameter>6</Parameter>
-    <Parameter>20</Parameter>
+    <Parameter>5</Parameter>
     <Parameter>1</Parameter>
 </Simulation>

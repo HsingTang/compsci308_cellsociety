@@ -4,6 +4,7 @@
     <Author>Hsingchih Tang</Author>
     <Width>50</Width>
     <Height>50</Height>
+    <SpecifiedConfig>false</SpecifiedConfig>
     <State>
         <StateName>Group1</StateName>
         <StateImage>Red</StateImage>
