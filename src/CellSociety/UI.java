@@ -169,7 +169,7 @@ public class UI extends Scene {
         ComboBox switchSimulationDropdown = new ComboBox(SIM_OPTIONS);
         switchSimulationDropdown.setOnAction(e -> {
             String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
-            String simFileName = "resources/" + simulationType + ".xml";
+            String simFileName = simulationType;
             mySimulation.switchSimulation(simFileName);
             mySimulation.initGrid();
         });
