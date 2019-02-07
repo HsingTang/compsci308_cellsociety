@@ -30,15 +30,15 @@ public class Simulation extends Application {
     public static final String FIRE_XML = "RPS";
     public static final String SEG_XML = "Segregation";
     public static final String PERC_XML = "Percolation";
-    public static final List<String> SIM_TYPE_LIST = Arrays.asList(GOL_XML,WATOR_XML,FIRE_XML,SEG_XML,PERC_XML);
-    public static final Map<String,Integer> SIM_PARAM_NUM = Map.ofEntries(
+    protected final List<String> SIM_TYPE_LIST = Arrays.asList(GOL_XML,WATOR_XML,FIRE_XML,SEG_XML,PERC_XML);
+    protected final Map<String,Integer> SIM_PARAM_NUM = Map.ofEntries(
             entry(GOL_XML,0),
             entry(WATOR_XML,4),
             entry(FIRE_XML,1),
             entry(SEG_XML,1),
             entry(PERC_XML,0)
     );
-    public static final Map<String,Integer> SIM_STATE_NUM = Map.ofEntries(
+    protected final Map<String,Integer> SIM_STATE_NUM = Map.ofEntries(
             entry(GOL_XML,2),
             entry(WATOR_XML,3),
             entry(FIRE_XML,3),
@@ -52,22 +52,21 @@ public class Simulation extends Application {
     private Cell[][] myGrid;
     private Scene myIntroScene;
     private UI myUIScene;
-    private Group myIntroRoot;
-    private Group myUIRoot;
     private int myWidth = DEFAULT_WIDTH;
     private int myHeight = DEFAULT_HEIGHT;
     private String SIM_TYPE;
-    private String myFilePath;
     private boolean specConfig = false;
-    private boolean pause = false;
-    private boolean step = true;
-    private XMLParser myParser;
-    private HashMap<String, String> stateImageMap;
-    private HashMap<String, Double> statePercentMap;
-    private ArrayList<Double> parametersList;
-    private ArrayList<String> stateList;
-    private HashMap<List<Integer>,String> cellState;
-    private XMLAlert myAlert;
+    // private boolean pause = false;
+    // private boolean step = true;
+    private Map<String, String> stateImageMap;
+    private Map<String, Double> statePercentMap;
+    private List<Double> parametersList;
+    private List<String> stateList;
+    private Map<List<Integer>,String> cellState;
+
+    public Simulation(){
+        // constructor, do something here
+    }
 
 
     /**
@@ -85,7 +84,7 @@ public class Simulation extends Application {
      * Set stage to the initialized IntroScene
      */
     private void initIntroScene() {
-        myIntroRoot = new Group();
+        Group myIntroRoot = new Group();
         myIntroScene = new IntroScene(myIntroRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
         myStage.setScene(myIntroScene);
         myStage.setTitle("Cell Society");
@@ -146,21 +145,22 @@ public class Simulation extends Application {
                 }else{
                     currCellState = stateList.get(randIdx);
                 }
+                ArrayList<Double> params = new ArrayList<>(parametersList);
                 switch (SIM_TYPE) {
                     case GOL_XML:
-                        currCell = new CellGameOfLife(i, j, currCellState, parametersList);
+                        currCell = new CellGameOfLife(i, j, currCellState, params);
                         break;
                     case WATOR_XML:
-                        currCell = new CellWATOR(i, j, currCellState, parametersList);
+                        currCell = new CellWATOR(i, j, currCellState, params);
                         break;
                     case FIRE_XML:
-                        currCell = new CellFire(i, j, currCellState, parametersList);
+                        currCell = new CellFire(i, j, currCellState, params);
                         break;
                     case SEG_XML:
-                        currCell = new CellSegregation(i, j, currCellState, parametersList);
+                        currCell = new CellSegregation(i, j, currCellState, params);
                         break;
                     case PERC_XML:
-                        currCell = new CellPercolation(i, j, currCellState, parametersList);
+                        currCell = new CellPercolation(i, j, currCellState, params);
                         break;
                 }
                 myGrid[i][j] = currCell;
@@ -180,7 +180,7 @@ public class Simulation extends Application {
      * Initialize the UI class for creating visualization of the simulation
      */
     private void initUI() {
-        myUIRoot = new Group();
+        Group myUIRoot = new Group();
         myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
         myUIScene.drawGrid();
         myStage.setScene(myUIScene);
@@ -208,16 +208,16 @@ public class Simulation extends Application {
      */
     public boolean validateSimulation(XMLParser parser){
         if(!SIM_TYPE_LIST.contains(parser.getSimType())){
-            this.myAlert = XMLAlert.SimTypeAlert;
-            this.myAlert.showAlert();
+            XMLAlert myAlert = XMLAlert.SimTypeAlert;
+            myAlert.showAlert();
             return false;
         }else if(SIM_PARAM_NUM.get(parser.getSimType())!=parser.getParameters().size()){
-            this.myAlert = XMLAlert.SimParamAlert;
-            this.myAlert.showAlert();
+            XMLAlert myAlert = XMLAlert.SimParamAlert;
+            myAlert.showAlert();
             return false;
         }else if(SIM_STATE_NUM.get(parser.getSimType())!=parser.getStateImg().keySet().size()){
-            this.myAlert = XMLAlert.SimStateAlert;
-            this.myAlert.showAlert();
+            XMLAlert myAlert = XMLAlert.SimStateAlert;
+            myAlert.showAlert();
             return false;
         }else if(!parser.isParseSuccess()){
             return false;
@@ -231,13 +231,14 @@ public class Simulation extends Application {
      * Read XML file containing simulation parameters
      */
     private boolean readXML() {
+        String myFilePath;
         if(SIM_TYPE_LIST.contains(SIM_TYPE)){
-            this.myFilePath = "resources/"+SIM_TYPE+".xml";
+            myFilePath = "resources/"+SIM_TYPE+".xml";
         }else{
-            this.myFilePath = SIM_TYPE;
+            myFilePath = SIM_TYPE;
         }
-        File f = new File(this.myFilePath);
-        myParser = new XMLParser(f);
+        File f = new File(myFilePath);
+        XMLParser myParser = new XMLParser(f);
         if(!validateSimulation(myParser)) {
             return false;
         }
@@ -263,7 +264,7 @@ public class Simulation extends Application {
     /**
      * @return a map associating state and corresponding image visualization
      */
-    public HashMap<String, String> getStateImageMap(){
+    public Map<String, String> getStateImageMap(){
         return this.stateImageMap;
     }
 

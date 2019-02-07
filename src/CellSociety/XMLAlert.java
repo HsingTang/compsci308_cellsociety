@@ -7,6 +7,9 @@ import javafx.scene.control.Alert;
  * or if any information is missing or mismatched in the parsed XML configuration file
  */
 public enum XMLAlert{
+
+
+
     FileNotFoundAlert("IOException at XMLParser","XML file is not found.","Upload a valid simulation XML file or verify that default XML file exists in resources folder."),
     ParserConfigAlert("Parser Configuration Exception","Something went wrong when initializing XMLParser.","Relaunch the program and try again. Contact the developer if the issue is not resolved."),
     SAXAlert("SAX Exception at XMLParser","XML file is invalid.","Upload a valid simulation XML file."),
