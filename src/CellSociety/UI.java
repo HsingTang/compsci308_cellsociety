@@ -13,9 +13,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import org.w3c.dom.css.Rect;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UI extends Scene {
