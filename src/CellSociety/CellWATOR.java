@@ -91,25 +91,8 @@ public class CellWATOR extends Cell {
                 //System.out.println("\t Turns Survived: " + myTurnsSurvived);
                 ////System.out.println("\t Above Next State: " + myNextState);
                 if(myNextState.equals("")){
-                    findEmptyNeighbors();
-                    ////System.out.println("\t Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
-
-                    //can't move
-                    if(myEmptyNeighbors.size() == 0){
-                        fishStays();
-                        ////System.out.println("\t Above can't move");
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
-                    else{
-                        moveFish();
-                        ////System.out.println("\t about to check for baby");
-                        checkForBaby(FISH);
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
+                    setFishNextState();
+                    return;
                 }
                 else{
                     return;
@@ -165,6 +148,28 @@ public class CellWATOR extends Cell {
                 if(myNextState.equals("")){
                     myNextState = EMPTY;
                 }
+        }
+    }
+
+    private void setFishNextState() {
+        findEmptyNeighbors();
+        ////System.out.println("\t Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
+
+        //can't move
+        if(myEmptyNeighbors.size() == 0){
+            fishStays();
+            ////System.out.println("\t Above can't move");
+            ////System.out.println("\t\tFinal Next State: " + myNextState);
+            ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+            return;
+        }
+        else{
+            moveFish();
+            ////System.out.println("\t about to check for baby");
+            checkForBaby(FISH);
+            ////System.out.println("\t\tFinal Next State: " + myNextState);
+            ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+            return;
         }
     }
 

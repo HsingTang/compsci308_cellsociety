@@ -65,11 +65,13 @@ abstract class Cell {
 
     /**
      * This method finds and sets the Cell's neighbors based on the 2D Cell array passed as an argument.
-     * @param cell 2D int array of Cell objects
+     * @param cell ArrayList of ArrayList of cells
      */
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
-    abstract public void findNeighbors(Cell[][] cell);
+
+    //edgeType capitalized
+    abstract public void findNeighbors(ArrayList<ArrayList<Cell>> cell, ArrayList<Integer> desiredNeighbors, String edgeType);
 
     //generates and sets 4 neighbors
     //can be called by concrete class implementations
@@ -99,19 +101,18 @@ abstract class Cell {
                 int tempCol = dCol[i] + myCol;
 
                 //ensures not to add self
-                if(tempRow == myRow && tempCol == myCol){
-                    continue;
+                if(!isSelf(tempRow, tempCol) && inBounds(tempRow, tempCol)){
+                    myNeighbors.add(myGrid[tempRow][tempCol]);
                 }
-                else{
-                    if(inBounds(tempRow, tempCol)){
-                        myNeighbors.add(myGrid[tempRow][tempCol]);
-                        //System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
-                    }
-                }
+
             }
 
         }
         //System.out.println();
+    }
+
+    private boolean isSelf(int tempRow, int tempCol) {
+        return tempRow == myRow && tempCol == myCol;
     }
 
     /**
@@ -140,5 +141,15 @@ abstract class Cell {
             return false;
         }
         return true;
+    }
+
+    //TODO: write this method
+    /**
+     * Sets the state of the cell.
+     * Used in UI for user input to switch cell states.
+     * @param newState String indicating the desired state.
+     */
+    public void setUserSwitchState(){
+
     }
 }
