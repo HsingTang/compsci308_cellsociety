@@ -13,9 +13,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import org.w3c.dom.css.Rect;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UI extends Scene {
@@ -171,7 +169,7 @@ public class UI extends Scene {
         ComboBox switchSimulationDropdown = new ComboBox(SIM_OPTIONS);
         switchSimulationDropdown.setOnAction(e -> {
             String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
-            String simFileName = "resources/" + simulationType + ".xml";
+            String simFileName = simulationType;
             mySimulation.switchSimulation(simFileName);
             mySimulation.initGrid();
         });
