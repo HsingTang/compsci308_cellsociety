@@ -49,6 +49,7 @@ public class UI extends Scene {
     private Simulation mySimulation;
     private HashMap<Cell, Rectangle> cellVisMap;
     HashMap<String, String> stateMap;
+    HashMap<String, Integer> stateNumMap;
 
 
     public UI(Group root, int width, int height, Simulation s){
@@ -60,6 +61,7 @@ public class UI extends Scene {
         CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
         CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
         initCellVisMap();
+        initStateNumMap();
         setupButtons();
     }
 
@@ -70,6 +72,21 @@ public class UI extends Scene {
         }
     }
 
+    public void drawGraph(){
+
+    }
+
+    private void makeGraphData(){
+
+    }
+
+    private void initStateNumMap(){
+        stateNumMap = new HashMap<>();
+        for (String key: stateMap.keySet()){
+            stateNumMap.putIfAbsent(key, 0);
+        }
+
+    }
     private void initCellVisMap(){
         stateMap = mySimulation.getStateImageMap();
         Cell[][] cells = mySimulation.getGrid();

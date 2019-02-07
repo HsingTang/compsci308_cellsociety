@@ -38,6 +38,7 @@ public class Simulation extends Application {
             entry(SEG_XML,1),
             entry(PERC_XML,0)
     );
+
     public static final Map<String,Integer> SIM_STATE_NUM = Map.ofEntries(
             entry(GOL_XML,2),
             entry(WATOR_XML,3),
