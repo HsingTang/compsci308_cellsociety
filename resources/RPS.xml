@@ -2,22 +2,40 @@
     <Type>RPS</Type>
     <Title>Fire_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>50</Width>
-    <Height>50</Height>
+    <Width>2</Width>
+    <Height>2</Height>
+    <SpecifiedConfig>true</SpecifiedConfig>
     <State>
         <StateName>Burning</StateName>
         <StateImage>Red</StateImage>
-        <StatePercentage>0.2</StatePercentage>
     </State>
     <State>
         <StateName>Tree</StateName>
         <StateImage>Green</StateImage>
-        <StatePercentage>0.7</StatePercentage>
     </State>
     <State>
         <StateName>Empty</StateName>
         <StateImage>Yellow</StateImage>
-        <StatePercentage>0.1</StatePercentage>
     </State>
+    <Cell>
+        <Row>0</Row>
+        <Col>0</Col>
+        <CellState>Burning</CellState>
+    </Cell>
+    <Cell>
+        <Row>0</Row>
+        <Col>1</Col>
+        <CellState>Empty</CellState>
+    </Cell>
+    <Cell>
+        <Row>1</Row>
+        <Col>0</Col>
+        <CellState>Empty</CellState>
+    </Cell>
+    <Cell>
+        <Row>1</Row>
+        <Col>1</Col>
+        <CellState>Tree</CellState>
+    </Cell>
     <Parameter>0.75</Parameter>
 </Simulation>
