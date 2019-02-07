@@ -5,6 +5,9 @@
     <Width>2</Width>
     <Height>2</Height>
     <SpecifiedConfig>true</SpecifiedConfig>
+    <CellShape>rectangle/triangle/etc</CellShape>
+    <NeighborStyle>0/1/2/3/4/5/etc</NeighborStyle>
+    <EdgeStyle>Finite/Toroidal</EdgeStyle>
     <State>
         <StateName>Burning</StateName>
         <StateImage>Red</StateImage>
