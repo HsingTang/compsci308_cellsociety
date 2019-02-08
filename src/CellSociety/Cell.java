@@ -15,6 +15,17 @@ abstract class Cell {
     protected Cell[][] myGrid;
     protected List<String> myStates;
 
+    /**
+     * @author Carrie Hunner (clh87)
+     *
+     * @param row int index of the row of the cell in a grid of cells that will be passed through
+     *            when setting neighbors
+     * @param col int index of the column of the cell in a grid of cells that will be passed through when]
+     *            setting the neighbors
+     * @param initialState String indicating the initial state of the cell
+     * @param parameters ArrayList of doubles containing any extra parameters needed e.g. probability
+     *                   of catching fire or the health of a shark
+     */
     Cell(int row, int col, String initialState, ArrayList<Double> parameters){
         myRow = row;
         myCol = col;
@@ -54,10 +65,13 @@ abstract class Cell {
 
     /**
      * This method finds and sets the Cell's neighbors based on the 2D Cell array passed as an argument.
-     * @param cell 2D int array of Cell objects
+     * @param cell ArrayList of ArrayList of cells
      */
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
+
+    //edgeType capitalized
+    //, ArrayList<Integer> desiredNeighbors, String edgeType
     abstract public void findNeighbors(Cell[][] cell);
 
     //generates and sets 4 neighbors
@@ -88,19 +102,18 @@ abstract class Cell {
                 int tempCol = dCol[i] + myCol;
 
                 //ensures not to add self
-                if(tempRow == myRow && tempCol == myCol){
-                    continue;
+                if(!isSelf(tempRow, tempCol) && inBounds(tempRow, tempCol)){
+                    myNeighbors.add(myGrid[tempRow][tempCol]);
                 }
-                else{
-                    if(inBounds(tempRow, tempCol)){
-                        myNeighbors.add(myGrid[tempRow][tempCol]);
-                        //System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
-                    }
-                }
+
             }
 
         }
         //System.out.println();
+    }
+
+    private boolean isSelf(int tempRow, int tempCol) {
+        return tempRow == myRow && tempCol == myCol;
     }
 
     /**
@@ -129,5 +142,15 @@ abstract class Cell {
             return false;
         }
         return true;
+    }
+
+    //TODO: write this method
+    /**
+     * Sets the state of the cell.
+     * Used in UI for user input to switch cell states.
+     *
+     */
+    public void setUserSwitchState(){
+
     }
 }

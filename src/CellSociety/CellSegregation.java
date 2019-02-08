@@ -11,6 +11,16 @@ public class CellSegregation extends Cell {
     private double mySatisfaction;
 
 
+    /**
+     * @author Carrie Hunner (clh87)
+     *
+     * @param row int index of the row of the cell in a grid of cells that will be passed through
+     *            when setting neighbors
+     * @param col int index of the column of the cell in a grid of cells that will be passed through when]
+     *            setting the neighbors
+     * @param initialState String indicating the initial state of the cell
+     * @param parameters ArrayList of doubles with the threshold frequency as a decimal value
+     */
     CellSegregation(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
 
