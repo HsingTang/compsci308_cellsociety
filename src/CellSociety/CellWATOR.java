@@ -92,11 +92,8 @@ public class CellWATOR extends Cell {
                 ////System.out.println("\t Above Next State: " + myNextState);
                 if(myNextState.equals("")){
                     setFishNextState();
-                    return;
                 }
-                else{
-                    return;
-                }
+                return;
             case SHARK:
                 //System.out.println(myCurrentState + " at Row: " + myRow + " Col: " + myCol);
                 //System.out.println("\t Turns Survived: " + myTurnsSurvived);
@@ -125,24 +122,21 @@ public class CellWATOR extends Cell {
                     ////System.out.println("\t\tFinal Current State: " + myCurrentState);
                 }
                 //no fish to eat
-                else{
-                    //moves to empty space
-                    if(myEmptyNeighbors.size() != 0){
-                        moveSharkToEmptyNeighbor();
-                        ////System.out.println("\t about to check for baby");
-                        checkForBaby(SHARK);
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
-                    //can't move
-                    else{
-                        sharkStays();
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
+                //moves to empty space
+                else if(myEmptyNeighbors.size() != 0){
+                    moveSharkToEmptyNeighbor();
+                    ////System.out.println("\t about to check for baby");
+                    checkForBaby(SHARK);
+                    ////System.out.println("\t\tFinal Next State: " + myNextState);
+                    ////System.out.println("\t\tFinal Current State: " + myCurrentState);
                 }
+                //can't move
+                else{
+                    sharkStays();
+                    ////System.out.println("\t\tFinal Next State: " + myNextState);
+                    ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+                }
+                return;
 
             case EMPTY:
                 if(myNextState.equals("")){
