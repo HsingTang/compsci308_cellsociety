@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class CellWATOR extends Cell {
 
-    private final String FISH = "Fish";
-    private final String SHARK = "Shark";
-    private final String EMPTY = "Empty";
+    private static final String FISH = "Fish";
+    private static final String SHARK = "Shark";
+    private static final String EMPTY = "Empty";
 
     private double myFishReproTime;
     private double mySharkEnergy;
@@ -95,7 +95,7 @@ public class CellWATOR extends Cell {
                     ////System.out.println("\t Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
 
                     //can't move
-                    if(myEmptyNeighbors.size() == 0){
+                    if(myEmptyNeighbors.isEmpty()){
                         fishStays();
                         ////System.out.println("\t Above can't move");
                         ////System.out.println("\t\tFinal Next State: " + myNextState);
@@ -134,7 +134,7 @@ public class CellWATOR extends Cell {
                 }
 
                 //eating fish
-                if(myFishNeighbors.size() != 0){
+                if(!myFishNeighbors.isEmpty()){
                     eatFish();
                     ////System.out.println("\t about to check for baby");
                     checkForBaby(SHARK);
@@ -144,7 +144,7 @@ public class CellWATOR extends Cell {
                 //no fish to eat
                 else{
                     //moves to empty space
-                    if(myEmptyNeighbors.size() != 0){
+                    if(!myEmptyNeighbors.isEmpty()){
                         moveSharkToEmptyNeighbor();
                         ////System.out.println("\t about to check for baby");
                         checkForBaby(SHARK);
