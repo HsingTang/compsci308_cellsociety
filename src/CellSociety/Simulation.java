@@ -24,6 +24,7 @@ import static java.lang.Math.ceil;
  * Respond to user action of playing/resuming/stepping/switching simulation
  */
 public class Simulation extends Application {
+<<<<<<< HEAD
     static final String configFilePath = "resources/SimulationConfig.txt";
     static final String GOL_XML = "Game of Life";
     static final String WATOR_XML = "WaTor";
@@ -31,6 +32,10 @@ public class Simulation extends Application {
     static final String SEG_XML = "Segregation";
     static final String PERC_XML = "Percolation";
     static final String RPS_XML = "RPS";
+=======
+
+    private final String configFilePath = "resources/SimulationConfig.txt";
+>>>>>>> 050adf6adf3931bba916196596f90840a6d7288c
     private int myWidth;
     private int myHeight;
     private double delay;
