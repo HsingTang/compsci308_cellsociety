@@ -9,10 +9,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
+import static com.sun.javafx.application.PlatformImpl.exit;
 import static java.lang.Math.ceil;
-import static java.util.Map.entry;
+
 
 /**
  * @author Hsingchih Tang
@@ -23,51 +25,74 @@ import static java.util.Map.entry;
  */
 public class Simulation extends Application {
 
-    public static final int DEFAULT_WIDTH = 20;
-    public static final int DEFAULT_HEIGHT = 20;
-    public static final String GOL_XML = "Game of Life";
-    public static final String WATOR_XML = "WaTor";
-    public static final String FIRE_XML = "RPS";
-    public static final String SEG_XML = "Segregation";
-    public static final String PERC_XML = "Percolation";
-    protected final List<String> SIM_TYPE_LIST = Arrays.asList(GOL_XML,WATOR_XML,FIRE_XML,SEG_XML,PERC_XML);
-    protected final Map<String,Integer> SIM_PARAM_NUM = Map.ofEntries(
-            entry(GOL_XML,0),
-            entry(WATOR_XML,4),
-            entry(FIRE_XML,1),
-            entry(SEG_XML,1),
-            entry(PERC_XML,0)
-    );
-
-    protected final Map<String,Integer> SIM_STATE_NUM = Map.ofEntries(
-            entry(GOL_XML,2),
-            entry(WATOR_XML,3),
-            entry(FIRE_XML,3),
-            entry(SEG_XML,3),
-            entry(PERC_XML,3)
-    );
+    private final String configFilePath = "resources/SimulationConfig.txt";
+    private int myWidth;
+    private int myHeight;
+    private double delay;
+    private double distributionAccuracy;
+    private String myTitle;
+    final String GOL_XML = "Game of Life";
+    final String WATOR_XML = "WaTor";
+    final String FIRE_XML = "RPS";
+    final String SEG_XML = "Segregation";
+    final String PERC_XML = "Percolation";
+    final String RPS_XML = "RPS";
+    private List<String> SIM_TYPE_LIST = new ArrayList<>();
+    private Map<String,Integer> SIM_PARAM_NUM = new HashMap<>();
+    private Map<String,Integer> SIM_STATE_NUM = new HashMap<>();
 
     private Timeline myTimeline;
     private Stage myStage;
-    private double delay = 1000;
     private Cell[][] myGrid;
     private Scene myIntroScene;
     private UI myUIScene;
-    private int myWidth = DEFAULT_WIDTH;
-    private int myHeight = DEFAULT_HEIGHT;
     private String SIM_TYPE;
+    private String cellShape;
+    private String edgeType;
     private boolean specConfig = false;
-    // private boolean pause = false;
-    // private boolean step = true;
+    private List<String> stateList;
+    private List<Double> parametersList;
+    private List<Integer> neighborList;
     private Map<String, String> stateImageMap;
     private Map<String, Double> statePercentMap;
-    private List<Double> parametersList;
-    private List<String> stateList;
-    private Map<List<Integer>,String> cellState;
+    private Map<List<Integer>,String> cellStateMap;
     private XMLParser myParser;
 
+
+    /**
+     * Constructor of a Simulation object
+     * Call readConfig() to set up the Simulation class with specific parameters
+     */
     public Simulation(){
-        // constructor, do something here
+        super();
+        try{
+            readConfig();
+        }catch (FileNotFoundException e){
+            System.out.println("Simulation configuration file not found.");
+            exit();
+        }
+    }
+
+
+    /**
+     * Read the configuration text file for basic parameters (default size, simulation delay, etc.) in Simulation
+     * @throws FileNotFoundException if the configuration file is not found
+     */
+    private void readConfig() throws FileNotFoundException {
+        Scanner sc = new Scanner(new File(configFilePath));
+        myTitle = sc.nextLine();
+        myWidth = Integer.valueOf(sc.nextLine());
+        myHeight = Integer.valueOf(sc.nextLine());
+        delay = Double.valueOf(sc.nextLine());
+        distributionAccuracy = Double.valueOf(sc.nextLine());
+        while(sc.hasNextLine()){
+            String modelName = sc.nextLine();
+            Integer paramNum = Integer.valueOf(sc.nextLine());
+            Integer stateNum = Integer.valueOf(sc.nextLine());
+            SIM_TYPE_LIST.add(modelName);
+            SIM_PARAM_NUM.put(modelName,paramNum);
+            SIM_STATE_NUM.put(modelName,stateNum);
+        }
     }
 
 
@@ -87,9 +112,9 @@ public class Simulation extends Application {
      */
     private void initIntroScene() {
         Group myIntroRoot = new Group();
-        myIntroScene = new IntroScene(myIntroRoot, DEFAULT_WIDTH, DEFAULT_HEIGHT, this);
+        myIntroScene = new IntroScene(myIntroRoot, myWidth, myHeight, this);
         myStage.setScene(myIntroScene);
-        myStage.setTitle("Cell Society");
+        myStage.setTitle(myTitle);
         myStage.show();
     }
 
@@ -105,48 +130,20 @@ public class Simulation extends Application {
 
 
     /**
-     * Initialize a list of states with/without the percentage distribution read from XML file
+     * A private method that's expected to be called from switchSimulation() or resetSimulation()
+     * Initialize the grid of cells of a specific concrete cell class and set each cell's initial state
+     * Then pipeline to the next step of creating UI scene for displaying visualization
      */
-    private void initStateList() {
-        this.stateList = new ArrayList<>();
-        if(statePercentMap.size()==0){
-            for (String state : stateImageMap.keySet()) {
-                stateList.add(state);
-            }
-        }else{
-            for (String state : statePercentMap.keySet()) {
-                for (int i = 0; i < ceil(statePercentMap.get(state) * 100); i++) {
-                    stateList.add(state);
-                }
-            }
-        }
-    }
-
-
-
-    /**
-     * This is a public method that's expected to be called from UI class each time a new simulation is initialized
-     * Initialize the grid of Cells and set each Cell's initial state
-     * and then pipeline to the next step of creating UI scene for displaying visualization
-     */
-    public void initGrid() {
+    private void initGrid() {
         if(!readXML()){
             return;
         }
         myGrid = new Cell[myHeight][myWidth];
         initStateList();
-        Random myRandom = new Random();
         for (int i = 0; i < myGrid.length; i++) {
             for (int j = 0; j < myGrid[0].length; j++) {
                 Cell currCell = null;
-                int randIdx = myRandom.nextInt(stateList.size());
-                String currCellState;
-                if(this.specConfig){
-                    List<Integer> cellIdx = Arrays.asList(i,j);
-                    currCellState = cellState.get(cellIdx);
-                }else{
-                    currCellState = stateList.get(randIdx);
-                }
+                String currCellState = defineState(i,j);
                 ArrayList<Double> params = new ArrayList<>(parametersList);
                 switch (SIM_TYPE) {
                     case GOL_XML:
@@ -168,14 +165,57 @@ public class Simulation extends Application {
                 myGrid[i][j] = currCell;
             }
         }
-        for (int i = 0; i < myGrid.length; i++) {
-            for (int j = 0; j < myGrid[0].length; j++) {
-                myGrid[i][j].findNeighbors(myGrid);
-            }
-        }
+        initNeighbors();
         initUI();
     }
 
+
+    /**
+     * Initialize a list of states with/without the percentage distribution read from XML file
+     */
+    private void initStateList() {
+        this.stateList = new ArrayList<>();
+        if(statePercentMap.size()==0){
+            stateList.addAll(stateImageMap.keySet());
+        }else{
+            for (String state : statePercentMap.keySet()) {
+                for (int i = 0; i < ceil(statePercentMap.get(state) * distributionAccuracy); i++) {
+                    stateList.add(state);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Generate state for the current cell based on simulation configuration read from XML file
+     * @param row Row index of the cell
+     * @param col Column index of the cell
+     * @return a String indicating the cell's initial state
+     */
+    private String defineState(int row, int col){
+        Random myRandom = new Random();
+        int randIdx = myRandom.nextInt(stateList.size());
+        if(this.specConfig){
+            List<Integer> cellIdx = Arrays.asList(row,col);
+            return cellStateMap.get(cellIdx);
+        }else{
+            return stateList.get(randIdx);
+        }
+    }
+
+
+    /**
+     * Loop through all cells in the grid and initialize neighbors for each cell
+     */
+    private void initNeighbors(){
+        for (Cell[] row :myGrid) {
+            for (Cell currCell:row) {
+                //currCell.findNeighbors(myGrid);
+                currCell.findNeighbors(myGrid,cellShape,edgeType,neighborList);
+            }
+        }
+    }
 
 
     /**
@@ -183,7 +223,8 @@ public class Simulation extends Application {
      */
     private void initUI() {
         Group myUIRoot = new Group();
-        myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
+        //myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
+        myUIScene = new UI(myUIRoot, myWidth, myHeight, cellShape, this);
         myUIScene.drawGrid();
         myStage.setScene(myUIScene);
         myStage.show();
@@ -208,7 +249,7 @@ public class Simulation extends Application {
      * @param parser XMLParser object which handled the input file
      * @return boolean value indicating whether the parsed information is valid
      */
-    public boolean validateSimulation(XMLParser parser){
+    private boolean validateSimulation(XMLParser parser){
         if(!SIM_TYPE_LIST.contains(parser.getSimType())){
             myParser.modelErrAlert.showAlert();
             return false;
@@ -218,12 +259,9 @@ public class Simulation extends Application {
         }else if(SIM_STATE_NUM.get(parser.getSimType())!=parser.getStateImg().keySet().size()){
             myParser.stateErrAlert.showAlert();
             return false;
-        }else if(!parser.isParseSuccess()){
-            return false;
         }
-        return true;
+        return parser.isParseSuccess();
     }
-
 
 
     /**
@@ -246,13 +284,16 @@ public class Simulation extends Application {
         if(!validateSimulation(myParser)) {
             return false;
         }
-        this.stateImageMap = myParser.getStateImg();
-        this.statePercentMap = myParser.getStatePercent();
-        this.parametersList = myParser.getParameters();
         this.myWidth = myParser.getWidth();
         this.myHeight = myParser.getHeight();
         this.specConfig = myParser.isSpecConfig();
-        this.cellState = myParser.getCellState();
+        this.cellShape = myParser.getCellShape();
+        this.edgeType = myParser.getEdgeType();
+        this.neighborList = myParser.getNeighbors();
+        this.parametersList = myParser.getParameters();
+        this.stateImageMap = myParser.getStateImg();
+        this.statePercentMap = myParser.getStatePercent();
+        this.cellStateMap = myParser.getCellState();
         return true;
     }
 
@@ -266,10 +307,10 @@ public class Simulation extends Application {
 
 
     /**
-     * @return a map associating state and corresponding image visualization
+     * @return an immutable map associating state and corresponding image visualization
      */
     public Map<String, String> getStateImageMap(){
-        return this.stateImageMap;
+        return Collections.unmodifiableMap(this.stateImageMap);
     }
 
 
@@ -277,15 +318,13 @@ public class Simulation extends Application {
      * Update all Cells' states in the grid
      */
     private void updateGrid() {
-        for (int i = 0; i < myGrid.length; i++) {
-            for (int j = 0; j < myGrid[0].length; j++) {
-                Cell currCell = myGrid[i][j];
+        for (Cell[] row : myGrid) {
+            for (Cell currCell:row) {
                 currCell.findNextState();
             }
         }
-        for (int i = 0; i < myGrid.length; i++) {
-            for (int j = 0; j < myGrid[0].length; j++) {
-                Cell currCell = myGrid[i][j];
+        for (Cell[] row : myGrid) {
+            for (Cell currCell:row) {
                 currCell.updateState();
             }
         }
@@ -371,7 +410,6 @@ public class Simulation extends Application {
     public String getSimulationType() {
         return this.SIM_TYPE;
     }
-
 
 
     /**
