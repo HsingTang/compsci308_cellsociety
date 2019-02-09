@@ -105,6 +105,10 @@ public abstract class Cell {
     }
 
 
+    private boolean isSelf(int tempRow, int tempCol) {
+        return tempRow == myRow && tempCol == myCol;
+    }
+
     /**
      * Used in WATOR and Segregation to determine if a cell has been claimed for the
      * following step.
