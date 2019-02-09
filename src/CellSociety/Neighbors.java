@@ -6,7 +6,7 @@ import java.util.HashMap;
 abstract public class Neighbors {
     protected int myRow;
     protected int myCol;
-    protected ArrayList<ArrayList<Cell>> myGrid;
+    protected Cell[][] myGrid;
 
     protected ArrayList<Integer> myNeighborIndexes;
     protected String myEdgeType;
@@ -14,11 +14,11 @@ abstract public class Neighbors {
     protected ArrayList<Cell> myNeighbors;
     protected HashMap<Integer, ArrayList<Integer>> myIndexMap;
 
-    private final String FINITE = "Finite";
-    private final String TOROIDAL = "Toroidal";
+    protected final String FINITE = "Finite";
+    protected final String TOROIDAL = "Toroidal";
 
 
-    Neighbors(int row, int col, ArrayList<ArrayList<Cell>> grid){
+    Neighbors(int row, int col, Cell[][] grid){
         myRow = row;
         myCol = col;
         myGrid = grid;
@@ -40,6 +40,13 @@ abstract public class Neighbors {
         myNeighborIndexes = neighborIndexes;
     }
 
+    public ArrayList<Cell> getNeighborsList(){
+        setIndexMap();
+        setNeighbors();
+
+        return myNeighbors;
+    }
+
     private boolean isValidEdgeType(String edgeType){
         switch (edgeType){
             case FINITE:
@@ -49,4 +56,21 @@ abstract public class Neighbors {
         }
         return false;
     }
+
+    //checks if indices are within the grid
+    protected boolean inBounds(int row, int col){
+        if(row < 0 || row >= myGrid.length){
+            return false;
+        }
+        else if(col < 0 || col >= myGrid[0].length){
+            return false;
+        }
+        return true;
+    }
+
+    abstract protected void setIndexMap();
+
+    abstract protected void setNeighbors();
+
+
 }

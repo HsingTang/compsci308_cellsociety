@@ -12,7 +12,7 @@ abstract class Cell {
     protected int myRow;
     protected List<Double> myParams;
     protected List<Cell> myNeighbors;
-    protected ArrayList<ArrayList<Cell>> myGrid;
+    protected Cell[][] myGrid;
     protected List<String> myStates;
 
     private final String SQUARE = "Square";
@@ -73,56 +73,18 @@ abstract class Cell {
      */
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
-    public void findNeighbors(ArrayList<ArrayList<Cell>> cell, ArrayList<Integer> neighborIndexes, String edgeType, String shapeType){
+    public void findNeighbors(Cell[][] cell, String shapeType, String edgeType, ArrayList<Integer> neighborIndexes){
         myGrid = cell;
         switch(shapeType){
             case SQUARE:
-
+                NeighborsSquare neighborsSquare = new NeighborsSquare(myRow, myCol, myGrid);
+                neighborsSquare.initializeEdgeAndIndexes(edgeType, neighborIndexes);
+            case TRIANGLE:
         }
+        throw new IllegalArgumentException("Unknown Shape Type");
+
     }
 
-    //generates and sets 4 neighbors
-    //can be called by concrete class implementations
-    protected void generateFourNeighbors(){
-        int[] dRow = new int[] {0, 0, 1, -1};
-        int[] dCol = new int[] {1, -1, 0, 0};
-
-        for(int k = 0; k < dRow.length; k++){
-            int tempRow = dRow[k] + myRow;
-            int tempCol = dCol[k] + myCol;
-
-            if(inBounds(tempRow, tempCol)){
-                myNeighbors.add(myGrid[tempRow][tempCol]);
-            }
-        }
-    }
-
-    //generates and sets 8 neighbors
-    //can be called by concrete class implementations
-    protected void generateEightNeighbors(){
-        int[] dRow = new int[] {-1, 0, 1};
-        int[] dCol = new int[] {-1, 0, 1};
-        //System.out.println("Row: " + myRow + " Col: " + myCol);
-        for(int k = 0; k < dRow.length; k++){
-            for(int i = 0; i < dCol.length; i++){
-                int tempRow = dRow[k] + myRow;
-                int tempCol = dCol[i] + myCol;
-
-                //ensures not to add self
-                if(tempRow == myRow && tempCol == myCol){
-                    continue;
-                }
-                else{
-                    if(inBounds(tempRow, tempCol)){
-                        myNeighbors.add(myGrid[tempRow][tempCol]);
-                        //System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
-                    }
-                }
-            }
-
-        }
-        //System.out.println();
-    }
 
     /**
      * Used in WATOR and Segregation to determine if a cell has been claimed for the
@@ -141,14 +103,5 @@ abstract class Cell {
         myNextState = state;
     }
 
-    //checks if indices are within the grid
-    private boolean inBounds(int row, int col){
-        if(row < 0 || row >= myGrid.length){
-            return false;
-        }
-        else if(col < 0 || col >= myGrid[0].length){
-            return false;
-        }
-        return true;
-    }
+
 }
