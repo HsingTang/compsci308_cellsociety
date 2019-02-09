@@ -1,11 +1,15 @@
 package CellSociety;
 //look into enum
 
+import CellSociety.Neighbors.Neighbors;
+import CellSociety.Neighbors.NeighborsSquare;
+import CellSociety.Neighbors.NeighborsTriangle;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-abstract class Cell {
+public abstract class Cell {
     protected String myCurrentState;
     protected String myNextState;
     protected int myCol;
@@ -14,6 +18,9 @@ abstract class Cell {
     protected List<Cell> myNeighbors;
     protected Cell[][] myGrid;
     protected List<String> myStates;
+
+    private final String SQUARE = "Square";
+    private final String TRIANGLE = "Triangle";
 
     /**
      * @author Carrie Hunner (clh87)
@@ -64,53 +71,29 @@ abstract class Cell {
 
 
     /**
-     * This method finds and sets the Cell's neighbors based on the 2D Cell array passed as an argument.
-     * @param cell ArrayList of ArrayList of cells
+     * Used to set the neighbors of the Cell.
+     * @param cell ArrayList of ArrayLists of Cells, makes up the grid of cells
+     * @param neighborIndexes ArrayList of integers corresponding with neighbor indexes
      */
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
-
-    //edgeType capitalized
-    //, ArrayList<Integer> desiredNeighbors, String edgeType
-    abstract public void findNeighbors(Cell[][] cell);
-
-    //generates and sets 4 neighbors
-    //can be called by concrete class implementations
-    protected void generateFourNeighbors(){
-        int[] dRow = new int[] {0, 0, 1, -1};
-        int[] dCol = new int[] {1, -1, 0, 0};
-
-        for(int k = 0; k < dRow.length; k++){
-            int tempRow = dRow[k] + myRow;
-            int tempCol = dCol[k] + myCol;
-
-            if(inBounds(tempRow, tempCol)){
-                myNeighbors.add(myGrid[tempRow][tempCol]);
-            }
+    public void findNeighbors(Cell[][] cell, String shapeType, String edgeType, ArrayList<Integer> neighborIndexes){
+        myGrid = cell;
+        switch(shapeType){
+            case SQUARE:
+                NeighborsSquare squareNeighbors = new NeighborsSquare(myRow, myCol, myGrid);
+                squareNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
+                myNeighbors =  squareNeighbors.getNeighborsList();
+                return;
+            case TRIANGLE:
+                NeighborsTriangle triangleNeighbors = new NeighborsTriangle(myRow, myCol, myGrid);
+                triangleNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
+                myNeighbors = triangleNeighbors.getNeighborsList();
+                return;
         }
+        throw new IllegalArgumentException("Unknown Shape Type");
     }
 
-    //generates and sets 8 neighbors
-    //can be called by concrete class implementations
-    protected void generateEightNeighbors(){
-        int[] dRow = new int[] {-1, 0, 1};
-        int[] dCol = new int[] {-1, 0, 1};
-        //System.out.println("Row: " + myRow + " Col: " + myCol);
-        for(int k = 0; k < dRow.length; k++){
-            for(int i = 0; i < dCol.length; i++){
-                int tempRow = dRow[k] + myRow;
-                int tempCol = dCol[i] + myCol;
-
-                //ensures not to add self
-                if(!isSelf(tempRow, tempCol) && inBounds(tempRow, tempCol)){
-                    myNeighbors.add(myGrid[tempRow][tempCol]);
-                }
-
-            }
-
-        }
-        //System.out.println();
-    }
 
     private boolean isSelf(int tempRow, int tempCol) {
         return tempRow == myRow && tempCol == myCol;
@@ -133,24 +116,5 @@ abstract class Cell {
         myNextState = state;
     }
 
-    //checks if indices are within the grid
-    private boolean inBounds(int row, int col){
-        if(row < 0 || row >= myGrid.length){
-            return false;
-        }
-        else if(col < 0 || col >= myGrid[0].length){
-            return false;
-        }
-        return true;
-    }
 
-    //TODO: write this method
-    /**
-     * Sets the state of the cell.
-     * Used in UI for user input to switch cell states.
-     *
-     */
-    public void setUserSwitchState(){
-
-    }
 }

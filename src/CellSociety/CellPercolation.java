@@ -56,15 +56,4 @@ public class CellPercolation extends Cell {
             }
         }
     }
-
-    /**
-     * Locates and sets the neighbors using the cell array argument.
-     * For Precolation, each cell has eight neighbors.
-     * @param cell 2D int array of Cell objects
-     */
-    @Override
-    public void findNeighbors(Cell[][] cell) {
-        myGrid = cell;
-        generateEightNeighbors();
-    }
 }
