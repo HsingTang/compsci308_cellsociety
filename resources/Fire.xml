@@ -5,6 +5,7 @@
     <Width>50</Width>
     <Height>50</Height>
     <SpecifiedConfig>false</SpecifiedConfig>
+    <NeighborStyle>0;1;3;5;7</NeighborStyle>
     <State>
         <StateName>Burning</StateName>
         <StateImage>Red</StateImage>
