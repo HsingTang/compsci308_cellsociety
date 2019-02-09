@@ -13,7 +13,11 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 
+import java.util.Map;
 import java.util.HashMap;
 
 public class UI extends Scene {
@@ -47,10 +51,10 @@ public class UI extends Scene {
 
     private Group myRoot;
     private Simulation mySimulation;
-    private HashMap<Cell, Rectangle> cellVisMap;
-    HashMap<String, String> stateMap;
-    HashMap<String, Integer> stateNumMap;
-
+    private Map<Cell, Rectangle> cellVisMap;
+    private Map<String, String> stateMap;
+    private Map<String, XYChart.Series> stateSeriesMap;
+    private int stepNum;
 
     public UI(Group root, int width, int height, Simulation s){
         super(root, WINDOW_HEIGHT, WINDOW_WIDTH, BACKGROUND_FILL);
@@ -60,8 +64,9 @@ public class UI extends Scene {
         GRID_ROW_NUM = height;
         CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
         CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
+        stepNum = 0;
         initCellVisMap();
-        initStateNumMap();
+        initGraph();
         setupButtons();
     }
 
@@ -73,20 +78,50 @@ public class UI extends Scene {
     }
 
     public void drawGraph(){
-
-    }
-
-    private void makeGraphData(){
-
-    }
-
-    private void initStateNumMap(){
-        stateNumMap = new HashMap<>();
-        for (String key: stateMap.keySet()){
-            stateNumMap.putIfAbsent(key, 0);
+        for (Map.Entry<String, XYChart.Series> stateSeries: stateSeriesMap.entrySet()){
+            double statePercent = calcCellStatePercentage(stateSeries.getKey());
+            stateSeries.getValue().getData().add(new XYChart.Data(stepNum, statePercent));
         }
-
+        stepNum++;
     }
+
+    private void initGraph(){
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final LineChart<Number, Number> lineChart = new LineChart<>(xAxis,yAxis);
+        xAxis.setLabel("Number of Steps Completed");
+        yAxis.setLabel("Percentage of Cells");
+        lineChart.setTitle("Percentage of Cells in each State vs. Steps Completed");
+        initStateSeriesMap(lineChart);
+    }
+
+    private void initStateSeriesMap(LineChart lineChart){
+        stateSeriesMap = new HashMap<>();
+        for (String state: stateMap.keySet()){
+            XYChart.Series series = new XYChart.Series();
+            series.setName(state);
+            stateSeriesMap.put(state, series);
+            lineChart.getData().add(series);
+        }
+    }
+
+    private HashMap<String, Integer> makeStateNumMap(){
+        HashMap<String, Integer> stateNumMap = new HashMap<>();
+        for (String state: stateMap.keySet()){
+            stateNumMap.putIfAbsent(state, 0);
+        }
+        for (Cell cell: cellVisMap.keySet()){
+            stateNumMap.put(cell.getState(), stateNumMap.get(cell.getState()) + 1);
+        }
+        return stateNumMap;
+    }
+
+    private double calcCellStatePercentage(String state){
+        int numCells = makeStateNumMap().get(state);
+        double percent = numCells/(GRID_COL_NUM * GRID_ROW_NUM);
+        return percent;
+    }
+
     private void initCellVisMap(){
         stateMap = mySimulation.getStateImageMap();
         Cell[][] cells = mySimulation.getGrid();
