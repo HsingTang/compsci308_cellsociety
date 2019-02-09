@@ -6,9 +6,9 @@ import java.util.Random;
 
 public class CellWATOR extends Cell {
 
-    private final String FISH = "Fish";
-    private final String SHARK = "Shark";
-    private final String EMPTY = "Empty";
+    private static final String FISH = "Fish";
+    private static final String SHARK = "Shark";
+    private static final String EMPTY = "Empty";
 
     private double myFishReproTime;
     private double mySharkEnergy;
@@ -91,7 +91,28 @@ public class CellWATOR extends Cell {
                 //System.out.println("\t Turns Survived: " + myTurnsSurvived);
                 ////System.out.println("\t Above Next State: " + myNextState);
                 if(myNextState.equals("")){
-                    setFishNextState();
+                    findEmptyNeighbors();
+                    ////System.out.println("\t Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
+
+                    //can't move
+                    if(myEmptyNeighbors.isEmpty()){
+                        fishStays();
+                        ////System.out.println("\t Above can't move");
+                        ////System.out.println("\t\tFinal Next State: " + myNextState);
+                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+                        return;
+                    }
+                    else{
+                        moveFish();
+                        ////System.out.println("\t about to check for baby");
+                        checkForBaby(FISH);
+                        ////System.out.println("\t\tFinal Next State: " + myNextState);
+                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+                        return;
+                    }
+                }
+                else{
+                    return;
                 }
                 return;
             case SHARK:
@@ -114,7 +135,7 @@ public class CellWATOR extends Cell {
                 }
 
                 //eating fish
-                if(myFishNeighbors.size() != 0){
+                if(!myFishNeighbors.isEmpty()){
                     eatFish();
                     ////System.out.println("\t about to check for baby");
                     checkForBaby(SHARK);
@@ -132,9 +153,22 @@ public class CellWATOR extends Cell {
                 }
                 //can't move
                 else{
-                    sharkStays();
-                    ////System.out.println("\t\tFinal Next State: " + myNextState);
-                    ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+                    //moves to empty space
+                    if(!myEmptyNeighbors.isEmpty()){
+                        moveSharkToEmptyNeighbor();
+                        ////System.out.println("\t about to check for baby");
+                        checkForBaby(SHARK);
+                        ////System.out.println("\t\tFinal Next State: " + myNextState);
+                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+                        return;
+                    }
+                    //can't move
+                    else{
+                        sharkStays();
+                        ////System.out.println("\t\tFinal Next State: " + myNextState);
+                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+                        return;
+                    }
                 }
                 return;
 
@@ -308,15 +342,4 @@ public class CellWATOR extends Cell {
         }
     }
 
-
-    /**
-     * Finds and sets neighbors.
-     * Assumes the cell can have up to four neighbors.
-     * @param cell 2D int array of Cell objects
-     */
-    @Override
-    public void findNeighbors(Cell[][] cell) {
-        myGrid = cell;
-        generateFourNeighbors();
-    }
 }
