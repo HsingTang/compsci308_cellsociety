@@ -309,15 +309,4 @@ public class CellWATOR extends Cell {
         }
     }
 
-
-    /**
-     * Finds and sets neighbors.
-     * Assumes the cell can have up to four neighbors.
-     * @param cell 2D int array of Cell objects
-     */
-    @Override
-    public void findNeighbors(Cell[][] cell) {
-        myGrid = cell;
-        generateFourNeighbors();
-    }
 }

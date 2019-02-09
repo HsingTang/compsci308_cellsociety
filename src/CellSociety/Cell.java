@@ -77,8 +77,9 @@ abstract class Cell {
         myGrid = cell;
         switch(shapeType){
             case SQUARE:
-                NeighborsSquare neighborsSquare = new NeighborsSquare(myRow, myCol, myGrid);
-                neighborsSquare.initializeEdgeAndIndexes(edgeType, neighborIndexes);
+                NeighborsSquare neighbors = new NeighborsSquare(myRow, myCol, myGrid);
+                neighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
+                myNeighbors =  neighbors.getNeighborsList();
             case TRIANGLE:
         }
         throw new IllegalArgumentException("Unknown Shape Type");
