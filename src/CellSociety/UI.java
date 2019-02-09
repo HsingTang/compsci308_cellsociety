@@ -56,7 +56,7 @@ public class UI extends Scene {
     private Map<String, XYChart.Series> stateSeriesMap;
     private int stepNum;
 
-    public UI(Group root, int width, int height, Simulation s){
+    public UI(Group root, int width, int height, String cellShape, Simulation s){
         super(root, WINDOW_HEIGHT, WINDOW_WIDTH, BACKGROUND_FILL);
         this.mySimulation = s;
         myRoot = root;
@@ -66,8 +66,7 @@ public class UI extends Scene {
         CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
         stepNum = 0;
         initCellVisMap();
-        initGraph();
-        setupButtons();
+        setupLayout();
     }
 
     public void drawGrid(){
@@ -85,7 +84,7 @@ public class UI extends Scene {
         stepNum++;
     }
 
-    private void initGraph(){
+    private LineChart<Number, Number> addGraph(){
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         final LineChart<Number, Number> lineChart = new LineChart<>(xAxis,yAxis);
@@ -93,6 +92,7 @@ public class UI extends Scene {
         yAxis.setLabel("Percentage of Cells");
         lineChart.setTitle("Percentage of Cells in each State vs. Steps Completed");
         initStateSeriesMap(lineChart);
+        return lineChart;
     }
 
     private void initStateSeriesMap(LineChart lineChart){
@@ -141,7 +141,7 @@ public class UI extends Scene {
         }
     }
 
-    private void setupButtons(){
+    private void setupLayout(){
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         borderPane.setRight(addVBox());
@@ -172,8 +172,10 @@ public class UI extends Scene {
         hbox.setPadding(new Insets(HBOX_BUFFER_TOP, HBOX_BUFFER_SIDE, HBOX_BUFFER_TOP, HBOX_BUFFER_SIDE));
         hbox.setSpacing(HBOX_BUFFER_BUTTON);
         hbox.setStyle("-fx-background-color: #84eeff");
+        hbox.getChildren().add(addGraph());
         return hbox;
     }
+
 
     private Button resetButton(){
         Button resetButton = new Button("Reset");
@@ -223,7 +225,6 @@ public class UI extends Scene {
             String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
             String simFileName = simulationType;
             mySimulation.switchSimulation(simFileName);
-            mySimulation.initGrid();
         });
         return switchSimulationDropdown;
     }
