@@ -5,6 +5,9 @@
     <Width>50</Width>
     <Height>50</Height>
     <SpecifiedConfig>false</SpecifiedConfig>
+    <CellShape>Rectangle</CellShape>
+    <EdgeStyle>Toroidal</EdgeStyle>
+    <NeighborStyle>0;1;2;3;4;5;6;7</NeighborStyle>
     <State>
         <StateName>Fish</StateName>
         <StateImage>Blue</StateImage>
