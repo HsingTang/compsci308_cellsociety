@@ -87,7 +87,7 @@ public abstract class Cell {
      */
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
-    public void findNeighbors(Cell[][] cell, String shapeType, String edgeType, ArrayList<Integer> neighborIndexes){
+    public void findNeighbors(Cell[][] cell, String shapeType, String edgeType, List<Integer> neighborIndexes){
         myGrid = cell;
         switch(shapeType){
             case SQUARE:

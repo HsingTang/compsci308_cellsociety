@@ -4,13 +4,14 @@ import CellSociety.Cell;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 abstract public class Neighbors {
     protected int myRow;
     protected int myCol;
     protected Cell[][] myGrid;
 
-    protected ArrayList<Integer> myNeighborIndexes;
+    protected List<Integer> myNeighborIndexes;
     protected String myEdgeType;
 
     protected ArrayList<Cell> myNeighbors;
@@ -31,7 +32,7 @@ abstract public class Neighbors {
      * @param edgeType String indicating the edge type (finite, toroidal)
      * @param neighborIndexes ArrayList of Indexes corresponding to desired neighbors
      */
-    public void initializeEdgeAndIndexes(String edgeType, ArrayList<Integer> neighborIndexes){
+    public void initializeEdgeAndIndexes(String edgeType, List<Integer> neighborIndexes){
         if(isValidEdgeType(edgeType)){
             myEdgeType = edgeType;
         }
