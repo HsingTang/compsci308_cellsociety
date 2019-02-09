@@ -1,11 +1,13 @@
 package CellSociety;
 //look into enum
 
+import CellSociety.Neighbors.NeighborsSquare;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-abstract class Cell {
+public abstract class Cell {
     protected String myCurrentState;
     protected String myNextState;
     protected int myCol;

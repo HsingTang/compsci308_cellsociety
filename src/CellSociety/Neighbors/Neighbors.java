@@ -1,4 +1,6 @@
-package CellSociety;
+package CellSociety.Neighbors;
+
+import CellSociety.Cell;
 
 import java.util.ArrayList;
 import java.util.HashMap;

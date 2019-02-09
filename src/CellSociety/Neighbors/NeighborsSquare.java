@@ -1,11 +1,13 @@
-package CellSociety;
+package CellSociety.Neighbors;
+
+import CellSociety.Cell;
 
 import java.util.ArrayList;
 
 public class NeighborsSquare extends Neighbors {
 
 
-    NeighborsSquare(int row, int col, Cell[][] grid) {
+    public NeighborsSquare(int row, int col, Cell[][] grid) {
         super(row, col, grid);
     }
 
