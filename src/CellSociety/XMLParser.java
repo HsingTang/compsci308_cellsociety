@@ -27,25 +27,25 @@ import static java.util.Map.entry;
  */
 public class XMLParser {
     // Immutable file path and XML tags for parsing file
-    private final String ALERT_CONFIG_PATH = "resources/XMLAlertText.txt";
-    private final String SIM_TYPE_TAG = "Type";
-    private final String TITLE_TAG = "Title";
-    private final String AUTHOR_TAG = "Author";
-    private final String WIDTH_TAG = "Width";
-    private final String HEIGHT_TAG = "Height";
-    private final String CONFIG_TAG = "SpecifiedConfig";
-    private final String CELL_SHAPE_TAG = "CellShape";
-    private final String CELL_NEIGHBOR_TAG = "NeighborStyle";
-    private final String EDGE_TAG = "EdgeStyle";
-    private final String STATE_TAG = "State";
-    private final String STATE_NAME_TAG = "StateName";
-    private final String STATE_IMG_TAG = "StateImage";
-    private final String STATE_PERCENT_TAG = "StatePercentage";
-    private final String PARAMETER_TAG = "Parameter";
-    private final String CELL_TAG = "Cell";
-    private final String CELL_ROW_TAG = "Row";
-    private final String CELL_COL_TAG = "Col";
-    private final String CELL_STATE_TAG = "CellState";
+    static final String ALERT_CONFIG_PATH = "resources/XMLAlertText.txt";
+    static final String SIM_TYPE_TAG = "Type";
+    static final String TITLE_TAG = "Title";
+    static final String AUTHOR_TAG = "Author";
+    static final String WIDTH_TAG = "Width";
+    static final String HEIGHT_TAG = "Height";
+    static final String CONFIG_TAG = "SpecifiedConfig";
+    static final String CELL_SHAPE_TAG = "CellShape";
+    static final String CELL_NEIGHBOR_TAG = "NeighborStyle";
+    static final String EDGE_TAG = "EdgeStyle";
+    static final String STATE_TAG = "State";
+    static final String STATE_NAME_TAG = "StateName";
+    static final String STATE_IMG_TAG = "StateImage";
+    static final String STATE_PERCENT_TAG = "StatePercentage";
+    static final String PARAMETER_TAG = "Parameter";
+    static final String CELL_TAG = "Cell";
+    static final String CELL_ROW_TAG = "Row";
+    static final String CELL_COL_TAG = "Col";
+    static final String CELL_STATE_TAG = "CellState";
     private final Map<String, Integer> VALID_CELL_SHAPE_MAXNEIGHBOR = Map.ofEntries(
             entry("Rectangle", 8),
             entry("Triangle", 12));
@@ -93,9 +93,10 @@ public class XMLParser {
 
     /**
      * Constructor of the XMLParser
+     *
      * @param f the file to parse
      * @throws Exception ParserConfigurationException to be handled in Simulation class,
-     *                  which will terminate the program and print error message to console
+     *                   which will terminate the program and print error message to console
      */
     public XMLParser(File f) throws Exception {
         try {
@@ -127,7 +128,9 @@ public class XMLParser {
             this.parseCellNeighbor();
             this.parseState();
             this.parseParam();
-            this.parseCell();
+            if (this.specConfig) {
+                this.parseCell();
+            }
         }
 
     }
@@ -136,6 +139,7 @@ public class XMLParser {
     /**
      * Set up error messages of XMLAlert
      * Alert dialogue boxes will pop up if an XML configuration file is mal-formatted
+     *
      * @throws IOException if the source file storing error message text is not found
      */
     private void setupAlert() throws IOException {
@@ -150,6 +154,7 @@ public class XMLParser {
 
     /**
      * Pop up an XMLAlert's dialogue box and set flag for notifying Simulation of the parsing failure
+     *
      * @param a the corresponding XMLAlert to pop up
      */
     private void callAlert(XMLAlert a) {
@@ -168,9 +173,9 @@ public class XMLParser {
         }
         // Error case: exception handling
         catch (SAXException e) {
-            throw new SAXException("SAX Exception occurs",e);
+            throw new SAXException("SAX Exception occurs", e);
         } catch (IOException e) {
-            throw new IOException("IO Exception occurs",e);
+            throw new IOException("IO Exception occurs", e);
         }
     }
 
@@ -224,6 +229,7 @@ public class XMLParser {
     /**
      * Parse the flag indicating whether cells initial states are explicitly defined in file
      * or should be randomly generated based on distribution percentage
+     *
      * @return
      */
     private boolean parseSpecConfig() {
@@ -245,8 +251,9 @@ public class XMLParser {
         NodeList shapeNode = this.mySimRoot.getElementsByTagName(CELL_SHAPE_TAG);
         if (shapeNode.getLength() != 0) {
             String shape = shapeNode.item(0).getTextContent();
-            if (VALID_CELL_SHAPE_MAXNEIGHBOR.keySet().contains(shape))
+            if (VALID_CELL_SHAPE_MAXNEIGHBOR.keySet().contains(shape)) {
                 myCellShape = shape;
+            }
         }
     }
 
@@ -259,8 +266,9 @@ public class XMLParser {
         NodeList edgeNode = this.mySimRoot.getElementsByTagName(EDGE_TAG);
         if (edgeNode.getLength() != 0) {
             String edge = edgeNode.item(0).getTextContent();
-            if (VALID_EDGE_TYPE.contains(edge))
+            if (VALID_EDGE_TYPE.contains(edge)) {
                 myEdgeType = edge;
+            }
         }
     }
 
@@ -275,13 +283,13 @@ public class XMLParser {
             String[] neighborsInString = neighborNode.item(0).getTextContent().split(";");
             for (String s : neighborsInString) {
                 Integer neighborIdx = Integer.valueOf(s);
-                if (neighborIdx >= VALID_CELL_SHAPE_MAXNEIGHBOR.get(myCellShape)){
+                if (neighborIdx >= VALID_CELL_SHAPE_MAXNEIGHBOR.get(myCellShape)) {
                     callAlert(neighborErrAlert);
                     return;
                 }
                 neighbors.add(neighborIdx);
             }
-        }else{
+        } else {
             callAlert(neighborErrAlert);
         }
     }
@@ -315,7 +323,7 @@ public class XMLParser {
             }
         }
         // Error case: number of states does not match state percentage map size
-        if (stateImage.keySet().size() != statePercent.keySet().size() && statePercent.keySet().size() != 0) {
+        if (stateImage.keySet().size() != statePercent.keySet().size() && statePercent.keySet().isEmpty()) {
             callAlert(stateErrAlert);
         }
     }
@@ -340,29 +348,25 @@ public class XMLParser {
     private void parseCell() {
         NodeList cellList = this.mySimRoot.getElementsByTagName(CELL_TAG);
         // Error case: file parsing specification does not match cell info
-        if(!this.specConfig){
-            return;
-        }else if (cellList.getLength() == 0 && this.specConfig) {
+        if (cellList.getLength() == 0) {
             callAlert(cellConfigAlert);
             return;
         }
         for (int i = 0; i < cellList.getLength(); i++) {
-            Node cellNode = cellList.item(i);
+            Node currCellNode = cellList.item(i);
             // Error case: missing cell information
-            if (((Element) cellNode).getElementsByTagName(CELL_ROW_TAG).getLength() == 0
-                    || (((Element) cellNode).getElementsByTagName(CELL_COL_TAG).getLength() == 0)
-                    || ((Element) cellNode).getElementsByTagName(CELL_STATE_TAG).getLength() == 0) {
+            if (!validateCellInfo(currCellNode)) {
                 callAlert(cellInfoAlert);
                 return;
             }
-            int currRow = Integer.valueOf(((Element) cellNode).getElementsByTagName(CELL_ROW_TAG).item(0).getTextContent());
-            int currCol = Integer.valueOf(((Element) cellNode).getElementsByTagName(CELL_COL_TAG).item(0).getTextContent());
+            int currRow = Integer.valueOf(((Element) currCellNode).getElementsByTagName(CELL_ROW_TAG).item(0).getTextContent());
+            int currCol = Integer.valueOf(((Element) currCellNode).getElementsByTagName(CELL_COL_TAG).item(0).getTextContent());
             // Error case: cell index out of bounds
-            if (currRow < 0 || currCol < 0 || currRow >= myHeight || currCol >= myWidth) {
+            if (!validateCellIdx(currRow, currCol)) {
                 callAlert(cellIdxAlert);
                 return;
             }
-            String currState = ((Element) cellNode).getElementsByTagName(CELL_STATE_TAG).item(0).getTextContent();
+            String currState = ((Element) currCellNode).getElementsByTagName(CELL_STATE_TAG).item(0).getTextContent();
             // Error case: invalid cell state configuration
             if (!this.stateImage.containsKey(currState)) {
                 callAlert(cellStateAlert);
@@ -374,6 +378,31 @@ public class XMLParser {
         if (cellState.keySet().size() != myWidth * myHeight) {
             callAlert(cellInfoAlert);
         }
+    }
+
+
+    /**
+     * Check whether cell's row/column indices and initial state are all given
+     *
+     * @param cellNode the current cell to validate
+     * @return boolean value indicating information valid or not
+     */
+    private boolean validateCellInfo(Node cellNode) {
+        return ((Element) cellNode).getElementsByTagName(CELL_ROW_TAG).getLength() == 0
+                || ((Element) cellNode).getElementsByTagName(CELL_COL_TAG).getLength() == 0
+                || ((Element) cellNode).getElementsByTagName(CELL_STATE_TAG).getLength() == 0;
+    }
+
+
+    /**
+     * Check whether cell's row/column indices are out of bounds of the grid
+     *
+     * @param row row index of the cell
+     * @param col column index of the cell
+     * @return boolean value indicating validity of the cell's indices
+     */
+    private boolean validateCellIdx(int row, int col) {
+        return row < 0 || col < 0 || row >= myHeight || col >= myWidth;
     }
 
 
@@ -414,7 +443,7 @@ public class XMLParser {
      * @return String indicating the cell's visualization shape
      * Can be Rectangle or Triangle
      */
-    public String getCellShape(){
+    public String getCellShape() {
         return this.myCellShape;
     }
 
@@ -423,7 +452,7 @@ public class XMLParser {
      * @return String indicating the edge type
      * Can be Finite or Toroidal
      */
-    public String getEdgeType(){
+    public String getEdgeType() {
         return this.myEdgeType;
     }
 
@@ -455,7 +484,7 @@ public class XMLParser {
     /**
      * @return immutable list defining "neighbors" of a cell in the grid with location-based indices
      */
-    public List<Integer> getNeighbors(){
+    public List<Integer> getNeighbors() {
         return Collections.unmodifiableList(this.neighbors);
     }
 
@@ -499,7 +528,6 @@ public class XMLParser {
     public boolean isSpecConfig() {
         return this.specConfig;
     }
-
 
 
 //    public class XMLException extends RuntimeException {

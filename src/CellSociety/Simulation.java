@@ -24,19 +24,23 @@ import static java.lang.Math.ceil;
  * Respond to user action of playing/resuming/stepping/switching simulation
  */
 public class Simulation extends Application {
+<<<<<<< HEAD
+    static final String configFilePath = "resources/SimulationConfig.txt";
+    static final String GOL_XML = "Game of Life";
+    static final String WATOR_XML = "WaTor";
+    static final String FIRE_XML = "RPS";
+    static final String SEG_XML = "Segregation";
+    static final String PERC_XML = "Percolation";
+    static final String RPS_XML = "RPS";
+=======
 
     private final String configFilePath = "resources/SimulationConfig.txt";
+>>>>>>> 050adf6adf3931bba916196596f90840a6d7288c
     private int myWidth;
     private int myHeight;
     private double delay;
     private double distributionAccuracy;
     private String myTitle;
-    final String GOL_XML = "Game of Life";
-    final String WATOR_XML = "WaTor";
-    final String FIRE_XML = "RPS";
-    final String SEG_XML = "Segregation";
-    final String PERC_XML = "Percolation";
-    final String RPS_XML = "RPS";
     private List<String> SIM_TYPE_LIST = new ArrayList<>();
     private Map<String,Integer> SIM_PARAM_NUM = new HashMap<>();
     private Map<String,Integer> SIM_STATE_NUM = new HashMap<>();
@@ -63,13 +67,13 @@ public class Simulation extends Application {
      * Constructor of a Simulation object
      * Call readConfig() to set up the Simulation class with specific parameters
      */
-    public Simulation(){
+    public Simulation() throws FileNotFoundException{
         super();
         try{
             readConfig();
         }catch (FileNotFoundException e){
             System.out.println("Simulation configuration file not found.");
-            exit();
+            throw e;
         }
     }
 
@@ -135,7 +139,9 @@ public class Simulation extends Application {
      * Then pipeline to the next step of creating UI scene for displaying visualization
      */
     private void initGrid() {
-        if(!readXML()){
+        try{readXML();}
+        catch (Exception e){
+            myParser.parserConfigAlert.showAlert();
             return;
         }
         myGrid = new Cell[myHeight][myWidth];
@@ -178,9 +184,9 @@ public class Simulation extends Application {
         if(statePercentMap.size()==0){
             stateList.addAll(stateImageMap.keySet());
         }else{
-            for (String state : statePercentMap.keySet()) {
-                for (int i = 0; i < ceil(statePercentMap.get(state) * distributionAccuracy); i++) {
-                    stateList.add(state);
+            for (Map.Entry<String,Double> entry : statePercentMap.entrySet()) {
+                for (int i = 0; i < ceil(entry.getValue() * distributionAccuracy); i++) {
+                    stateList.add(entry.getKey());
                 }
             }
         }
@@ -267,7 +273,7 @@ public class Simulation extends Application {
     /**
      * Read XML file containing simulation parameters
      */
-    private boolean readXML() {
+    private boolean readXML() throws Exception{
         String myFilePath;
         if(SIM_TYPE_LIST.contains(SIM_TYPE)){
             myFilePath = "resources/"+SIM_TYPE+".xml";
@@ -278,8 +284,7 @@ public class Simulation extends Application {
         try{
             myParser= new XMLParser(f);
         }catch (Exception e){
-            myParser.parserConfigAlert.showAlert();
-            return false;
+            throw e;
         }
         if(!validateSimulation(myParser)) {
             return false;
