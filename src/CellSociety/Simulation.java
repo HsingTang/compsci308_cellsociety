@@ -24,6 +24,7 @@ import static java.lang.Math.ceil;
  * Respond to user action of playing/resuming/stepping/switching simulation
  */
 public class Simulation extends Application {
+
     private final String configFilePath = "resources/SimulationConfig.txt";
     private int myWidth;
     private int myHeight;
