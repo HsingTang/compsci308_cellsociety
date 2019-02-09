@@ -75,8 +75,8 @@ public class XMLParser {
     // private variables for storing parsing results
     private DocumentBuilder myDBuilder;
     private String mySimulationType = "";
-    private String mySimulationTitle = "";
-    private String myAuthor = "";
+    //private String mySimulationTitle = "";
+    //private String myAuthor = "";
     private String myCellShape = "Rectangle";
     private String myEdgeType = "Finite";
     private Element mySimRoot;
@@ -121,8 +121,8 @@ public class XMLParser {
         if (this.mySimRoot != null) {
             this.parseSimConfig();
             specConfig = this.parseSpecConfig();
-            this.parseTitle();
-            this.parseAuthor();
+            //this.parseTitle();
+            //this.parseAuthor();
             this.parseCellShape();
             this.parseEdgeType();
             this.parseCellNeighbor();
@@ -204,26 +204,26 @@ public class XMLParser {
     }
 
 
-    /**
-     * Parse the title of the simulation configuration file
-     */
-    private void parseTitle() {
-        NodeList titleNode = this.mySimRoot.getElementsByTagName(TITLE_TAG);
-        if (titleNode.getLength() != 0) {
-            mySimulationTitle = titleNode.item(0).getTextContent();
-        }
-    }
-
-
-    /**
-     * Parse the file's author name
-     */
-    private void parseAuthor() {
-        NodeList authorNode = this.mySimRoot.getElementsByTagName(AUTHOR_TAG);
-        if (authorNode.getLength() != 0) {
-            myAuthor = authorNode.item(0).getTextContent();
-        }
-    }
+//    /**
+//     * Parse the title of the simulation configuration file
+//     */
+//    private void parseTitle() {
+//        NodeList titleNode = this.mySimRoot.getElementsByTagName(TITLE_TAG);
+//        if (titleNode.getLength() != 0) {
+//            mySimulationTitle = titleNode.item(0).getTextContent();
+//        }
+//    }
+//
+//
+//    /**
+//     * Parse the file's author name
+//     */
+//    private void parseAuthor() {
+//        NodeList authorNode = this.mySimRoot.getElementsByTagName(AUTHOR_TAG);
+//        if (authorNode.getLength() != 0) {
+//            myAuthor = authorNode.item(0).getTextContent();
+//        }
+//    }
 
 
     /**

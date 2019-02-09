@@ -135,11 +135,11 @@ public class Simulation extends Application {
      * Initialize the grid of cells of a specific concrete cell class and set each cell's initial state
      * Then pipeline to the next step of creating UI scene for displaying visualization
      */
-    private void initGrid() {
+    private void initGrid() throws Exception{
         try{readXML();}
         catch (Exception e){
             myParser.parserConfigAlert.showAlert();
-            return;
+            throw e;
         }
         myGrid = new Cell[myHeight][myWidth];
         initStateList();
@@ -366,9 +366,14 @@ public class Simulation extends Application {
      * Reset all cell states according to XML file's configuration
      * and still remain in the same simulation model
      */
-    public void resetSimulation() {
+    public void resetSimulation() throws Exception{
         this.myTimeline.pause();
-        initGrid();
+        try {
+            initGrid();
+        }catch (Exception e){
+            System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
+            throw e;
+        }
     }
 
 
@@ -377,10 +382,16 @@ public class Simulation extends Application {
      * and reinitializing all Cells in the grid
      * @param newSimType path to the XML file for the new Simulation
      */
-    public void switchSimulation(String newSimType) {
+    public void switchSimulation(String newSimType) throws Exception{
         this.myTimeline.stop();
         this.setSimType(newSimType);
-        initGrid();
+        try{
+            initGrid();
+        }catch (Exception e){
+            System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
+            throw e;
+        }
+
     }
 
 
