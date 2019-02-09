@@ -22,6 +22,8 @@ public abstract class Cell {
     private final String SQUARE = "Square";
     private final String TRIANGLE = "Triangle";
 
+    private int myNumUserCalls;
+
     /**
      * @author Carrie Hunner (clh87)
      *
@@ -40,6 +42,7 @@ public abstract class Cell {
         myNeighbors = new ArrayList<>();
         myParams = parameters;
         myNextState = "";
+        myNumUserCalls = 0;
 
         myStates = new ArrayList<>();
         initializeStatesList();
@@ -65,8 +68,15 @@ public abstract class Cell {
      * Updates the cell's current state to its next state
      */
     public void updateState(){
-        myCurrentState = myNextState;
-        myNextState = "";       //can be used in concrete classes to check if a nextState has been set
+        if(!myNextState.equals("")){
+            myCurrentState = myNextState;
+            myNextState = "";       //can be used in concrete classes to check if a nextState has been set
+        }
+        else {
+            //likely occurs when user switches state
+            throw new IllegalStateException("Next State never initialized");
+        }
+
     }
 
 
@@ -112,5 +122,9 @@ public abstract class Cell {
         myNextState = state;
     }
 
+    public void userSwitchState(){
+        int rem = myNumUserCalls % (myStates.size() - 1);
+        myCurrentState = myStates.get(rem);
+    }
 
 }
