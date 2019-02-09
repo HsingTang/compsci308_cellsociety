@@ -12,8 +12,11 @@ abstract class Cell {
     protected int myRow;
     protected List<Double> myParams;
     protected List<Cell> myNeighbors;
-    protected Cell[][] myGrid;
+    protected ArrayList<ArrayList<Cell>> myGrid;
     protected List<String> myStates;
+
+    private final String SQUARE = "Square";
+    private final String TRIANGLE = "Triangle";
 
     /**
      * @author Carrie Hunner (clh87)
@@ -64,12 +67,19 @@ abstract class Cell {
 
 
     /**
-     * This method finds and sets the Cell's neighbors based on the 2D Cell array passed as an argument.
-     * @param cell 2D int array of Cell objects
+     * Used to set the neighbors of the Cell.
+     * @param cell ArrayList of ArrayLists of Cells, makes up the grid of cells
+     * @param neighborIndexes ArrayList of integers corresponding with neighbor indexes
      */
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
-    abstract public void findNeighbors(Cell[][] cell);
+    public void findNeighbors(ArrayList<ArrayList<Cell>> cell, ArrayList<Integer> neighborIndexes, String edgeType, String shapeType){
+        myGrid = cell;
+        switch(shapeType){
+            case SQUARE:
+
+        }
+    }
 
     //generates and sets 4 neighbors
     //can be called by concrete class implementations
