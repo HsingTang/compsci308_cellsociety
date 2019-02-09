@@ -28,60 +28,14 @@ public class NeighborsSquare extends Neighbors {
                 if (tempRow == myRow && tempCol == myCol) {
                     continue;
                 }
-                if (inBounds(tempRow, tempCol)) {
-                    ArrayList<Integer> temp = new ArrayList<>();
-                    temp.add(tempRow);
-                    temp.add(tempCol);
-
-                    myIndexMap.put(key, temp);
-                    //System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
-                } else {
-                    if (myEdgeType.equals(TOROIDAL)) {
-                        myIndexMap.put(key, findToroidalCoords(tempRow, tempCol));
-                    }
-                }
+                handleEdgesAndAddCoords(key, tempRow, tempCol);
 
             }
 
         }
     }
 
-    private ArrayList<Integer> findToroidalCoords(int row, int col) {
-        int wrappedRow;
-        int wrappedCol;
 
-        if (row >= myGrid.length) {
-            wrappedRow = row - myGrid.length;
-        } else if (row < 0) {
-            wrappedRow = myGrid.length + row;
-        } else {
-            throw new IndexOutOfBoundsException("Row was within bounds of the grid");
-        }
 
-        if (col >= myGrid[0].length) {
-            wrappedCol = col - myGrid[0].length;
-        } else if (col < 0) {
-            wrappedCol = myGrid[0].length + col;
-        } else {
-            throw new IndexOutOfBoundsException("Col was within bounds of grid");
-        }
 
-        ArrayList<Integer> coords = new ArrayList<>();
-        coords.add(wrappedRow);
-        coords.add(wrappedCol);
-        return coords;
-    }
-
-    @Override
-    protected void setDesiredNeighbors() {
-        for (Integer index : myNeighborIndexes) {
-            if (myIndexMap.containsKey(index)) {
-                ArrayList<Integer> coords = myIndexMap.get(index);
-                int row = coords.get(0);
-                int col = coords.get(1);
-
-                myNeighbors.add(myGrid[row][col]);
-            }
-        }
-    }
 }

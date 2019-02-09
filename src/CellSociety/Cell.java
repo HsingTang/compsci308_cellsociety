@@ -1,7 +1,9 @@
 package CellSociety;
 //look into enum
 
+import CellSociety.Neighbors.Neighbors;
 import CellSociety.Neighbors.NeighborsSquare;
+import CellSociety.Neighbors.NeighborsTriangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,13 +81,17 @@ public abstract class Cell {
         myGrid = cell;
         switch(shapeType){
             case SQUARE:
-                NeighborsSquare neighbors = new NeighborsSquare(myRow, myCol, myGrid);
-                neighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
-                myNeighbors =  neighbors.getNeighborsList();
+                NeighborsSquare squareNeighbors = new NeighborsSquare(myRow, myCol, myGrid);
+                squareNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
+                myNeighbors =  squareNeighbors.getNeighborsList();
+                return;
             case TRIANGLE:
+                NeighborsTriangle triangleNeighbors = new NeighborsTriangle(myRow, myCol, myGrid);
+                triangleNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
+                myNeighbors = triangleNeighbors.getNeighborsList();
+                return;
         }
         throw new IllegalArgumentException("Unknown Shape Type");
-
     }
 
 
