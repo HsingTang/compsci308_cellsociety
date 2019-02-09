@@ -21,7 +21,7 @@
         <StateImage>Yellow</StateImage>
     </State>
     <Cell>
-        <Row>0</Row>
+
         <Col>0</Col>
         <CellState>Burning</CellState>
     </Cell>

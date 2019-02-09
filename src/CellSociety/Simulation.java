@@ -63,6 +63,7 @@ public class Simulation extends Application {
     private List<Double> parametersList;
     private List<String> stateList;
     private Map<List<Integer>,String> cellState;
+    private XMLParser myParser;
 
     public Simulation(){
         // constructor, do something here
@@ -208,16 +209,13 @@ public class Simulation extends Application {
      */
     public boolean validateSimulation(XMLParser parser){
         if(!SIM_TYPE_LIST.contains(parser.getSimType())){
-            XMLAlert myAlert = XMLAlert.SimTypeAlert;
-            myAlert.showAlert();
+            myParser.modelErrAlert.showAlert();
             return false;
         }else if(SIM_PARAM_NUM.get(parser.getSimType())!=parser.getParameters().size()){
-            XMLAlert myAlert = XMLAlert.SimParamAlert;
-            myAlert.showAlert();
+            myParser.paramErrAlert.showAlert();
             return false;
         }else if(SIM_STATE_NUM.get(parser.getSimType())!=parser.getStateImg().keySet().size()){
-            XMLAlert myAlert = XMLAlert.SimStateAlert;
-            myAlert.showAlert();
+            myParser.stateErrAlert.showAlert();
             return false;
         }else if(!parser.isParseSuccess()){
             return false;
@@ -238,7 +236,12 @@ public class Simulation extends Application {
             myFilePath = SIM_TYPE;
         }
         File f = new File(myFilePath);
-        XMLParser myParser = new XMLParser(f);
+        try{
+            myParser= new XMLParser(f);
+        }catch (Exception e){
+            myParser.parserConfigAlert.showAlert();
+            return false;
+        }
         if(!validateSimulation(myParser)) {
             return false;
         }
