@@ -11,31 +11,30 @@ public class NeighborsSquare extends Neighbors {
 
     @Override
     protected void setIndexMap() {
-        int[] dRow = new int[] {-1, 0, 1};
-        int[] dCol = new int[] {-1, 0, 1};
+        int[] dRow = new int[]{-1, 0, 1};
+        int[] dCol = new int[]{-1, 0, 1};
 
         Integer key = -1;
         //System.out.println("Row: " + myRow + " Col: " + myCol);
-        for(int k = 0; k < dRow.length; k++){
-            for(int i = 0; i < dCol.length; i++){
+        for (int k = 0; k < dRow.length; k++) {
+            for (int i = 0; i < dCol.length; i++) {
                 key++;
                 int tempRow = dRow[k] + myRow;
                 int tempCol = dCol[i] + myCol;
 
                 //ensures not to add self
-                if(tempRow == myRow && tempCol == myCol){
+                if (tempRow == myRow && tempCol == myCol) {
                     continue;
                 }
-                if(inBounds(tempRow, tempCol)){
+                if (inBounds(tempRow, tempCol)) {
                     ArrayList<Integer> temp = new ArrayList<>();
                     temp.add(tempRow);
                     temp.add(tempCol);
 
                     myIndexMap.put(key, temp);
                     //System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
-                }
-                else{
-                    if(myEdgeType.equals(TOROIDAL)){
+                } else {
+                    if (myEdgeType.equals(TOROIDAL)) {
                         myIndexMap.put(key, findToroidalCoords(tempRow, tempCol));
                     }
                 }
@@ -45,28 +44,23 @@ public class NeighborsSquare extends Neighbors {
         }
     }
 
-    private ArrayList<Integer> findToroidalCoords(int row, int col){
+    private ArrayList<Integer> findToroidalCoords(int row, int col) {
         int wrappedRow;
         int wrappedCol;
 
-        if(row >= myGrid.length){
+        if (row >= myGrid.length) {
             wrappedRow = row - myGrid.length;
-        }
-
-        else if(row < 0){
+        } else if (row < 0) {
             wrappedRow = myGrid.length + row;
-        }
-        else{
+        } else {
             throw new IndexOutOfBoundsException("Row was within bounds of the grid");
         }
 
-        if(col >= myGrid[0].length){
+        if (col >= myGrid[0].length) {
             wrappedCol = col - myGrid[0].length;
-        }
-        else if(col < 0){
+        } else if (col < 0) {
             wrappedCol = myGrid[0].length + col;
-        }
-        else{
+        } else {
             throw new IndexOutOfBoundsException("Col was within bounds of grid");
         }
 
@@ -77,13 +71,15 @@ public class NeighborsSquare extends Neighbors {
     }
 
     @Override
-    protected void setNeighbors() {
-        for(Integer index : myNeighborIndexes){
-            ArrayList<Integer> coords = myIndexMap.get(index);
-            int row = coords.get(0);
-            int col = coords.get(1);
+    protected void setDesiredNeighbors() {
+        for (Integer index : myNeighborIndexes) {
+            if (myIndexMap.containsKey(index)) {
+                ArrayList<Integer> coords = myIndexMap.get(index);
+                int row = coords.get(0);
+                int col = coords.get(1);
 
-            myNeighbors.add(myGrid[row][col]);
+                myNeighbors.add(myGrid[row][col]);
+            }
         }
     }
 }

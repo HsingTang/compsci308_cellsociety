@@ -42,7 +42,7 @@ abstract public class Neighbors {
 
     public ArrayList<Cell> getNeighborsList(){
         setIndexMap();
-        setNeighbors();
+        setDesiredNeighbors();
 
         return myNeighbors;
     }
@@ -70,7 +70,7 @@ abstract public class Neighbors {
 
     abstract protected void setIndexMap();
 
-    abstract protected void setNeighbors();
+    abstract protected void setDesiredNeighbors();
 
 
 }
