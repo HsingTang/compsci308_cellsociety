@@ -5,6 +5,8 @@
     <Width>50</Width>
     <Height>50</Height>
     <SpecifiedConfig>false</SpecifiedConfig>
+    <CellShape>Triangle</CellShape>
+    <NeighborStyle>0;1;10;11</NeighborStyle>
     <State>
         <StateName>Group1</StateName>
         <StateImage>Red</StateImage>

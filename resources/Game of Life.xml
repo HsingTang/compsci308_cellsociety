@@ -5,6 +5,7 @@
     <Width>50</Width>
     <Height>50</Height>
     <SpecifiedConfig>false</SpecifiedConfig>
+    <NeighborStyle>0;2;4;6</NeighborStyle>
     <State>
         <StateName>Dead</StateName>
         <StateImage>Blue</StateImage>

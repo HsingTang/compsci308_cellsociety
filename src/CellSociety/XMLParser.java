@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static java.util.Map.entry;
+
 /**
  * @author Robert C. Duvall
  * @author Rhondu Smithwick
@@ -24,6 +26,7 @@ import java.util.*;
  * and public methods for returning information to caller
  */
 public class XMLParser {
+    // Immutable file path and XML tags for parsing file
     private final String ALERT_CONFIG_PATH = "resources/XMLAlertText.txt";
     private final String SIM_TYPE_TAG = "Type";
     private final String TITLE_TAG = "Title";
@@ -31,6 +34,9 @@ public class XMLParser {
     private final String WIDTH_TAG = "Width";
     private final String HEIGHT_TAG = "Height";
     private final String CONFIG_TAG = "SpecifiedConfig";
+    private final String CELL_SHAPE_TAG = "CellShape";
+    private final String CELL_NEIGHBOR_TAG = "NeighborStyle";
+    private final String EDGE_TAG = "EdgeStyle";
     private final String STATE_TAG = "State";
     private final String STATE_NAME_TAG = "StateName";
     private final String STATE_IMG_TAG = "StateImage";
@@ -40,7 +46,15 @@ public class XMLParser {
     private final String CELL_ROW_TAG = "Row";
     private final String CELL_COL_TAG = "Col";
     private final String CELL_STATE_TAG = "CellState";
-    // private File myFile;
+    private final Map<String, Integer> VALID_CELL_SHAPE_MAXNEIGHBOR = Map.ofEntries(
+            entry("Rectangle", 8),
+            entry("Triangle", 12));
+    private final List<String> VALID_EDGE_TYPE = List.of(
+            "Finite",
+            "Toroidal");
+
+    // XMLAlerts to pop up when encountering mal-formatted XML file
+    // package-private variables
     XMLAlert fileNotFoundAlert = new XMLAlert();
     XMLAlert parserConfigAlert = new XMLAlert();
     XMLAlert SAXAlert = new XMLAlert();
@@ -48,20 +62,23 @@ public class XMLParser {
     XMLAlert modelErrAlert = new XMLAlert();
     XMLAlert paramErrAlert = new XMLAlert();
     XMLAlert configErrAlert = new XMLAlert();
+    XMLAlert neighborErrAlert = new XMLAlert();
     XMLAlert stateErrAlert = new XMLAlert();
     XMLAlert cellIdxAlert = new XMLAlert();
     XMLAlert cellStateAlert = new XMLAlert();
     XMLAlert cellConfigAlert = new XMLAlert();
     XMLAlert cellInfoAlert = new XMLAlert();
-    final XMLAlert[] myAlertArr = new XMLAlert[]{fileNotFoundAlert, parserConfigAlert, SAXAlert,
-            gridErrAlert,modelErrAlert, paramErrAlert, configErrAlert, stateErrAlert, cellIdxAlert, cellStateAlert,
-            cellConfigAlert, cellInfoAlert};
+    private XMLAlert[] myAlertArr = new XMLAlert[]{fileNotFoundAlert, parserConfigAlert, SAXAlert, gridErrAlert,
+            modelErrAlert, paramErrAlert, configErrAlert, neighborErrAlert, stateErrAlert, cellIdxAlert,
+            cellStateAlert, cellConfigAlert, cellInfoAlert};
 
-
+    // private variables for storing parsing results
     private DocumentBuilder myDBuilder;
     private String mySimulationType = "";
     private String mySimulationTitle = "";
     private String myAuthor = "";
+    private String myCellShape = "Rectangle";
+    private String myEdgeType = "Finite";
     private Element mySimRoot;
     private Integer myWidth;
     private Integer myHeight;
@@ -69,11 +86,17 @@ public class XMLParser {
     private HashMap<String, Double> statePercent = new HashMap<>();
     private HashMap<List<Integer>, String> cellState = new HashMap<>();
     private ArrayList<Double> parameters = new ArrayList<>();
+    private ArrayList<Integer> neighbors = new ArrayList<>();
     private boolean specConfig = false;
     private boolean parseSuccess = true;
 
 
-
+    /**
+     * Constructor of the XMLParser
+     * @param f the file to parse
+     * @throws Exception ParserConfigurationException to be handled in Simulation class,
+     *                  which will terminate the program and print error message to console
+     */
     public XMLParser(File f) throws Exception {
         try {
             setupAlert();
@@ -84,21 +107,24 @@ public class XMLParser {
             this.myDBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             // Error case: ParserConfigurationException handling
-            throw new Exception("ParserConfigurationException occurs",e);
+            throw new Exception("ParserConfigurationException occurs", e);
         }
-        try{
+        try {
             this.mySimRoot = getRootElement(f);
-        }catch (SAXException e){
+        } catch (SAXException e) {
             callAlert(SAXAlert);
-        }catch (IOException e){
+        } catch (IOException e) {
             callAlert(fileNotFoundAlert);
         }
 
         if (this.mySimRoot != null) {
             this.parseSimConfig();
-            this.parseSpecConfig();
+            specConfig = this.parseSpecConfig();
             this.parseTitle();
             this.parseAuthor();
+            this.parseCellShape();
+            this.parseEdgeType();
+            this.parseCellNeighbor();
             this.parseState();
             this.parseParam();
             this.parseCell();
@@ -107,25 +133,33 @@ public class XMLParser {
     }
 
 
+    /**
+     * Set up error messages of XMLAlert
+     * Alert dialogue boxes will pop up if an XML configuration file is mal-formatted
+     * @throws IOException if the source file storing error message text is not found
+     */
     private void setupAlert() throws IOException {
         Scanner sc = new Scanner(new File(ALERT_CONFIG_PATH));
         int idx = 0;
-        while (sc.hasNextLine()&&idx<myAlertArr.length) {
+        while (sc.hasNextLine() && idx < myAlertArr.length) {
             String[] alertText = sc.nextLine().split(";");
-            myAlertArr[idx].setText(alertText[0],alertText[1],alertText[2]);
+            myAlertArr[idx].setText(alertText[0], alertText[1], alertText[2]);
             idx++;
         }
     }
 
-
-    private void callAlert(XMLAlert a){
+    /**
+     * Pop up an XMLAlert's dialogue box and set flag for notifying Simulation of the parsing failure
+     * @param a the corresponding XMLAlert to pop up
+     */
+    private void callAlert(XMLAlert a) {
         a.showAlert();
         this.parseSuccess = false;
     }
 
 
     // Get root element of an XML file
-    private Element getRootElement(File xmlFile) throws IOException,SAXException {
+    private Element getRootElement(File xmlFile) throws IOException, SAXException {
         Document myDoc;
         myDBuilder.reset();
         try {
@@ -134,13 +168,17 @@ public class XMLParser {
         }
         // Error case: exception handling
         catch (SAXException e) {
-            throw e;
+            throw new SAXException("SAX Exception occurs",e);
         } catch (IOException e) {
-            throw e;
+            throw new IOException("IO Exception occurs",e);
         }
     }
 
 
+    /**
+     * Parse the simulation's type, grid width and grid height
+     * Display alert dialogue box if information is missing
+     */
     private void parseSimConfig() {
         NodeList simTypeNode = this.mySimRoot.getElementsByTagName(SIM_TYPE_TAG);
         // Error case: missing simulation type information
@@ -161,6 +199,9 @@ public class XMLParser {
     }
 
 
+    /**
+     * Parse the title of the simulation configuration file
+     */
     private void parseTitle() {
         NodeList titleNode = this.mySimRoot.getElementsByTagName(TITLE_TAG);
         if (titleNode.getLength() != 0) {
@@ -169,6 +210,9 @@ public class XMLParser {
     }
 
 
+    /**
+     * Parse the file's author name
+     */
     private void parseAuthor() {
         NodeList authorNode = this.mySimRoot.getElementsByTagName(AUTHOR_TAG);
         if (authorNode.getLength() != 0) {
@@ -177,21 +221,75 @@ public class XMLParser {
     }
 
 
-    private void parseSpecConfig() {
+    /**
+     * Parse the flag indicating whether cells initial states are explicitly defined in file
+     * or should be randomly generated based on distribution percentage
+     * @return
+     */
+    private boolean parseSpecConfig() {
         NodeList specNode = this.mySimRoot.getElementsByTagName(CONFIG_TAG);
         // Error case: Missing file parsing specification info
         if (specNode.getLength() == 0) {
             callAlert(configErrAlert);
-            return;
+            return false;
         }
-        if (specNode.item(0).getTextContent().equals("true")) {
-            this.specConfig = true;
-        } else {
-            this.specConfig = false;
+        return Boolean.valueOf(specNode.item(0).getTextContent());
+    }
+
+
+    /**
+     * Parse the cell's visualization shape: Rectangle or Triangle
+     * Defaulted to Rectangle
+     */
+    private void parseCellShape() {
+        NodeList shapeNode = this.mySimRoot.getElementsByTagName(CELL_SHAPE_TAG);
+        if (shapeNode.getLength() != 0) {
+            String shape = shapeNode.item(0).getTextContent();
+            if (VALID_CELL_SHAPE_MAXNEIGHBOR.keySet().contains(shape))
+                myCellShape = shape;
         }
     }
 
 
+    /**
+     * Parse the grid's edge type: Finite or Toroidal
+     * Defaulted to Finite
+     */
+    private void parseEdgeType() {
+        NodeList edgeNode = this.mySimRoot.getElementsByTagName(EDGE_TAG);
+        if (edgeNode.getLength() != 0) {
+            String edge = edgeNode.item(0).getTextContent();
+            if (VALID_EDGE_TYPE.contains(edge))
+                myEdgeType = edge;
+        }
+    }
+
+
+    /**
+     * Parse the configuration of neighboring cells for a cell
+     * Neighbors are numbered by integers (0-7 for Rectangle shape; 0-11 for Triangle shape) and stored in a list
+     */
+    private void parseCellNeighbor() {
+        NodeList neighborNode = this.mySimRoot.getElementsByTagName(CELL_NEIGHBOR_TAG);
+        if (neighborNode.getLength() != 0) {
+            String[] neighborsInString = neighborNode.item(0).getTextContent().split(";");
+            for (String s : neighborsInString) {
+                Integer neighborIdx = Integer.valueOf(s);
+                if (neighborIdx >= VALID_CELL_SHAPE_MAXNEIGHBOR.get(myCellShape)){
+                    callAlert(neighborErrAlert);
+                    return;
+                }
+                neighbors.add(neighborIdx);
+            }
+        }else{
+            callAlert(neighborErrAlert);
+        }
+    }
+
+
+    /**
+     * Parse the names, associated visualization colors, and percentage distribution of the states in this simulation
+     */
     private void parseState() {
         NodeList stateList = this.mySimRoot.getElementsByTagName(STATE_TAG);
         // Error case: missing state information
@@ -223,6 +321,9 @@ public class XMLParser {
     }
 
 
+    /**
+     * Parse any possible parameter for this simulation (e.g. threshold, cell reproduce time, etc.)
+     */
     private void parseParam() {
         NodeList paramList = this.mySimRoot.getElementsByTagName(PARAMETER_TAG);
         for (int i = 0; i < paramList.getLength(); i++) {
@@ -232,13 +333,17 @@ public class XMLParser {
     }
 
 
+    /**
+     * Parse cell's initial state if specConfig flag is raised
+     * All cells' states are stored in a map and associated with row/column indices
+     */
     private void parseCell() {
         NodeList cellList = this.mySimRoot.getElementsByTagName(CELL_TAG);
         // Error case: file parsing specification does not match cell info
-        if ((cellList.getLength() != 0 && !this.specConfig) || (cellList.getLength() == 0 && this.specConfig)) {
-            callAlert(cellConfigAlert);
+        if(!this.specConfig){
             return;
-        } else if (!this.specConfig) {
+        }else if (cellList.getLength() == 0 && this.specConfig) {
+            callAlert(cellConfigAlert);
             return;
         }
         for (int i = 0; i < cellList.getLength(); i++) {
@@ -272,53 +377,129 @@ public class XMLParser {
     }
 
 
+    /**
+     * @return a string indicating the simulation type
+     * Can be Fire, Game of Life, Percolation, Segregation, WaTor, RPS
+     */
     public String getSimType() {
         return this.mySimulationType;
     }
 
-    public Element getSimRoot() {
-        return this.mySimRoot;
+
+//    /**
+//     * @return the root for parsing XML file
+//     */
+//    public Element getSimRoot() {
+//        return this.mySimRoot;
+//    }
+//
+//
+//    /**
+//     * @return title of the XML configuration document
+//     */
+//    public String getSimTitle() {
+//        return this.mySimulationTitle;
+//    }
+//
+//
+//    /**
+//     * @return Author of the XML configuration document
+//     */
+//    public String getAuthor() {
+//        return this.myAuthor;
+//    }
+
+
+    /**
+     * @return String indicating the cell's visualization shape
+     * Can be Rectangle or Triangle
+     */
+    public String getCellShape(){
+        return this.myCellShape;
     }
 
-    public String getSimTitle() {
-        return this.mySimulationTitle;
+
+    /**
+     * @return String indicating the edge type
+     * Can be Finite or Toroidal
+     */
+    public String getEdgeType(){
+        return this.myEdgeType;
     }
 
-    public String getAuthor() {
-        return this.myAuthor;
-    }
 
+    /**
+     * @return immutable map indicating the visualization color for each state
+     */
     public Map<String, String> getStateImg() {
         return Collections.unmodifiableMap(this.stateImage);
     }
 
+
+    /**
+     * @return immutable map indicating the percentage (if any) associated with each state in initial configuration
+     */
     public Map<String, Double> getStatePercent() {
         return Collections.unmodifiableMap(this.statePercent);
     }
 
+
+    /**
+     * @return immutable list storing simulation-specific parameters
+     */
     public List<Double> getParameters() {
         return Collections.unmodifiableList(this.parameters);
     }
 
+
+    /**
+     * @return immutable list defining "neighbors" of a cell in the grid with location-based indices
+     */
+    public List<Integer> getNeighbors(){
+        return Collections.unmodifiableList(this.neighbors);
+    }
+
+
+    /**
+     * @return immutable list explicitly defining the initial state of each cell
+     */
+    public Map<List<Integer>, String> getCellState() {
+        return Collections.unmodifiableMap(this.cellState);
+    }
+
+
+    /**
+     * @return Integer indicating number of cells per row in the grid
+     */
     public Integer getWidth() {
         return this.myWidth;
     }
 
+
+    /**
+     * @return Integer indicating number of cells per column in the grid
+     */
     public Integer getHeight() {
         return this.myHeight;
     }
 
+
+    /**
+     * @return boolean flag indicating whether the XML parsing process is completed successfully
+     */
     public boolean isParseSuccess() {
         return this.parseSuccess;
     }
 
+
+    /**
+     * @return boolean flag indicating whether cells' initial states are explicitly defined in the XML file
+     * Simulation will assign cell states completely randomly or based on distribution percentage if this flag is false
+     */
     public boolean isSpecConfig() {
         return this.specConfig;
     }
 
-    public Map<List<Integer>, String> getCellState() {
-        return this.cellState;
-    }
 
 
 //    public class XMLException extends RuntimeException {
