@@ -65,17 +65,4 @@ public class CellFire extends Cell {
         }
     }
 
-    /**
-     * Finds and sets neighbors.
-     * Assumes the cell can have up to four neighbors.
-     * @param cell 2D int array of Cell objects
-     */
-    @Override
-    public void findNeighbors(Cell[][] cell) {
-        myGrid = cell;
-        generateFourNeighbors();
-        if(myNeighbors.size() < 4){
-            myCurrentState = EMPTY;
-        }
-    }
 }
