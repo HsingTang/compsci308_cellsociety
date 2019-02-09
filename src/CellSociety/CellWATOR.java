@@ -25,6 +25,18 @@ public class CellWATOR extends Cell {
     private List<CellWATOR> myFishNeighbors;
     private CellWATOR myNextLocCell;
 
+    /**
+     * @author Carrie Hunner (clh87)
+     *
+     * @param row int index of the row of the cell in a grid of cells that will be passed through
+     *            when setting neighbors
+     * @param col int index of the column of the cell in a grid of cells that will be passed through when]
+     *            setting the neighbors
+     * @param initialState String indicating the initial state of the cell
+     * @param parameters ArrayList of doubles containing the turns it takes for a fish to reproduce,
+     *                   the turns it takes for a shark to reproduce, the initial energy of a shark,
+     *                   and the energy a shark gets by eating a fish
+     */
     CellWATOR(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
 
@@ -79,29 +91,9 @@ public class CellWATOR extends Cell {
                 //System.out.println("\t Turns Survived: " + myTurnsSurvived);
                 ////System.out.println("\t Above Next State: " + myNextState);
                 if(myNextState.equals("")){
-                    findEmptyNeighbors();
-                    ////System.out.println("\t Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
-
-                    //can't move
-                    if(myEmptyNeighbors.size() == 0){
-                        fishStays();
-                        ////System.out.println("\t Above can't move");
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
-                    else{
-                        moveFish();
-                        ////System.out.println("\t about to check for baby");
-                        checkForBaby(FISH);
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
+                    setFishNextState();
                 }
-                else{
-                    return;
-                }
+                return;
             case SHARK:
                 //System.out.println(myCurrentState + " at Row: " + myRow + " Col: " + myCol);
                 //System.out.println("\t Turns Survived: " + myTurnsSurvived);
@@ -130,29 +122,48 @@ public class CellWATOR extends Cell {
                     ////System.out.println("\t\tFinal Current State: " + myCurrentState);
                 }
                 //no fish to eat
-                else{
-                    //moves to empty space
-                    if(myEmptyNeighbors.size() != 0){
-                        moveSharkToEmptyNeighbor();
-                        ////System.out.println("\t about to check for baby");
-                        checkForBaby(SHARK);
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
-                    //can't move
-                    else{
-                        sharkStays();
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
+                //moves to empty space
+                else if(myEmptyNeighbors.size() != 0){
+                    moveSharkToEmptyNeighbor();
+                    ////System.out.println("\t about to check for baby");
+                    checkForBaby(SHARK);
+                    ////System.out.println("\t\tFinal Next State: " + myNextState);
+                    ////System.out.println("\t\tFinal Current State: " + myCurrentState);
                 }
+                //can't move
+                else{
+                    sharkStays();
+                    ////System.out.println("\t\tFinal Next State: " + myNextState);
+                    ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+                }
+                return;
 
             case EMPTY:
                 if(myNextState.equals("")){
                     myNextState = EMPTY;
                 }
+        }
+    }
+
+    private void setFishNextState() {
+        findEmptyNeighbors();
+        ////System.out.println("\t Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
+
+        //can't move
+        if(myEmptyNeighbors.size() == 0){
+            fishStays();
+            ////System.out.println("\t Above can't move");
+            ////System.out.println("\t\tFinal Next State: " + myNextState);
+            ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+            return;
+        }
+        else{
+            moveFish();
+            ////System.out.println("\t about to check for baby");
+            checkForBaby(FISH);
+            ////System.out.println("\t\tFinal Next State: " + myNextState);
+            ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+            return;
         }
     }
 

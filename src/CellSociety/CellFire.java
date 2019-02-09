@@ -13,6 +13,16 @@ public class CellFire extends Cell {
 
     private double myProbBurning;
 
+    /**
+     * @author Carrie Hunner (clh87)
+     *
+     * @param row int index of the row of the cell in a grid of cells that will be passed through
+     *            when setting neighbors
+     * @param col int index of the column of the cell in a grid of cells that will be passed through when]
+     *            setting the neighbors
+     * @param initialState String indicating the initial state of the cell
+     * @param parameters ArrayList of doubles containing the probability of a tree catching on fire
+     */
     CellFire(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
         myProbBurning = parameters.get(0);
@@ -64,5 +74,8 @@ public class CellFire extends Cell {
     public void findNeighbors(Cell[][] cell) {
         myGrid = cell;
         generateFourNeighbors();
+        if(myNeighbors.size() < 4){
+            myCurrentState = EMPTY;
+        }
     }
 }

@@ -8,7 +8,16 @@ public class CellPercolation extends Cell {
     private final String PERCOLATED = "Percolated";
 
 
-
+    /**
+     * @author Carrie Hunner (clh87)
+     *
+     * @param row int index of the row of the cell in a grid of cells that will be passed through
+     *            when setting neighbors
+     * @param col int index of the column of the cell in a grid of cells that will be passed through when]
+     *            setting the neighbors
+     * @param initialState String indicating the initial state of the cell
+     * @param parameters empty arraylist that is not needed for this concrete implementation
+     */
     CellPercolation(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
     }
