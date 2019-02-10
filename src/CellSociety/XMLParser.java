@@ -47,7 +47,7 @@ public class XMLParser {
     static final String CELL_COL_TAG = "Col";
     static final String CELL_STATE_TAG = "CellState";
     private final Map<String, Integer> VALID_CELL_SHAPE_MAXNEIGHBOR = Map.ofEntries(
-            entry("Rectangle", 8),
+            entry("Square", 8),
             entry("Triangle", 12));
     private final List<String> VALID_EDGE_TYPE = List.of(
             "Finite",
@@ -77,7 +77,7 @@ public class XMLParser {
     private String mySimulationType = "";
     //private String mySimulationTitle = "";
     //private String myAuthor = "";
-    private String myCellShape = "Rectangle";
+    private String myCellShape = "Square";
     private String myEdgeType = "Finite";
     private Element mySimRoot;
     private Integer myWidth;
