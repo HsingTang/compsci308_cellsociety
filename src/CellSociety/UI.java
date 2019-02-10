@@ -1,11 +1,10 @@
 package CellSociety;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -20,9 +19,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+
+import java.util.*;
 
 public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 600;
@@ -55,6 +53,7 @@ public class UI extends Scene {
     private Map<String, String> stateMap;
     private Map<String, XYChart.Series> stateSeriesMap;
     private int stepNum;
+    private List<Double> parametersList = new ArrayList<>();
 
     public UI(Group root, int width, int height, String cellShape, Simulation s){
         super(root, WINDOW_HEIGHT, WINDOW_WIDTH, BACKGROUND_FILL);
@@ -200,8 +199,9 @@ public class UI extends Scene {
                 speedLabel(),
                 speedSlider(),
                 stepButton(),
-                switchSimulationDropdown()
-        );
+                switchSimulationDropdown());
+        vbox.getChildren().add(paramSliderLabel());
+        vbox.getChildren().addAll(paramSliders());
         return vbox;
     }
 
@@ -274,6 +274,29 @@ public class UI extends Scene {
         Button stepButton = new Button(myResources.getString("StepButton"));
         stepButton.setOnMouseClicked(e -> mySimulation.stepSimulation());
         return stepButton;
+    }
+
+    private List<Slider> paramSliders(){
+        List<Slider> sliders = new ArrayList<>();
+        for(Double param: parametersList){
+            Slider slider = new Slider();
+            slider.setMin(0);
+            slider.setMax(1);
+            slider.setValue(param);
+            slider.setShowTickLabels(true);
+            slider.setShowTickMarks(true);
+            slider.setMajorTickUnit(0.5);
+            slider.setMinorTickCount(10);
+            slider.setBlockIncrement(0.01);
+            slider.valueProperty().addListener(e -> parametersList.set(parametersList.indexOf(param), slider.getValue()));
+            sliders.add(slider);
+        }
+        return sliders;
+    }
+
+    private Label paramSliderLabel(){
+        Label paramSlider = new Label(myResources.getString("ParamSlider"));
+        return paramSlider;
     }
 
     private ComboBox switchSimulationDropdown(){
