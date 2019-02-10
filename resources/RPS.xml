@@ -5,65 +5,68 @@
     <Width>3</Width>
     <Height>3</Height>
     <SpecifiedConfig>true</SpecifiedConfig>
-    <CellShape>Triangle</CellShape>
+    <CellShape>Rectangle</CellShape>
     <EdgeStyle>Finite</EdgeStyle>
-    <NeighborStyle>0;1;2;3;4;5</NeighborStyle>
+    <NeighborStyle>0;1;2;3;4;5;6;7</NeighborStyle>
     <State>
-        <StateName>Rock</StateName>
+        <StateName>White</StateName>
+        <StateImage>White</StateImage>
+    </State>
+    <State>
+        <StateName>Red</StateName>
         <StateImage>Red</StateImage>
     </State>
     <State>
-        <StateName>Paper</StateName>
+        <StateName>Green</StateName>
         <StateImage>Green</StateImage>
     </State>
     <State>
-        <StateName>Scissor</StateName>
-        <StateImage>blue</StateImage>
+        <StateName>Blue</StateName>
+        <StateImage>Blue</StateImage>
     </State>
     <Cell>
         <Row>0</Row>
         <Col>0</Col>
-        <CellState>Rock</CellState>
+        <CellState>Red</CellState>
     </Cell>
     <Cell>
         <Row>0</Row>
         <Col>1</Col>
-        <CellState>Paper</CellState>
+        <CellState>Blue</CellState>
     </Cell>
     <Cell>
         <Row>0</Row>
         <Col>2</Col>
-        <CellState>Scissor</CellState>
+        <CellState>Green</CellState>
     </Cell>
     <Cell>
         <Row>1</Row>
         <Col>0</Col>
-        <CellState>Scissor</CellState>
+        <CellState>Blue</CellState>
     </Cell>
     <Cell>
         <Row>1</Row>
         <Col>1</Col>
-        <CellState>Rock</CellState>
+        <CellState>Red</CellState>
     </Cell>
     <Cell>
         <Row>1</Row>
         <Col>2</Col>
-        <CellState>Paper</CellState>
+        <CellState>Green</CellState>
     </Cell>
     <Cell>
         <Row>2</Row>
         <Col>0</Col>
-        <CellState>Paper</CellState>
+        <CellState>Green</CellState>
     </Cell>
     <Cell>
         <Row>2</Row>
         <Col>1</Col>
-        <CellState>Rock</CellState>
+        <CellState>Green</CellState>
     </Cell>
     <Cell>
         <Row>2</Row>
         <Col>2</Col>
-        <CellState>Scissor</CellState>
+        <CellState>Red</CellState>
     </Cell>
-    <Parameter>0.75</Parameter>
 </Simulation>
