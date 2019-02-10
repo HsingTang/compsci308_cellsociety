@@ -3,7 +3,7 @@ cell society
 
 This project implements a cellular automata simulator.
 
-Names:
+Names: Hsing Tang, Irene Qiao, Carrie Hunner
 
 ### Timeline
 
@@ -14,7 +14,10 @@ Finish Date:
 Hours Spent:
 
 ### Primary Roles
-
+Hsing Tang: Configuration
+Irene Qiao - Visualization: 
+Carrie Hunner - Simulation: Created the cell
+classes and the neighbor classes.
 
 ### Resources Used
 
@@ -40,6 +43,10 @@ triangle cells.
 Our program currently allows either finite or toroidal edge types.
 * Implement additional simulations:
 We implemented the RPS simulation.
+
+#Configuration
+
+#Visualization
 
 
 Assumptions or Simplifications:
