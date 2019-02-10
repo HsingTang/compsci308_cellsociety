@@ -12,6 +12,7 @@ import javafx.stage.PopupWindow;
 import javafx.stage.Window;
 
 import java.io.File;
+import java.security.spec.ECField;
 import java.util.ResourceBundle;
 
 public class IntroScene extends Scene {
@@ -26,31 +27,38 @@ public class IntroScene extends Scene {
     private Simulation mySimulation;
     private Group myRoot;
 
-    public IntroScene(Group root, double width, double height, Simulation s){ //width and height params unused
+    public IntroScene(Group root, double width, double height, Simulation s) throws Exception{ //width and height params unused
         super(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         myRoot = root;
         this.mySimulation = s;
         myResources = ResourceBundle.getBundle("/resources/English");
-        setupButtons();
+        try{
+            setupButtons();
+        }
+        catch (Exception e){
+            System.out.println("XMLParserConfigurationException occurred at simulation");
+            throw e;
+        }
     }
 
     private void setupButtons(){
-        BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        borderPane.setStyle("-fx-background-color: #a3beff");
-        borderPane.setLeft(addVBoxLeft());
-        borderPane.setRight(addVBoxRight());
-        myRoot.getChildren().add(borderPane);
+
+            BorderPane borderPane = new BorderPane();
+            borderPane.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+            borderPane.setStyle("-fx-background-color: #a3beff");
+            borderPane.setLeft(addVBoxLeft());
+            borderPane.setRight(addVBoxRight());
+            myRoot.getChildren().add(borderPane);
     }
 
     private VBox addVBoxLeft(){
-        VBox vbox = new VBox();
-        vbox.setStyle("-fx-background-color: #b5f7ff");
-        vbox.setPadding(new Insets(VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE, VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE));
+            VBox vbox = new VBox();
+            vbox.setStyle("-fx-background-color: #b5f7ff");
+            vbox.setPadding(new Insets(VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE, VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE));
 
-        vbox.setSpacing(BUTTONS_VBUFFER);
-        vbox.getChildren().addAll(fireSimButton(), GOLSimButton(), PercSimButton());
-        return vbox;
+            vbox.setSpacing(BUTTONS_VBUFFER);
+            vbox.getChildren().addAll(fireSimButton(), GOLSimButton(), PercSimButton());
+            return vbox;
     }
 
     private VBox addVBoxRight(){
@@ -64,24 +72,27 @@ public class IntroScene extends Scene {
 
     private Button fireSimButton(){
         Button fireSimButton = new Button(myResources.getString("Fire"));
-        fireSimButton.setOnMouseClicked(e -> {
-            mySimulation.switchSimulation(mySimulation.FIRE_XML);
-        });
+            fireSimButton.setOnMouseClicked(e -> {
+                mySimulation.setSimType(mySimulation.FIRE_XML);
+                mySimulation.startSimulation();
+            });
         return fireSimButton;
     }
 
     private Button GOLSimButton(){
         Button GOLSimButton = new Button(myResources.getString("GOL"));
-        GOLSimButton.setOnMouseClicked(e -> {
-            mySimulation.switchSimulation(mySimulation.GOL_XML);
-        });
+            GOLSimButton.setOnMouseClicked(e -> {
+                mySimulation.setSimType(mySimulation.GOL_XML);
+                mySimulation.startSimulation();
+            });
         return GOLSimButton;
     }
 
     private Button PercSimButton(){
         Button PercSimButton = new Button(myResources.getString("Perc"));
         PercSimButton.setOnMouseClicked(e -> {
-            mySimulation.switchSimulation(mySimulation.PERC_XML);
+            mySimulation.setSimType(mySimulation.PERC_XML);
+            mySimulation.startSimulation();
         });
         return PercSimButton;
     }
@@ -89,7 +100,8 @@ public class IntroScene extends Scene {
     private Button SegSimButton(){
         Button SegSimButton = new Button(myResources.getString("Seg"));
         SegSimButton.setOnMouseClicked(e -> {
-            mySimulation.switchSimulation(mySimulation.SEG_XML);
+            mySimulation.setSimType(mySimulation.SEG_XML);
+            mySimulation.startSimulation();
         });
         return SegSimButton;
     }
@@ -97,7 +109,8 @@ public class IntroScene extends Scene {
     private Button WaTorSimButton(){
         Button WaTorSimButton = new Button(myResources.getString("WaTor"));
         WaTorSimButton.setOnMouseClicked(e -> {
-            mySimulation.switchSimulation(mySimulation.WATOR_XML);
+            mySimulation.setSimType(mySimulation.WATOR_XML);
+            mySimulation.startSimulation();
         });
         return WaTorSimButton;
     }
@@ -124,7 +137,8 @@ public class IntroScene extends Scene {
                 || file.toString().equals(mySimulation.SEG_XML)
                 || file.toString().equals(mySimulation.PERC_XML
     )){
-            mySimulation.switchSimulation(file.toString());
+            mySimulation.setSimType(file.toString());
+            mySimulation.startSimulation();
         }
         else {
             badDataAlert();

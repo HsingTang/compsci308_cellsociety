@@ -1,44 +1,72 @@
 <Simulation>
     <Type>RPS</Type>
-    <Title>Fire_01</Title>
+    <Title>RPS_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>2</Width>
-    <Height>2</Height>
+    <Width>3</Width>
+    <Height>3</Height>
     <SpecifiedConfig>true</SpecifiedConfig>
-    <CellShape>Triangle</CellShape>
+    <CellShape>Rectangle</CellShape>
     <EdgeStyle>Finite</EdgeStyle>
-    <NeighborStyle>0;1;2;3;4;5</NeighborStyle>
+    <NeighborStyle>0;1;2;3;4;5;6;7</NeighborStyle>
     <State>
-        <StateName>Burning</StateName>
+        <StateName>White</StateName>
+        <StateImage>White</StateImage>
+    </State>
+    <State>
+        <StateName>Red</StateName>
         <StateImage>Red</StateImage>
     </State>
     <State>
-        <StateName>Tree</StateName>
+        <StateName>Green</StateName>
         <StateImage>Green</StateImage>
     </State>
     <State>
-        <StateName>Empty</StateName>
-        <StateImage>Yellow</StateImage>
+        <StateName>Blue</StateName>
+        <StateImage>Blue</StateImage>
     </State>
     <Cell>
         <Row>0</Row>
         <Col>0</Col>
-        <CellState>Burning</CellState>
+        <CellState>Red</CellState>
     </Cell>
     <Cell>
         <Row>0</Row>
         <Col>1</Col>
-        <CellState>Empty</CellState>
+        <CellState>Blue</CellState>
+    </Cell>
+    <Cell>
+        <Row>0</Row>
+        <Col>2</Col>
+        <CellState>Green</CellState>
     </Cell>
     <Cell>
         <Row>1</Row>
         <Col>0</Col>
-        <CellState>Empty</CellState>
+        <CellState>Blue</CellState>
     </Cell>
     <Cell>
         <Row>1</Row>
         <Col>1</Col>
-        <CellState>Tree</CellState>
+        <CellState>Red</CellState>
     </Cell>
-    <Parameter>0.75</Parameter>
+    <Cell>
+        <Row>1</Row>
+        <Col>2</Col>
+        <CellState>Green</CellState>
+    </Cell>
+    <Cell>
+        <Row>2</Row>
+        <Col>0</Col>
+        <CellState>Green</CellState>
+    </Cell>
+    <Cell>
+        <Row>2</Row>
+        <Col>1</Col>
+        <CellState>Green</CellState>
+    </Cell>
+    <Cell>
+        <Row>2</Row>
+        <Col>2</Col>
+        <CellState>Red</CellState>
+    </Cell>
 </Simulation>
