@@ -24,7 +24,6 @@ public class CellSegregation extends Cell {
     CellSegregation(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
         setParams(parameters);
-
     }
 
     /**
