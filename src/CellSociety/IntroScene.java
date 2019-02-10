@@ -31,18 +31,11 @@ public class IntroScene extends Scene {
         super(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         myRoot = root;
         this.mySimulation = s;
-        myResources = ResourceBundle.getBundle("/resources/English");
-        try{
-            setupButtons();
-        }
-        catch (Exception e){
-            System.out.println("XMLParserConfigurationException occurred at simulation");
-            throw e;
-        }
+        myResources = ResourceBundle.getBundle("English");
+        setupButtons();
     }
 
     private void setupButtons(){
-
             BorderPane borderPane = new BorderPane();
             borderPane.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
             borderPane.setStyle("-fx-background-color: #a3beff");
