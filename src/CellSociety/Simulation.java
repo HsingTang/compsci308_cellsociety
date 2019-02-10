@@ -227,7 +227,7 @@ public class Simulation extends Application {
     private void initUI() {
         Group myUIRoot = new Group();
         //myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
-        myUIScene = new UI(myUIRoot, myWidth, myHeight, cellShape, this);
+        myUIScene = new UI(myUIRoot, myWidth, myHeight, cellShape, parametersList, this);
         myUIScene.drawGrid();
         myStage.setScene(myUIScene);
         myStage.show();
@@ -335,6 +335,21 @@ public class Simulation extends Application {
 
 
     /**
+     * Public method which is expected to be called from IntroScene after user has selected a simulation model
+     * @throws Exception when XMLParserConfigurationException occurs and print error message to console
+     */
+    public void startSimulation() throws Exception{
+        try{
+            initGrid();
+        }catch (Exception e){
+            System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
+            throw e;
+        }
+        this.myTimeline.play();
+    }
+
+
+    /**
      * Pause the simulation
      * Expected to be called by UI when a pause button is pressed
      */
@@ -365,6 +380,7 @@ public class Simulation extends Application {
     /**
      * Reset all cell states according to XML file's configuration
      * and still remain in the same simulation model
+     * @throws Exception when XMLParserConfigurationException occurs and print error message to console
      */
     public void resetSimulation() throws Exception{
         this.myTimeline.pause();
@@ -381,6 +397,7 @@ public class Simulation extends Application {
      * Switch to the other simulation model by reading the corresponding XML file
      * and reinitializing all Cells in the grid
      * @param newSimType path to the XML file for the new Simulation
+     * @throws Exception when XMLParserConfigurationException occurs and print error message to console
      */
     public void switchSimulation(String newSimType) throws Exception{
         this.myTimeline.stop();
