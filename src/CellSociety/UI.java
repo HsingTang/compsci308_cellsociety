@@ -4,11 +4,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
@@ -54,9 +52,9 @@ public class UI extends Scene {
     private Map<String, String> stateMap;
     private Map<String, XYChart.Series> stateSeriesMap;
     private int stepNum;
-    private List<Double> parametersList = new ArrayList<>();
+    private List<Double> parametersList;
 
-    public UI(Group root, int width, int height, String cellShape, Simulation s){
+    public UI(Group root, int width, int height, String cellShape, List<Double> paramList, Simulation s){
         super(root, WINDOW_HEIGHT, WINDOW_WIDTH, BACKGROUND_FILL);
         this.mySimulation = s;
         myRoot = root;
@@ -71,6 +69,7 @@ public class UI extends Scene {
                 myResources.getString("Perc"),
                 myResources.getString("Seg"),
                 myResources.getString("WaTor"));
+        parametersList = paramList;
         initStartingCoordinates(cellShape);
         stepNum = 0;
         initCellVisMap();
@@ -265,19 +264,23 @@ public class UI extends Scene {
     }*/
 
     private Slider speedSlider(){
-        Slider slider = new Slider();
-        slider.setMin(0);
-        slider.setMax(100);
-        slider.setValue(50);
-        slider.setShowTickLabels(true);
-        slider.setShowTickMarks(true);
-        slider.setMajorTickUnit(50);
-        slider.setMinorTickCount(5);
-        slider.setBlockIncrement(10);
+        Slider slider = createGenericSlider();
         slider.valueProperty().addListener(e -> mySimulation.setSpeed(slider.getValue()));
         return slider;
     }
 
+    private Slider createGenericSlider(){
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(1);
+        slider.setValue(0.5);
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(0.5);
+        slider.setMinorTickCount(10);
+        slider.setBlockIncrement(0.1);
+        return slider;
+    }
     private Label speedLabel(){
         Label speed = new Label(myResources.getString("SpeedSlider"));
         return speed;
@@ -292,15 +295,7 @@ public class UI extends Scene {
     private List<Slider> paramSliders(){
         List<Slider> sliders = new ArrayList<>();
         for(Double param: parametersList){
-            Slider slider = new Slider();
-            slider.setMin(0);
-            slider.setMax(1);
-            slider.setValue(param);
-            slider.setShowTickLabels(true);
-            slider.setShowTickMarks(true);
-            slider.setMajorTickUnit(0.5);
-            slider.setMinorTickCount(10);
-            slider.setBlockIncrement(0.01);
+            Slider slider = createGenericSlider();
             slider.valueProperty().addListener(e -> parametersList.set(parametersList.indexOf(param), slider.getValue()));
             sliders.add(slider);
         }
@@ -315,9 +310,9 @@ public class UI extends Scene {
     private ComboBox switchSimulationDropdown(){
         ComboBox switchSimulationDropdown = new ComboBox(SIM_OPTIONS);
         switchSimulationDropdown.setOnAction(e -> {
-            String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
-            String simFileName = simulationType;
-            mySimulation.switchSimulation(simFileName);
+            String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem() + "_XML";
+            mySimulation.setSimType(simulationType);
+            mySimulation.startSimulation();
         });
         return switchSimulationDropdown;
     }
