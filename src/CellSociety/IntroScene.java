@@ -12,6 +12,7 @@ import javafx.stage.PopupWindow;
 import javafx.stage.Window;
 
 import java.io.File;
+import java.util.ResourceBundle;
 
 public class IntroScene extends Scene {
     private static final int WINDOW_HEIGHT = 600;
@@ -20,6 +21,8 @@ public class IntroScene extends Scene {
     private static final int VBOX_BUFFER_TOP = 100;
     private static final int VBOX_BUFFER_SIDE = 100;
 
+    private ResourceBundle myResources;
+
     private Simulation mySimulation;
     private Group myRoot;
 
@@ -27,6 +30,7 @@ public class IntroScene extends Scene {
         super(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         myRoot = root;
         this.mySimulation = s;
+        myResources = ResourceBundle.getBundle("/resources/English");
         setupButtons();
     }
 
@@ -59,59 +63,54 @@ public class IntroScene extends Scene {
     }
 
     private Button fireSimButton(){
-        Button fireSimButton = new Button("Fire");
+        Button fireSimButton = new Button(myResources.getString("Fire"));
         fireSimButton.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.FIRE_XML);
-            mySimulation.initGrid();
+            mySimulation.switchSimulation(mySimulation.FIRE_XML);
         });
         return fireSimButton;
     }
 
     private Button GOLSimButton(){
-        Button GOLSimButton = new Button("Game of Life");
+        Button GOLSimButton = new Button(myResources.getString("GOL"));
         GOLSimButton.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.GOL_XML);
-            mySimulation.initGrid();
+            mySimulation.switchSimulation(mySimulation.GOL_XML);
         });
         return GOLSimButton;
     }
 
     private Button PercSimButton(){
-        Button PercSimButton = new Button("Percolation");
+        Button PercSimButton = new Button(myResources.getString("Perc"));
         PercSimButton.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.PERC_XML);
-            mySimulation.initGrid();
+            mySimulation.switchSimulation(mySimulation.PERC_XML);
         });
         return PercSimButton;
     }
 
     private Button SegSimButton(){
-        Button SegSimButton = new Button("Segregation");
+        Button SegSimButton = new Button(myResources.getString("Seg"));
         SegSimButton.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.SEG_XML);
-            mySimulation.initGrid();
+            mySimulation.switchSimulation(mySimulation.SEG_XML);
         });
         return SegSimButton;
     }
 
     private Button WaTorSimButton(){
-        Button WaTorSimButton = new Button("Wa-Tor World");
+        Button WaTorSimButton = new Button(myResources.getString("WaTor"));
         WaTorSimButton.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.WATOR_XML);
-            mySimulation.initGrid();
+            mySimulation.switchSimulation(mySimulation.WATOR_XML);
         });
         return WaTorSimButton;
     }
 
     private Button uploadXML(){
-        Button uploadXML = new Button("Upload XML File");
+        Button uploadXML = new Button(myResources.getString("PromptUploadXML"));
         uploadXML.setOnMouseClicked(e -> chooseFile());
         return uploadXML;
     }
 
     private void chooseFile(){
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open XML File");
+        fileChooser.setTitle(myResources.getString("FileChooserTitle"));
         File file = fileChooser.showOpenDialog(new PopupWindow() {
             @Override
             public void show(Window window) {
@@ -125,25 +124,17 @@ public class IntroScene extends Scene {
                 || file.toString().equals(mySimulation.SEG_XML)
                 || file.toString().equals(mySimulation.PERC_XML
     )){
-            mySimulation.setSimType(file.toString());
-            mySimulation.initGrid();
+            mySimulation.switchSimulation(file.toString());
         }
         else {
             badDataAlert();
         }
     }
 
-    private void emptyDataAlert(){
-        Alert emptyAlert = new Alert(Alert.AlertType.ERROR);
-        emptyAlert.setTitle("Empty Data");
-        emptyAlert.setContentText("Please choose another file.");
-        emptyAlert.showAndWait();
-    }
-
     private void badDataAlert(){
         Alert badAlert = new Alert(Alert.AlertType.ERROR);
-        badAlert.setTitle("Bad Data");
-        badAlert.setContentText("Please choose another file.");
+        badAlert.setTitle(myResources.getString("BadDataAlert"));
+        badAlert.setContentText(myResources.getString("ChooseAnotherFile"));
         badAlert.showAndWait();
     }
 }
