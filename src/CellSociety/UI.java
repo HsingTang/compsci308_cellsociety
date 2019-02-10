@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
@@ -73,6 +74,7 @@ public class UI extends Scene {
         initStartingCoordinates(cellShape);
         stepNum = 0;
         initCellVisMap();
+        setOnMouseClicked(e -> handleCellClick(e.getX(), e.getY()));
         setupLayout();
     }
 
@@ -108,6 +110,7 @@ public class UI extends Scene {
                 break;
         }
     }
+
     private LineChart<Number, Number> addGraph(){
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
@@ -160,6 +163,16 @@ public class UI extends Scene {
         }
         for (Cell key: cellVisMap.keySet()){
             myRoot.getChildren().add(cellVisMap.get(key));
+        }
+    }
+
+    private void handleCellClick(double x, double y){
+        if (x <= GRID_WIDTH && y <= GRID_HEIGHT){
+            for (Map.Entry<Cell, Polygon> cell: cellVisMap.entrySet()){
+                if (cell.getValue().contains(x, y)){
+                    cell.getKey().updateState();
+                }
+            }
         }
     }
 
