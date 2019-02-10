@@ -44,7 +44,7 @@ public class CellWATOR extends Cell {
         myEmptyNeighbors = new ArrayList<>();
         myFishNeighbors = new ArrayList<>();
 
-        setParams(parameters);
+        setParams();
 
 
         myTurnsSurvived = 0;
@@ -59,12 +59,12 @@ public class CellWATOR extends Cell {
      *               Three Index: amount of energy sharl gains from eating a fish
      */
     @Override
-    public void setParams(ArrayList<Double> params){
-        myFishReproTime = params.get(0);
-        mySharkReproTime = params.get(1);
-        mySharkEnergy = params.get(2);
-        myNewSharkEnergy = params.get(2);
-        mySharkEatingEnergy = params.get(3);
+    protected void setParams(){
+        myFishReproTime = myParams.get(0);
+        mySharkReproTime = myParams.get(1);
+        mySharkEnergy = myParams.get(2);
+        myNewSharkEnergy = myParams.get(2);
+        mySharkEatingEnergy = myParams.get(3);
     }
 
     @Override
@@ -91,6 +91,7 @@ public class CellWATOR extends Cell {
      */
     @Override
     public void findNextState() {
+        setParams();
         myFishNeighbors.clear();
         myEmptyNeighbors.clear();
 

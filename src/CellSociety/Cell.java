@@ -137,10 +137,8 @@ public abstract class Cell {
      *  It defaults to not changing anything, as several of the simulations
      *  do no have parameters that could be modified. It will be overriden when
      *  necessary in concrete cell implementations.
-     * @param params ArrayList of doubles corresponding with the necessary
-     *               parameters for each simulation
      */
-    public void setParams(ArrayList<Double> params){
+    protected void setParams(){
         return;
     }
 }

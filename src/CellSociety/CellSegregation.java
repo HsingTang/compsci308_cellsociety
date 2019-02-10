@@ -23,17 +23,15 @@ public class CellSegregation extends Cell {
      */
     CellSegregation(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
-        setParams(parameters);
+        setParams();
     }
 
     /**
      * Sets the parameters of the simulation.
-     * @param params ArrayList of doubles with the zero index being the
-     *               percent threshold for satisfaction.
      */
     @Override
-    public void setParams(ArrayList<Double> params){
-        myThreshold = params.get(0);
+    protected void setParams(){
+        myThreshold = myParams.get(0);
     }
 
 
@@ -50,6 +48,7 @@ public class CellSegregation extends Cell {
      */
     @Override
     public void findNextState() {
+        setParams();
         //if it's empty and hasn't had anything overwrite it yet
         if(myCurrentState.equals(EMPTY) && myNextState.equals("")){
             myNextState = EMPTY;
