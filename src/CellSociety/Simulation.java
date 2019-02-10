@@ -3,6 +3,7 @@ package CellSociety;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -336,14 +337,13 @@ public class Simulation extends Application {
 
     /**
      * Public method which is expected to be called from IntroScene after user has selected a simulation model
-     * @throws Exception when XMLParserConfigurationException occurs and print error message to console
      */
-    public void startSimulation() throws Exception{
+    public void startSimulation(){
         try{
             initGrid();
         }catch (Exception e){
             System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
-            throw e;
+            Platform.exit();
         }
         this.myTimeline.play();
     }
@@ -380,15 +380,14 @@ public class Simulation extends Application {
     /**
      * Reset all cell states according to XML file's configuration
      * and still remain in the same simulation model
-     * @throws Exception when XMLParserConfigurationException occurs and print error message to console
      */
-    public void resetSimulation() throws Exception{
+    public void resetSimulation(){
         this.myTimeline.pause();
         try {
             initGrid();
         }catch (Exception e){
             System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
-            throw e;
+            Platform.exit();
         }
     }
 
@@ -397,16 +396,15 @@ public class Simulation extends Application {
      * Switch to the other simulation model by reading the corresponding XML file
      * and reinitializing all Cells in the grid
      * @param newSimType path to the XML file for the new Simulation
-     * @throws Exception when XMLParserConfigurationException occurs and print error message to console
      */
-    public void switchSimulation(String newSimType) throws Exception{
+    public void switchSimulation(String newSimType){
         this.myTimeline.stop();
         this.setSimType(newSimType);
         try{
             initGrid();
         }catch (Exception e){
             System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
-            throw e;
+            Platform.exit();
         }
 
     }
