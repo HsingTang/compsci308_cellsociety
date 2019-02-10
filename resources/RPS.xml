@@ -1,44 +1,69 @@
 <Simulation>
     <Type>RPS</Type>
-    <Title>Fire_01</Title>
+    <Title>RPS_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>2</Width>
-    <Height>2</Height>
+    <Width>3</Width>
+    <Height>3</Height>
     <SpecifiedConfig>true</SpecifiedConfig>
     <CellShape>Triangle</CellShape>
     <EdgeStyle>Finite</EdgeStyle>
     <NeighborStyle>0;1;2;3;4;5</NeighborStyle>
     <State>
-        <StateName>Burning</StateName>
+        <StateName>Rock</StateName>
         <StateImage>Red</StateImage>
     </State>
     <State>
-        <StateName>Tree</StateName>
+        <StateName>Paper</StateName>
         <StateImage>Green</StateImage>
     </State>
     <State>
-        <StateName>Empty</StateName>
-        <StateImage>Yellow</StateImage>
+        <StateName>Scissor</StateName>
+        <StateImage>blue</StateImage>
     </State>
     <Cell>
         <Row>0</Row>
         <Col>0</Col>
-        <CellState>Burning</CellState>
+        <CellState>Rock</CellState>
     </Cell>
     <Cell>
         <Row>0</Row>
         <Col>1</Col>
-        <CellState>Empty</CellState>
+        <CellState>Paper</CellState>
+    </Cell>
+    <Cell>
+        <Row>0</Row>
+        <Col>2</Col>
+        <CellState>Scissor</CellState>
     </Cell>
     <Cell>
         <Row>1</Row>
         <Col>0</Col>
-        <CellState>Empty</CellState>
+        <CellState>Scissor</CellState>
     </Cell>
     <Cell>
         <Row>1</Row>
         <Col>1</Col>
-        <CellState>Tree</CellState>
+        <CellState>Rock</CellState>
+    </Cell>
+    <Cell>
+        <Row>1</Row>
+        <Col>2</Col>
+        <CellState>Paper</CellState>
+    </Cell>
+    <Cell>
+        <Row>2</Row>
+        <Col>0</Col>
+        <CellState>Paper</CellState>
+    </Cell>
+    <Cell>
+        <Row>2</Row>
+        <Col>1</Col>
+        <CellState>Rock</CellState>
+    </Cell>
+    <Cell>
+        <Row>2</Row>
+        <Col>2</Col>
+        <CellState>Scissor</CellState>
     </Cell>
     <Parameter>0.75</Parameter>
 </Simulation>
