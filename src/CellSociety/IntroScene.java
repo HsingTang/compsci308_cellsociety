@@ -18,7 +18,9 @@ import java.util.ResourceBundle;
 public class IntroScene extends Scene {
     private static final int WINDOW_HEIGHT = 600;
     private static final int WINDOW_WIDTH = 600;
-    private static final int BUTTONS_VBUFFER = 130;
+    private static final int BUTTONS_VBUFFER_LEFT = 78;
+    private static final int BUTTONS_VBUFFER_RIGHT = 130;
+
     private static final int VBOX_BUFFER_TOP = 100;
     private static final int VBOX_BUFFER_SIDE = 100;
 
@@ -48,9 +50,8 @@ public class IntroScene extends Scene {
             VBox vbox = new VBox();
             vbox.setStyle("-fx-background-color: #b5f7ff");
             vbox.setPadding(new Insets(VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE, VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE));
-
-            vbox.setSpacing(BUTTONS_VBUFFER);
-            vbox.getChildren().addAll(fireSimButton(), GOLSimButton(), PercSimButton());
+            vbox.setSpacing(BUTTONS_VBUFFER_LEFT);
+            vbox.getChildren().addAll(fireSimButton(), GOLSimButton(), PercSimButton(), RPSSimButton());
             return vbox;
     }
 
@@ -58,7 +59,7 @@ public class IntroScene extends Scene {
         VBox vbox = new VBox();
         vbox.setStyle("-fx-background-color: #f3aaff");
         vbox.setPadding(new Insets(VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE, VBOX_BUFFER_TOP, VBOX_BUFFER_SIDE));
-        vbox.setSpacing(BUTTONS_VBUFFER);
+        vbox.setSpacing(BUTTONS_VBUFFER_RIGHT);
         vbox.getChildren().addAll(SegSimButton(), WaTorSimButton(), uploadXML());
         return vbox;
     }
@@ -106,6 +107,15 @@ public class IntroScene extends Scene {
             mySimulation.startSimulation();
         });
         return WaTorSimButton;
+    }
+
+    private Button RPSSimButton(){
+        Button rps = new Button(myResources.getString("RPS"));
+        rps.setOnMouseClicked(e -> {
+            mySimulation.setSimType(mySimulation.RPS_XML);
+            mySimulation.startSimulation();
+        });
+        return rps;
     }
 
     private Button uploadXML(){
