@@ -47,5 +47,16 @@
     Params                  Type    Description
     N/A
 
+//RPS
+    String
+    "White"     cell is empty
+    "Red"       cell is red
+    "Green"     cell is green
+    "Blue"      cell is blue
+
+    Params
+    N/A
+
+
 
 
