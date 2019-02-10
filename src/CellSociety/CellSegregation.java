@@ -23,8 +23,18 @@ public class CellSegregation extends Cell {
      */
     CellSegregation(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
+        setParams(parameters);
 
-        myThreshold = parameters.get(0);
+    }
+
+    /**
+     * Sets the parameters of the simulation.
+     * @param params ArrayList of doubles with the zero index being the
+     *               percent threshold for satisfaction.
+     */
+    @Override
+    public void setParams(ArrayList<Double> params){
+        myThreshold = params.get(0);
     }
 
 

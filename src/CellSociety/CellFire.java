@@ -25,8 +25,18 @@ public class CellFire extends Cell {
      */
     CellFire(int row, int col, String initialState, ArrayList<Double> parameters){
         super(row, col, initialState, parameters);
-        myProbBurning = parameters.get(0);
+        setParams(parameters);
         myRand = new Random();
+    }
+
+    /**
+     * Sets the parameters of the simulation.
+     * @param params ArrayList of doubles with the zero index being the probability
+     *               of catching fire.
+     */
+    @Override
+    public void setParams(ArrayList<Double> params){
+        myProbBurning = params.get(0);
     }
 
     @Override

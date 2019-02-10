@@ -44,14 +44,27 @@ public class CellWATOR extends Cell {
         myEmptyNeighbors = new ArrayList<>();
         myFishNeighbors = new ArrayList<>();
 
-        myFishReproTime = parameters.get(0);
-        mySharkReproTime = parameters.get(1);
-        mySharkEnergy = parameters.get(2);
-        myNewSharkEnergy = parameters.get(2);
-        mySharkEatingEnergy = parameters.get(3);
+        setParams(parameters);
 
 
         myTurnsSurvived = 0;
+    }
+
+    /**
+     * Sets the parameters of the simulation.
+     * @param params ArrayList of doubles.
+     *               Zero index: time it takes for a fish to reproduce
+     *               One index: time it takes for a shark to reproduce
+     *               Two Index: amount of energy a shark begins with
+     *               Three Index: amount of energy sharl gains from eating a fish
+     */
+    @Override
+    public void setParams(ArrayList<Double> params){
+        myFishReproTime = params.get(0);
+        mySharkReproTime = params.get(1);
+        mySharkEnergy = params.get(2);
+        myNewSharkEnergy = params.get(2);
+        mySharkEatingEnergy = params.get(3);
     }
 
     @Override
@@ -110,9 +123,6 @@ public class CellWATOR extends Cell {
                         ////System.out.println("\t\tFinal Current State: " + myCurrentState);
                         return;
                     }
-                }
-                else{
-                    return;
                 }
                 return;
             case SHARK:
