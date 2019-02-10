@@ -29,7 +29,7 @@ public class Simulation extends Application {
     static final String configFilePath = "resources/SimulationConfig.txt";
     static final String GOL_XML = "Game of Life";
     static final String WATOR_XML = "WaTor";
-    static final String FIRE_XML = "RPS";
+    static final String FIRE_XML = "Fire";
     static final String SEG_XML = "Segregation";
     static final String PERC_XML = "Percolation";
     static final String RPS_XML = "RPS";
@@ -37,6 +37,8 @@ public class Simulation extends Application {
     private int myWidth;
     private int myHeight;
     private double delay;
+    private double minDelay;
+    private double maxDelay;
     private double distributionAccuracy;
     private String myTitle;
     private List<String> SIM_TYPE_LIST = new ArrayList<>();
@@ -85,8 +87,10 @@ public class Simulation extends Application {
         myTitle = sc.nextLine();
         myWidth = Integer.valueOf(sc.nextLine());
         myHeight = Integer.valueOf(sc.nextLine());
-        delay = Double.valueOf(sc.nextLine());
         distributionAccuracy = Double.valueOf(sc.nextLine());
+        minDelay = Double.valueOf(sc.nextLine());
+        maxDelay = Double.valueOf(sc.nextLine());
+        delay = (minDelay+maxDelay)/2;
         while(sc.hasNextLine()){
             String modelName = sc.nextLine();
             Integer paramNum = Integer.valueOf(sc.nextLine());
@@ -164,6 +168,9 @@ public class Simulation extends Application {
                         break;
                     case PERC_XML:
                         currCell = new CellPercolation(i, j, currCellState, params);
+                        break;
+                    case RPS_XML:
+                        currCell = new CellRPS(i, j, currCellState, params);
                         break;
                 }
                 myGrid[i][j] = currCell;
@@ -336,7 +343,8 @@ public class Simulation extends Application {
 
 
     /**
-     * Public method which is expected to be called from IntroScene after user has selected a simulation model
+     * Public method for starting a new simulation
+     * Expected to be called from IntroScene after user has selected a simulation model
      */
     public void startSimulation(){
         try{
@@ -393,8 +401,8 @@ public class Simulation extends Application {
 
 
     /**
-     * Switch to the other simulation model by reading the corresponding XML file
-     * and reinitializing all Cells in the grid
+     * Switch to the other simulation model by reading the corresponding XML file and reinitializing the grid
+     * Expected to be called by UI after User has selected a Simulation type from dropdown menu
      * @param newSimType path to the XML file for the new Simulation
      */
     public void switchSimulation(String newSimType){
@@ -411,22 +419,12 @@ public class Simulation extends Application {
 
 
     /**
-     * Slow down the simulation by increasing the delay time interval by twice
+     * Modify the simulation speed by adjusting delay time between frames based on the passed-in double
+     * The double passed in is expected to be between 0 and 1
      */
-    public void slowdown() {
+    public void setSpeed(Double d) {
         this.myTimeline.stop();
-        this.delay *= 2;
-        initTimeline();
-        playSimulation();
-    }
-
-
-    /**
-     * Speed up the simulation by reducing the delay time interval to its half
-     */
-    public void speedup() {
-        this.myTimeline.stop();
-        this.delay /= 2;
+        this.delay = minDelay+d*(maxDelay-minDelay);
         initTimeline();
         playSimulation();
     }
