@@ -131,4 +131,16 @@ public abstract class Cell {
         myCurrentState = myStates.get(rem);
     }
 
+    /**
+     * Allows for the UI to adjust the parameters of the simulation
+     *  eg. probability of burning or shark health etc.
+     *  It defaults to not changing anything, as several of the simulations
+     *  do no have parameters that could be modified. It will be overriden when
+     *  necessary in concrete cell implementations.
+     * @param params ArrayList of doubles corresponding with the necessary
+     *               parameters for each simulation
+     */
+    public void setParams(ArrayList<Double> params){
+        return;
+    }
 }
