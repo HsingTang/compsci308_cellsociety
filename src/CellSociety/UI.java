@@ -19,6 +19,7 @@ import javafx.scene.chart.XYChart;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 600;
@@ -36,18 +37,13 @@ public class UI extends Scene {
     private static final int HBOX_BUFFER_SIDE = 50;
     private static final int HBOX_BUFFER_BUTTON = 50;
 
-    private static final ObservableList<String> SIM_OPTIONS = FXCollections.observableArrayList(
-            "Fire",
-            "Game of Life",
-            "Percolation",
-            "Segregation",
-            "WaTor"
-    );
-
     private final int GRID_ROW_NUM;
     private final int GRID_COL_NUM;
     private final int CELL_HEIGHT;
     private final int CELL_WIDTH;
+    private final ObservableList<String> SIM_OPTIONS;
+
+    private ResourceBundle myResources;
 
     private Group myRoot;
     private Simulation mySimulation;
@@ -65,21 +61,14 @@ public class UI extends Scene {
         GRID_ROW_NUM = height;
         CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
         CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
-        switch (cellShape){
-            case "Rectangle":
-                myStartingCoordinates = new Integer[]{
-                        0, 0,
-                        CELL_WIDTH, 0,
-                        0, CELL_HEIGHT,
-                        CELL_WIDTH, CELL_HEIGHT};
-                break;
-            case "Triangle":
-                myStartingCoordinates = new Integer[]{
-                CELL_WIDTH/2, 0,
-                0, CELL_HEIGHT,
-                CELL_WIDTH, CELL_HEIGHT};
-                break;
-        }
+        myResources = ResourceBundle.getBundle("/resources/English");
+        SIM_OPTIONS = FXCollections.observableArrayList(
+                myResources.getString("Fire"),
+                myResources.getString("GOL"),
+                myResources.getString("Perc"),
+                myResources.getString("Seg"),
+                myResources.getString("WaTor"));
+        initStartingCoordinates(cellShape);
         stepNum = 0;
         initCellVisMap();
         setupLayout();
@@ -100,13 +89,30 @@ public class UI extends Scene {
         stepNum++;
     }
 
+    private void initStartingCoordinates(String shape){
+        switch (shape){
+            case "Rectangle":
+                myStartingCoordinates = new Integer[]{
+                        0, 0,
+                        CELL_WIDTH, 0,
+                        0, CELL_HEIGHT,
+                        CELL_WIDTH, CELL_HEIGHT};
+                break;
+            case "Triangle":
+                myStartingCoordinates = new Integer[]{
+                        CELL_WIDTH/2, 0,
+                        0, CELL_HEIGHT,
+                        CELL_WIDTH, CELL_HEIGHT};
+                break;
+        }
+    }
     private LineChart<Number, Number> addGraph(){
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         final LineChart<Number, Number> lineChart = new LineChart<>(xAxis,yAxis);
-        xAxis.setLabel("Number of Steps Completed");
-        yAxis.setLabel("Percentage of Cells");
-        lineChart.setTitle("Percentage of Cells in each State vs. Steps Completed");
+        xAxis.setLabel(myResources.getString("XAxisLabel"));
+        yAxis.setLabel(myResources.getString("YAxisLabel"));
+        lineChart.setTitle(myResources.getString("LineChartTitle"));
         initStateSeriesMap(lineChart);
         return lineChart;
     }
@@ -205,43 +211,43 @@ public class UI extends Scene {
 
 
     private Button resetButton(){
-        Button resetButton = new Button("Reset");
+        Button resetButton = new Button(myResources.getString("ResetButton"));
         resetButton.setOnMouseClicked(e -> mySimulation.resetSimulation());
         return resetButton;
     }
 
     private Button startButton(){
-        Button startButton = new Button("Start");
+        Button startButton = new Button(myResources.getString("StartButton"));
         startButton.setOnMouseClicked(e -> mySimulation.playSimulation());
         return startButton;
     }
 
     private Button pauseButton(){
-        Button pauseButton = new Button("Pause");
+        Button pauseButton = new Button(myResources.getString("PauseButton"));
         pauseButton.setOnMouseClicked(e -> mySimulation.pauseSimulation());
         return pauseButton;
     }
 
     private Button resumeButton(){
-        Button stopButton = new Button("Resume");
+        Button stopButton = new Button(myResources.getString("ResumeButton"));
         stopButton.setOnMouseClicked(e -> mySimulation.playSimulation());
         return stopButton;
     }
 
     private Button slowDownButton(){
-        Button slowDownButton = new Button("Slow Down");
+        Button slowDownButton = new Button(myResources.getString("SlowDownButton"));
         slowDownButton.setOnMouseClicked(e -> mySimulation.slowdown());
         return slowDownButton;
     }
 
     private Button speedUpButton(){
-        Button speedUpButton = new Button("Speed Up");
+        Button speedUpButton = new Button(myResources.getString("SpeedUpButton"));
         speedUpButton.setOnMouseClicked(e -> mySimulation.speedup());
         return speedUpButton;
     }
 
     private Button stepButton(){
-        Button stepButton = new Button("Step");
+        Button stepButton = new Button(myResources.getString("StepButton"));
         stepButton.setOnMouseClicked(e -> mySimulation.stepSimulation());
         return stepButton;
     }
