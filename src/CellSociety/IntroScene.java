@@ -27,7 +27,7 @@ public class IntroScene extends Scene {
     private Simulation mySimulation;
     private Group myRoot;
 
-    public IntroScene(Group root, double width, double height, Simulation s) throws Exception{ //width and height params unused
+    public IntroScene(Group root, double width, double height, Simulation s){ //width and height params unused
         super(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         myRoot = root;
         this.mySimulation = s;
