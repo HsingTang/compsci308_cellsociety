@@ -141,8 +141,11 @@ public class Simulation extends Application {
      * Then pipeline to the next step of creating UI scene for displaying visualization
      */
     private void initGrid() throws Exception{
-        try{readXML();}
+        try{
+            readXML();
+        }
         catch (Exception e){
+            System.out.println("ParserConfig exception thrown");
             myParser.parserConfigAlert.showAlert();
             throw e;
         }
@@ -176,8 +179,13 @@ public class Simulation extends Application {
                 myGrid[i][j] = currCell;
             }
         }
+        System.out.println("grid initialized");
         initNeighbors();
+        System.out.println("Neighbor initialized");
         initUI();
+        System.out.println("UI initialized");
+        initTimeline();
+        System.out.println("timeline initialized");
     }
 
 
@@ -220,12 +228,19 @@ public class Simulation extends Application {
      * Loop through all cells in the grid and initialize neighbors for each cell
      */
     private void initNeighbors(){
+        System.out.println("entered initNeighbor");
+        int i = 0;
         for (Cell[] row :myGrid) {
+            int j = 0;
             for (Cell currCell:row) {
-                //currCell.findNeighbors(myGrid);
+                System.out.println(cellShape);
                 currCell.findNeighbors(myGrid,cellShape,edgeType,neighborList);
+                System.out.println("neighbor initialized for cell row "+i+" col "+j);
+                j++;
             }
+            i++;
         }
+        System.out.println("after initNeighbor");
     }
 
 
@@ -239,7 +254,6 @@ public class Simulation extends Application {
         myUIScene.drawGrid();
         myStage.setScene(myUIScene);
         myStage.show();
-        initTimeline();
     }
 
 
