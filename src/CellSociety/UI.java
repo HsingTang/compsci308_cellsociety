@@ -1,10 +1,14 @@
 package CellSociety;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
@@ -16,7 +20,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -192,8 +195,10 @@ public class UI extends Scene {
                 startButton(),
                 pauseButton(),
                 resumeButton(),
-                slowDownButton(),
-                speedUpButton(),
+                //slowDownButton(),
+                //speedUpButton(),
+                speedLabel(),
+                speedSlider(),
                 stepButton(),
                 switchSimulationDropdown()
         );
@@ -234,7 +239,7 @@ public class UI extends Scene {
         return stopButton;
     }
 
-    private Button slowDownButton(){
+    /*private Button slowDownButton(){
         Button slowDownButton = new Button(myResources.getString("SlowDownButton"));
         slowDownButton.setOnMouseClicked(e -> mySimulation.slowdown());
         return slowDownButton;
@@ -244,6 +249,25 @@ public class UI extends Scene {
         Button speedUpButton = new Button(myResources.getString("SpeedUpButton"));
         speedUpButton.setOnMouseClicked(e -> mySimulation.speedup());
         return speedUpButton;
+    }*/
+
+    private Slider speedSlider(){
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(100);
+        slider.setValue(50);
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(50);
+        slider.setMinorTickCount(5);
+        slider.setBlockIncrement(10);
+        slider.valueProperty().addListener(e -> mySimulation.setSpeed(slider.getValue()));
+        return slider;
+    }
+
+    private Label speedLabel(){
+        Label speed = new Label(myResources.getString("SpeedSlider"));
+        return speed;
     }
 
     private Button stepButton(){
