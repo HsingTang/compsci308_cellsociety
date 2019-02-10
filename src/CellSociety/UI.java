@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.chart.LineChart;
@@ -51,7 +51,8 @@ public class UI extends Scene {
 
     private Group myRoot;
     private Simulation mySimulation;
-    private Map<Cell, Rectangle> cellVisMap;
+    private Map<Cell, Polygon> cellVisMap;
+    private Integer[] myStartingCoordinates;
     private Map<String, String> stateMap;
     private Map<String, XYChart.Series> stateSeriesMap;
     private int stepNum;
@@ -64,6 +65,21 @@ public class UI extends Scene {
         GRID_ROW_NUM = height;
         CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
         CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
+        switch (cellShape){
+            case "Rectangle":
+                myStartingCoordinates = new Integer[]{
+                        0, 0,
+                        CELL_WIDTH, 0,
+                        0, CELL_HEIGHT,
+                        CELL_WIDTH, CELL_HEIGHT};
+                break;
+            case "Triangle":
+                myStartingCoordinates = new Integer[]{
+                CELL_WIDTH/2, 0,
+                0, CELL_HEIGHT,
+                CELL_WIDTH, CELL_HEIGHT};
+                break;
+        }
         stepNum = 0;
         initCellVisMap();
         setupLayout();
@@ -129,16 +145,27 @@ public class UI extends Scene {
         for (int i = 0; i < GRID_ROW_NUM; i++){
             for (int j = 0; j < GRID_COL_NUM; j++){
                 Cell cell = cells[i][j];
-                Rectangle cellRect = new Rectangle(CELL_WIDTH - CELL_BUFFER, CELL_HEIGHT - CELL_BUFFER);
-                cellRect.setFill(Color.web(stateMap.get(cell.getState())));
-                cellRect.setX(j * CELL_WIDTH);
-                cellRect.setY(i * CELL_HEIGHT);
-                cellVisMap.put(cell, cellRect);
+                Polygon cellShape = new Polygon(calcCurrentCoordinates(i, j));
+                cellShape.setFill(Color.web(stateMap.get(cell.getState())));
+                cellVisMap.put(cell, cellShape);
             }
         }
         for (Cell key: cellVisMap.keySet()){
             myRoot.getChildren().add(cellVisMap.get(key));
         }
+    }
+
+    private double[] calcCurrentCoordinates(int row, int col){
+        double [] currentCoordinates = new double[myStartingCoordinates.length];
+        for (int i = 0; i < myStartingCoordinates.length; i++){
+            if (i % 2 == 0){
+                currentCoordinates[i] = myStartingCoordinates[i] + col * CELL_WIDTH + CELL_BUFFER;
+            }
+            else{
+                currentCoordinates[i] = myStartingCoordinates[i] + row * CELL_WIDTH + CELL_BUFFER;
+            }
+        }
+        return currentCoordinates;
     }
 
     private void setupLayout(){
