@@ -4,9 +4,11 @@ package CellSociety;
 import CellSociety.Neighbors.Neighbors;
 import CellSociety.Neighbors.NeighborsSquare;
 import CellSociety.Neighbors.NeighborsTriangle;
+import javafx.scene.Scene;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.SynchronousQueue;
 
 
 public abstract class Cell {
@@ -88,18 +90,24 @@ public abstract class Cell {
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
     public void findNeighbors(Cell[][] cell, String shapeType, String edgeType, List<Integer> neighborIndexes){
+        //System.out.println("Made it to find Neighbors");
         myGrid = cell;
         switch(shapeType){
             case SQUARE:
+                //System.out.println("Made it to start of square shape");
                 NeighborsSquare squareNeighbors = new NeighborsSquare(myRow, myCol, myGrid);
+                //System.out.println("Made it past constructing square neighbors");
                 squareNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
+                //System.out.println("Made it past initializing edges and indexes");
                 myNeighbors =  squareNeighbors.getNeighborsList();
-                break;
+                //System.out.println("Made it to end of square shape");
+                return;
             case TRIANGLE:
                 NeighborsTriangle triangleNeighbors = new NeighborsTriangle(myRow, myCol, myGrid);
                 triangleNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
                 myNeighbors = triangleNeighbors.getNeighborsList();
-                break;
+                //System.out.println("Made it to triangle shape");
+                return;
         }
         System.out.println(shapeType);
         throw new IllegalArgumentException("Unknown Shape Type");
