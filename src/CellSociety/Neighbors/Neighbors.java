@@ -25,6 +25,10 @@ abstract public class Neighbors {
         myRow = row;
         myCol = col;
         myGrid = grid;
+
+        myNeighborIndexes = new ArrayList<>();
+        myNeighbors = new ArrayList<>();
+        myIndexMap = new HashMap<>();
     }
 
     /**
@@ -45,7 +49,9 @@ abstract public class Neighbors {
 
     public ArrayList<Cell> getNeighborsList(){
         setIndexMap();
+        //System.out.println("set index map");
         setDesiredNeighbors();
+        //System.out.println("set desired neighbors");
 
         return myNeighbors;
     }
@@ -73,14 +79,17 @@ abstract public class Neighbors {
 
     protected void handleEdgesAndAddCoords(Integer key, int tempRow, int tempCol) {
         if (inBounds(tempRow, tempCol)) {
+            //System.out.println("\t was in bounds");
             ArrayList<Integer> temp = new ArrayList<>();
             temp.add(tempRow);
             temp.add(tempCol);
 
             myIndexMap.put(key, temp);
-            //System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
+            ////System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
         } else {
+            //System.out.println("\t Was not in bounds");
             if (myEdgeType.equals(TOROIDAL)) {
+                //System.out.println("\t toroidal coordinates");
                 myIndexMap.put(key, findToroidalCoords(tempRow, tempCol));
             }
         }
