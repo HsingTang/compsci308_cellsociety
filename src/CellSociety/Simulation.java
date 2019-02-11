@@ -367,7 +367,6 @@ public class Simulation extends Application {
             System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
             Platform.exit();
         }
-        this.myTimeline.play();
     }
 
 
@@ -438,7 +437,7 @@ public class Simulation extends Application {
      */
     public void setSpeed(Double d) {
         this.myTimeline.stop();
-        this.delay = minDelay+d*(maxDelay-minDelay);
+        this.delay = maxDelay-d*(maxDelay-minDelay);
         initTimeline();
         playSimulation();
     }
