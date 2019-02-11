@@ -53,8 +53,10 @@ public class UI extends Scene {
     private Map<Cell, Polygon> cellVisMap;
     private String shape;
     private int numCoordinates;
-    private Integer[] myStartingCoordinatesOdd;
-    private Integer[] myStartingCoordinatesEven;
+    private Integer[] myStartingCoordinatesUpEven;
+    private Integer[] myStartingCoordinatesDownEven;
+    private Integer[] myStartingCoordinatesUpOdd;
+    private Integer[] myStartingCoordinatesDownOdd;
     private Integer[] myStartingCoordinates;
 
     private Map<String, String> stateMap;
@@ -116,14 +118,22 @@ public class UI extends Scene {
                 numCoordinates = NUM_TRIANGLE_COORDINATES;
                 CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM * 2;
                 CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM * 2;
-                myStartingCoordinatesOdd = new Integer[]{
+                myStartingCoordinatesUpEven = new Integer[]{
                         CELL_WIDTH/2, 0,
                         0, CELL_HEIGHT,
                         CELL_WIDTH, CELL_HEIGHT};
-                myStartingCoordinatesEven = new Integer[]{
+                myStartingCoordinatesDownEven = new Integer[]{
                         CELL_WIDTH/2, 0,
                         CELL_WIDTH, CELL_HEIGHT,
                         CELL_WIDTH + CELL_WIDTH/2, 0};
+                myStartingCoordinatesUpOdd = new Integer[]{
+                        CELL_WIDTH, 0,
+                        CELL_WIDTH/2, CELL_HEIGHT,
+                        CELL_WIDTH + CELL_WIDTH/2, CELL_HEIGHT};
+                myStartingCoordinatesDownOdd = new Integer[]{
+                        0, 0,
+                        CELL_WIDTH/2, CELL_HEIGHT,
+                        CELL_WIDTH, 0};
                 return;
             }
         System.out.println("Invalid shape " + shape);
@@ -222,11 +232,21 @@ public class UI extends Scene {
 
     private int calcXCoordinateTriangle(int col, int row, int i){
         int x;
-        if (col % 2 == 0){
-            x = myStartingCoordinatesEven[i] + col/2 * CELL_WIDTH;
+        if (row % 2 == 0){
+            if (col % 2 == 0){
+                x = myStartingCoordinatesUpEven[i] + col * CELL_WIDTH;
+            }
+            else {
+                x = myStartingCoordinatesDownEven[i] + col * CELL_WIDTH;
+            }
         }
         else {
-            x = myStartingCoordinatesOdd[i] + col/2 * CELL_WIDTH;
+            if (col % 2 == 0){
+                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH;
+            }
+            else {
+                x = myStartingCoordinatesDownOdd[i] + col * CELL_WIDTH;
+            }
         }
         return x;
     }
@@ -238,11 +258,21 @@ public class UI extends Scene {
 
     private int calcYCoordinateTriangle(int col, int row, int i) {
         int y;
-        if (col % 2 == 0){
-            y = myStartingCoordinatesEven[i] + row * CELL_WIDTH;
+        if (row % 2 == 0){
+            if (col % 2 == 0){
+                y = myStartingCoordinatesUpEven[i] + row * CELL_HEIGHT;
+            }
+            else {
+                y = myStartingCoordinatesDownEven[i] + row * CELL_HEIGHT;
+            }
         }
         else {
-            y = myStartingCoordinatesOdd[i] + row * CELL_WIDTH;
+            if (col % 2 == 0){
+                y = myStartingCoordinatesUpOdd[i] + row * CELL_HEIGHT;
+            }
+            else {
+                y = myStartingCoordinatesDownOdd[i] + row * CELL_HEIGHT;
+            }
         }
         return y;
     }
