@@ -2,10 +2,11 @@
     <Type>Fire</Type>
     <Title>Fire_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>50</Width>
-    <Height>50</Height>
+    <Width>70</Width>
+    <Height>70</Height>
     <SpecifiedConfig>false</SpecifiedConfig>
     <NeighborStyle>0;1;3;5;7</NeighborStyle>
+    <CellShape>Square</CellShape>
     <State>
         <StateName>Burning</StateName>
         <StateImage>Red</StateImage>
