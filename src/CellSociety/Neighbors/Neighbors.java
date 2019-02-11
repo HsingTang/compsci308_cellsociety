@@ -78,7 +78,10 @@ abstract public class Neighbors {
     }
 
     protected void handleEdgesAndAddCoords(Integer key, int tempRow, int tempCol) {
+        //System.out.println("\t Checking bounds (" + (tempRow + myRow) + ", " + (tempCol + myCol) + ")");
         if (inBounds(tempRow, tempCol)) {
+            //System.out.println("\t \t was in bounds");
+            //System.out.println("\t \t Index Number: " + key);
             //System.out.println("\t was in bounds");
             ArrayList<Integer> temp = new ArrayList<>();
             temp.add(tempRow);
@@ -124,16 +127,18 @@ abstract public class Neighbors {
     abstract protected void setIndexMap();
 
     private void setDesiredNeighbors(){
+        System.out.println("Cell Row: " + myRow + " Col: " + myCol);
         for (Integer index : myNeighborIndexes) {
             if (myIndexMap.containsKey(index)) {
                 ArrayList<Integer> coords = myIndexMap.get(index);
                 int row = coords.get(0);
                 int col = coords.get(1);
+                System.out.println("\t (" + row + ", " + col + ")");
 
                 myNeighbors.add(myGrid[row][col]);
             }
         }
-    };
+    }
 
 
 }
