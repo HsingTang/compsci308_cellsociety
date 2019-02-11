@@ -22,19 +22,23 @@ import javafx.scene.chart.XYChart;
 import java.util.*;
 
 public class UI extends Scene {
-    private static final int WINDOW_HEIGHT = 900;
+    private static final int WINDOW_HEIGHT = 775;
     private static final int WINDOW_WIDTH = 600;
     private static final Paint BACKGROUND_FILL = Color.WHITE;
-    private static final int GRID_HEIGHT = 400;
-    private static final int GRID_WIDTH = 400;
+    private static final int GRID_HEIGHT = 415;
+    private static final int GRID_WIDTH = 415;
 
     private static final int VBOX_BUFFER_TOP = 15;
     private static final int VBOX_BUFFER_SIDE = 30;
     private static final int VBOX_BUFFER_BUTTON = 10;
 
-    private static final int HBOX_BUFFER_TOP = 50;
-    private static final int HBOX_BUFFER_SIDE = 50;
-    private static final int HBOX_BUFFER_BUTTON = 50;
+    private static final int HBOX_BUFFER_TOP = 10;
+    private static final int HBOX_BUFFER_SIDE = 20;
+    private static final int HBOX_BUFFER_BUTTON = 0;
+
+    private static final int LINECHART_MAX_WIDTH = 600;
+    private static final int LINECHART_MAX_HEIGHT = 350;
+
 
     private final int GRID_ROW_NUM;
     private final int GRID_COL_NUM;
@@ -146,6 +150,7 @@ public class UI extends Scene {
         xAxis.setLabel(myResources.getString("XAxisLabel"));
         yAxis.setLabel(myResources.getString("YAxisLabel"));
         lineChart.setTitle(myResources.getString("LineChartTitle"));
+        lineChart.setMaxSize(LINECHART_MAX_WIDTH, LINECHART_MAX_HEIGHT);
         initStateSeriesMap(lineChart);
         return lineChart;
     }

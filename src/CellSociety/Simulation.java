@@ -353,6 +353,7 @@ public class Simulation extends Application {
             }
         }
         this.myUIScene.drawGrid();
+        this.myUIScene.drawGraph();
     }
 
 
