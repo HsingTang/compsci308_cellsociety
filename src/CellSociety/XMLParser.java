@@ -323,7 +323,7 @@ public class XMLParser {
             }
         }
         // Error case: number of states does not match state percentage map size
-        if (stateImage.keySet().size() != statePercent.keySet().size() && statePercent.keySet().isEmpty()) {
+        if (stateImage.keySet().size() != statePercent.keySet().size() && !statePercent.keySet().isEmpty()) {
             callAlert(stateErrAlert);
         }
     }
@@ -388,9 +388,9 @@ public class XMLParser {
      * @return boolean value indicating information valid or not
      */
     private boolean validateCellInfo(Node cellNode) {
-        return ((Element) cellNode).getElementsByTagName(CELL_ROW_TAG).getLength() == 0
+        return !(((Element) cellNode).getElementsByTagName(CELL_ROW_TAG).getLength() == 0
                 || ((Element) cellNode).getElementsByTagName(CELL_COL_TAG).getLength() == 0
-                || ((Element) cellNode).getElementsByTagName(CELL_STATE_TAG).getLength() == 0;
+                || ((Element) cellNode).getElementsByTagName(CELL_STATE_TAG).getLength() == 0);
     }
 
 
@@ -402,7 +402,7 @@ public class XMLParser {
      * @return boolean value indicating validity of the cell's indices
      */
     private boolean validateCellIdx(int row, int col) {
-        return row < 0 || col < 0 || row >= myHeight || col >= myWidth;
+        return row >= 0 && col >= 0 && row < myHeight && col < myWidth;
     }
 
 

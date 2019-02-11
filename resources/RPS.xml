@@ -52,7 +52,7 @@
     <Cell>
         <Row>1</Row>
         <Col>2</Col>
-        <CellState>Green</CellState>
+        <CellState>White</CellState>
     </Cell>
     <Cell>
         <Row>2</Row>
@@ -62,7 +62,7 @@
     <Cell>
         <Row>2</Row>
         <Col>1</Col>
-        <CellState>Green</CellState>
+        <CellState>White</CellState>
     </Cell>
     <Cell>
         <Row>2</Row>
