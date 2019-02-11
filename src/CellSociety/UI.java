@@ -23,7 +23,7 @@ import java.util.*;
 
 public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 775;
-    private static final int WINDOW_WIDTH = 600;
+    private static final int WINDOW_WIDTH = 700;
     private static final Paint BACKGROUND_FILL = Color.WHITE;
     private static final int GRID_HEIGHT = 415;
     private static final int GRID_WIDTH = 415;
@@ -81,7 +81,8 @@ public class UI extends Scene {
                 myResources.getString("GOL"),
                 myResources.getString("Perc"),
                 myResources.getString("Seg"),
-                myResources.getString("WaTor"));
+                myResources.getString("WaTor"),
+                myResources.getString("RPS"));
         parametersList = paramList;
         initStartingCoordinates(cellShape);
         stepNum = 0;
@@ -245,7 +246,7 @@ public class UI extends Scene {
                 x = myStartingCoordinatesUpEven[i] + col * CELL_WIDTH/2;
             }
             else {
-                x = myStartingCoordinatesDownEven[i] + col * CELL_WIDTH/2 - CELL_WIDTH/2;
+                x = myStartingCoordinatesDownEven[i] + col * CELL_WIDTH/2 + CELL_WIDTH/2 - CELL_WIDTH;
             }
         }
         else {
@@ -253,7 +254,7 @@ public class UI extends Scene {
                 x = myStartingCoordinatesDownOdd[i] + col * CELL_WIDTH/2;
             }
             else {
-                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH/2 + CELL_WIDTH/2;
+                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH/2 + CELL_WIDTH/2 - CELL_WIDTH;
             }
         }
         return x;
