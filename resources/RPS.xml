@@ -1,5 +1,5 @@
 <Simulation>
-    <Type>RPS</Type>
+    <Type>Rock Paper Scissors</Type>
     <Title>RPS_01</Title>
     <Author>Hsingchih Tang</Author>
     <Width>3</Width>
