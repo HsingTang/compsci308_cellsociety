@@ -234,18 +234,18 @@ public class UI extends Scene {
         int x;
         if (row % 2 == 0){
             if (col % 2 == 0){
-                x = myStartingCoordinatesUpEven[i] + col * CELL_WIDTH;
+                x = myStartingCoordinatesUpEven[i] + col * CELL_WIDTH/2;
             }
             else {
-                x = myStartingCoordinatesDownEven[i] + col * CELL_WIDTH;
+                x = myStartingCoordinatesDownEven[i] + col * CELL_WIDTH/2 - CELL_WIDTH/2;
             }
         }
         else {
             if (col % 2 == 0){
-                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH;
+                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH/2;
             }
             else {
-                x = myStartingCoordinatesDownOdd[i] + col * CELL_WIDTH;
+                x = myStartingCoordinatesDownOdd[i] + col * CELL_WIDTH/2 + CELL_WIDTH/2;
             }
         }
         return x;
