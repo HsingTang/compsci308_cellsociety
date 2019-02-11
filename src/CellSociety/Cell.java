@@ -19,7 +19,7 @@ public abstract class Cell {
     protected Cell[][] myGrid;
     protected List<String> myStates;
 
-    private final String SQUARE = "Square";
+    private final String SQUARE = "Rectangle";
     private final String TRIANGLE = "Triangle";
 
     private int myNumUserCalls;
@@ -94,16 +94,16 @@ public abstract class Cell {
                 NeighborsSquare squareNeighbors = new NeighborsSquare(myRow, myCol, myGrid);
                 squareNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
                 myNeighbors =  squareNeighbors.getNeighborsList();
-                return;
+                break;
             case TRIANGLE:
                 NeighborsTriangle triangleNeighbors = new NeighborsTriangle(myRow, myCol, myGrid);
                 triangleNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
                 myNeighbors = triangleNeighbors.getNeighborsList();
-                return;
+                break;
         }
+        System.out.println(shapeType);
         throw new IllegalArgumentException("Unknown Shape Type");
     }
-
 
     private boolean isSelf(int tempRow, int tempCol) {
         return tempRow == myRow && tempCol == myCol;

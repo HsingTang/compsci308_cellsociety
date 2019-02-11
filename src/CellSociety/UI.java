@@ -62,7 +62,7 @@ public class UI extends Scene {
         GRID_ROW_NUM = height;
         CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
         CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
-        myResources = ResourceBundle.getBundle("/resources/English");
+        myResources = ResourceBundle.getBundle("English");
         SIM_OPTIONS = FXCollections.observableArrayList(
                 myResources.getString("Fire"),
                 myResources.getString("GOL"),
@@ -108,6 +108,7 @@ public class UI extends Scene {
                         CELL_WIDTH, CELL_HEIGHT};
                 break;
         }
+        System.out.println("Invalid shape");
     }
 
     private LineChart<Number, Number> addGraph(){
