@@ -252,6 +252,7 @@ public class Simulation extends Application {
         //myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
         myUIScene = new UI(myUIRoot, myWidth, myHeight, cellShape, parametersList, this);
         myUIScene.drawGrid();
+        myUIScene.drawGraph();
         myStage.setScene(myUIScene);
         myStage.show();
     }
@@ -353,6 +354,7 @@ public class Simulation extends Application {
             }
         }
         this.myUIScene.drawGrid();
+        this.myUIScene.drawGraph();
     }
 
 
