@@ -22,15 +22,15 @@ import javafx.scene.chart.XYChart;
 import java.util.*;
 
 public class UI extends Scene {
-    private static final int WINDOW_HEIGHT = 600;
+    private static final int WINDOW_HEIGHT = 900;
     private static final int WINDOW_WIDTH = 600;
     private static final Paint BACKGROUND_FILL = Color.WHITE;
     private static final int GRID_HEIGHT = 400;
     private static final int GRID_WIDTH = 400;
 
-    private static final int VBOX_BUFFER_TOP = 45;
+    private static final int VBOX_BUFFER_TOP = 15;
     private static final int VBOX_BUFFER_SIDE = 30;
-    private static final int VBOX_BUFFER_BUTTON = 25;
+    private static final int VBOX_BUFFER_BUTTON = 10;
 
     private static final int HBOX_BUFFER_TOP = 50;
     private static final int HBOX_BUFFER_SIDE = 50;
@@ -65,7 +65,7 @@ public class UI extends Scene {
     private List<Double> parametersList;
 
     public UI(Group root, int width, int height, String cellShape, List<Double> paramList, Simulation s){
-        super(root, WINDOW_HEIGHT, WINDOW_WIDTH, BACKGROUND_FILL);
+        super(root, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_FILL);
         this.mySimulation = s;
         myRoot = root;
         GRID_COL_NUM = width;
@@ -116,7 +116,7 @@ public class UI extends Scene {
                 return;
             case "Triangle":
                 numCoordinates = NUM_TRIANGLE_COORDINATES;
-                CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM * 2;
+                CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
                 CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM * 2;
                 myStartingCoordinatesUpEven = new Integer[]{
                         CELL_WIDTH/2, 0,
@@ -173,7 +173,8 @@ public class UI extends Scene {
 
     private double calcCellStatePercentage(String state){
         int numCells = makeStateNumMap().get(state);
-        double percent = numCells/(GRID_COL_NUM * GRID_ROW_NUM);
+        double percent = (double) numCells/(GRID_COL_NUM * GRID_ROW_NUM);
+        System.out.println(percent + state);
         return percent;
     }
 
@@ -242,10 +243,10 @@ public class UI extends Scene {
         }
         else {
             if (col % 2 == 0){
-                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH/2;
+                x = myStartingCoordinatesDownOdd[i] + col * CELL_WIDTH/2;
             }
             else {
-                x = myStartingCoordinatesDownOdd[i] + col * CELL_WIDTH/2 + CELL_WIDTH/2;
+                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH/2 + CELL_WIDTH/2;
             }
         }
         return x;
@@ -268,10 +269,10 @@ public class UI extends Scene {
         }
         else {
             if (col % 2 == 0){
-                y = myStartingCoordinatesUpOdd[i] + row * CELL_HEIGHT;
+                y = myStartingCoordinatesDownOdd[i] + row * CELL_HEIGHT;
             }
             else {
-                y = myStartingCoordinatesDownOdd[i] + row * CELL_HEIGHT;
+                y = myStartingCoordinatesUpOdd[i] + row * CELL_HEIGHT;
             }
         }
         return y;
@@ -407,8 +408,7 @@ public class UI extends Scene {
         ComboBox switchSimulationDropdown = new ComboBox(SIM_OPTIONS);
         switchSimulationDropdown.setOnAction(e -> {
             String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
-            mySimulation.setSimType(simulationType);
-            mySimulation.startSimulation();
+            mySimulation.switchSimulation(simulationType);
         });
         return switchSimulationDropdown;
     }
