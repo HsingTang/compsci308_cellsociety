@@ -21,7 +21,7 @@ public abstract class Cell {
     protected Cell[][] myGrid;
     protected List<String> myStates;
 
-    private final String SQUARE = "Rectangle";
+    private final String SQUARE = "Square";
     private final String TRIANGLE = "Triangle";
 
     private int myNumUserCalls;

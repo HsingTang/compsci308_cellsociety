@@ -94,7 +94,7 @@ public class UI extends Scene {
 
     private void initStartingCoordinates(String shape){
         switch (shape){
-            case "Rectangle":
+            case "Square":
                 myStartingCoordinates = new Integer[]{
                         0, 0,
                         CELL_WIDTH, 0,
