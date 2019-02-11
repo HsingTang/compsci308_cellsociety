@@ -32,7 +32,7 @@ public class Simulation extends Application {
     static final String FIRE_XML = "Fire";
     static final String SEG_XML = "Segregation";
     static final String PERC_XML = "Percolation";
-    static final String RPS_XML = "RPS";
+    static final String RPS_XML = "Rock Paper Scissors";
 
     private int myWidth;
     private int myHeight;

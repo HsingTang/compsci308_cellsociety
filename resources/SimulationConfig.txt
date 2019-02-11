@@ -19,6 +19,6 @@ Segregation
 Percolation
 0
 3
-RPS
+Rock Paper Scissors
 0
 4

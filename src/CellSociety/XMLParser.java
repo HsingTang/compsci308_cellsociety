@@ -475,9 +475,10 @@ public class XMLParser {
 
     /**
      * @return immutable list storing simulation-specific parameters
+     * This list will be modifiable through user interaction with the UI scene
      */
     public List<Double> getParameters() {
-        return Collections.unmodifiableList(this.parameters);
+        return this.parameters;
     }
 
 
