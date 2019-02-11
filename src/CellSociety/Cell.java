@@ -109,9 +109,9 @@ public abstract class Cell {
                 //System.out.println("Made it to triangle shape");
                 return;
         }
+        System.out.println(shapeType);
         throw new IllegalArgumentException("Unknown Shape Type");
     }
-
 
     private boolean isSelf(int tempRow, int tempCol) {
         return tempRow == myRow && tempCol == myCol;

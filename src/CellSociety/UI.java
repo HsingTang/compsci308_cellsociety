@@ -27,7 +27,6 @@ public class UI extends Scene {
     private static final Paint BACKGROUND_FILL = Color.WHITE;
     private static final int GRID_HEIGHT = 400;
     private static final int GRID_WIDTH = 400;
-    private static final int CELL_BUFFER = 1;
 
     private static final int VBOX_BUFFER_TOP = 45;
     private static final int VBOX_BUFFER_SIDE = 30;
@@ -39,16 +38,27 @@ public class UI extends Scene {
 
     private final int GRID_ROW_NUM;
     private final int GRID_COL_NUM;
-    private final int CELL_HEIGHT;
-    private final int CELL_WIDTH;
     private final ObservableList<String> SIM_OPTIONS;
 
+    private final static int NUM_SQUARE_COORDINATES = 8;
+    private final static int NUM_TRIANGLE_COORDINATES = 6;
+
     private ResourceBundle myResources;
+
+    private int CELL_HEIGHT;
+    private int CELL_WIDTH;
 
     private Group myRoot;
     private Simulation mySimulation;
     private Map<Cell, Polygon> cellVisMap;
+    private String shape;
+    private int numCoordinates;
+    private Integer[] myStartingCoordinatesUpEven;
+    private Integer[] myStartingCoordinatesDownEven;
+    private Integer[] myStartingCoordinatesUpOdd;
+    private Integer[] myStartingCoordinatesDownOdd;
     private Integer[] myStartingCoordinates;
+
     private Map<String, String> stateMap;
     private Map<String, XYChart.Series> stateSeriesMap;
     private int stepNum;
@@ -60,9 +70,8 @@ public class UI extends Scene {
         myRoot = root;
         GRID_COL_NUM = width;
         GRID_ROW_NUM = height;
-        CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
-        CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
-        myResources = ResourceBundle.getBundle("/resources/English");
+        shape = cellShape;
+        myResources = ResourceBundle.getBundle("English");
         SIM_OPTIONS = FXCollections.observableArrayList(
                 myResources.getString("Fire"),
                 myResources.getString("GOL"),
@@ -94,20 +103,40 @@ public class UI extends Scene {
 
     private void initStartingCoordinates(String shape){
         switch (shape){
-            case "Rectangle":
+            case "Square":
+                numCoordinates = NUM_SQUARE_COORDINATES;
+                CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
+                CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
                 myStartingCoordinates = new Integer[]{
                         0, 0,
-                        CELL_WIDTH, 0,
                         0, CELL_HEIGHT,
-                        CELL_WIDTH, CELL_HEIGHT};
-                break;
+                        CELL_WIDTH, CELL_HEIGHT,
+                        CELL_WIDTH, 0
+                };
+                return;
             case "Triangle":
-                myStartingCoordinates = new Integer[]{
+                numCoordinates = NUM_TRIANGLE_COORDINATES;
+                CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM * 2;
+                CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM * 2;
+                myStartingCoordinatesUpEven = new Integer[]{
                         CELL_WIDTH/2, 0,
                         0, CELL_HEIGHT,
                         CELL_WIDTH, CELL_HEIGHT};
-                break;
-        }
+                myStartingCoordinatesDownEven = new Integer[]{
+                        CELL_WIDTH/2, 0,
+                        CELL_WIDTH, CELL_HEIGHT,
+                        CELL_WIDTH + CELL_WIDTH/2, 0};
+                myStartingCoordinatesUpOdd = new Integer[]{
+                        CELL_WIDTH, 0,
+                        CELL_WIDTH/2, CELL_HEIGHT,
+                        CELL_WIDTH + CELL_WIDTH/2, CELL_HEIGHT};
+                myStartingCoordinatesDownOdd = new Integer[]{
+                        0, 0,
+                        CELL_WIDTH/2, CELL_HEIGHT,
+                        CELL_WIDTH, 0};
+                return;
+            }
+        System.out.println("Invalid shape " + shape);
     }
 
     private LineChart<Number, Number> addGraph(){
@@ -155,8 +184,10 @@ public class UI extends Scene {
         for (int i = 0; i < GRID_ROW_NUM; i++){
             for (int j = 0; j < GRID_COL_NUM; j++){
                 Cell cell = cells[i][j];
-                Polygon cellShape = new Polygon(calcCurrentCoordinates(i, j));
+                Polygon cellShape = new Polygon(assignCurrentCoordinates(i, j));
                 cellShape.setFill(Color.web(stateMap.get(cell.getState())));
+                cellShape.setStroke(Color.BLACK);
+                cellShape.setStrokeWidth(1);
                 cellVisMap.put(cell, cellShape);
             }
         }
@@ -175,18 +206,82 @@ public class UI extends Scene {
         }
     }
 
-    private double[] calcCurrentCoordinates(int row, int col){
-        double [] currentCoordinates = new double[myStartingCoordinates.length];
-        for (int i = 0; i < myStartingCoordinates.length; i++){
-            if (i % 2 == 0){
-                currentCoordinates[i] = myStartingCoordinates[i] + col * CELL_WIDTH + CELL_BUFFER;
+    private double[] assignCurrentCoordinates(int row, int col){
+        double [] myCoordinates = new double[numCoordinates];
+        for (int i = 0; i < numCoordinates; i++) {
+            if (i % 2 == 0){ //assign x coordinate
+                if (shape.equals("Square")){
+                    myCoordinates[i] = calcXCoordinateSquare(col, row, i);
+                    System.out.println("square coordinates " + row + "," + col);
+                }
+                else if (shape.equals("Triangle")){
+                    myCoordinates[i] = calcXCoordinateTriangle(col, row, i);
+                }
             }
-            else{
-                currentCoordinates[i] = myStartingCoordinates[i] + row * CELL_WIDTH + CELL_BUFFER;
+            else {
+                if (shape.equals("Square")){
+                    myCoordinates[i] = calcYCoordinateSquare(col, row, i);
+                }
+                else if (shape.equals("Triangle")){
+                    myCoordinates[i] = calcYCoordinateTriangle(col, row, i);
+                }
             }
         }
-        return currentCoordinates;
+        return myCoordinates;
     }
+
+    private int calcXCoordinateTriangle(int col, int row, int i){
+        int x;
+        if (row % 2 == 0){
+            if (col % 2 == 0){
+                x = myStartingCoordinatesUpEven[i] + col * CELL_WIDTH;
+            }
+            else {
+                x = myStartingCoordinatesDownEven[i] + col * CELL_WIDTH;
+            }
+        }
+        else {
+            if (col % 2 == 0){
+                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH;
+            }
+            else {
+                x = myStartingCoordinatesDownOdd[i] + col * CELL_WIDTH;
+            }
+        }
+        return x;
+    }
+
+    private int calcXCoordinateSquare(int col, int row, int i){
+        int x = myStartingCoordinates[i] + col * CELL_WIDTH;
+        return x;
+    }
+
+    private int calcYCoordinateTriangle(int col, int row, int i) {
+        int y;
+        if (row % 2 == 0){
+            if (col % 2 == 0){
+                y = myStartingCoordinatesUpEven[i] + row * CELL_HEIGHT;
+            }
+            else {
+                y = myStartingCoordinatesDownEven[i] + row * CELL_HEIGHT;
+            }
+        }
+        else {
+            if (col % 2 == 0){
+                y = myStartingCoordinatesUpOdd[i] + row * CELL_HEIGHT;
+            }
+            else {
+                y = myStartingCoordinatesDownOdd[i] + row * CELL_HEIGHT;
+            }
+        }
+        return y;
+    }
+
+    private int calcYCoordinateSquare(int col, int row, int i) {
+        int y = myStartingCoordinates[i] + row * CELL_HEIGHT;
+        return y;
+    }
+
 
     private void setupLayout(){
         BorderPane borderPane = new BorderPane();
@@ -242,6 +337,7 @@ public class UI extends Scene {
     private Button pauseButton(){
         Button pauseButton = new Button(myResources.getString("PauseButton"));
         pauseButton.setOnMouseClicked(e -> mySimulation.pauseSimulation());
+        System.out.println("paused");
         return pauseButton;
     }
 
@@ -310,7 +406,7 @@ public class UI extends Scene {
     private ComboBox switchSimulationDropdown(){
         ComboBox switchSimulationDropdown = new ComboBox(SIM_OPTIONS);
         switchSimulationDropdown.setOnAction(e -> {
-            String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem() + "_XML";
+            String simulationType = (String) switchSimulationDropdown.getSelectionModel().getSelectedItem();
             mySimulation.setSimType(simulationType);
             mySimulation.startSimulation();
         });
