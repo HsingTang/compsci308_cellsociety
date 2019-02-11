@@ -201,7 +201,7 @@ public class UI extends Scene {
         if (x <= GRID_WIDTH && y <= GRID_HEIGHT){
             for (Map.Entry<Cell, Polygon> cell: cellVisMap.entrySet()){
                 if (cell.getValue().contains(x, y)){
-                    cell.getKey().updateState();
+                    cell.getKey().userSwitchState();
                 }
             }
         }
