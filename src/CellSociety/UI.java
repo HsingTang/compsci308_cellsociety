@@ -202,6 +202,8 @@ public class UI extends Scene {
             for (Map.Entry<Cell, Polygon> cell: cellVisMap.entrySet()){
                 if (cell.getValue().contains(x, y)){
                     cell.getKey().userSwitchState();
+                    Paint fill = Color.web(stateMap.get(cell.getKey().getState()));
+                    cell.getValue().setFill(fill);
                 }
             }
         }
