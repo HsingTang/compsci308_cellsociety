@@ -18,7 +18,7 @@ Putting it together the first time meeting ~3 hrs
 Putting it together this past sunday ~3 hrs? you guys may have stayed longer
 
 Outside of meetings:
-Carrie: ~20 (i think)
+Carrie: ~27 (forgot about today the first time lol)
 Hsingchih: ~30
 
 ### Primary Roles
