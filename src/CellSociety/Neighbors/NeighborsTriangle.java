@@ -8,9 +8,9 @@ public class NeighborsTriangle extends Neighbors {
     private final int[] downCenter = {-2, -1, 1, 2};
     private final int[] downBottom = {-1, 0, 1};
 
-    private final int[] upTop = {2, 1, 0, -1, -2};
+    private final int[] upBottom = {2, 1, 0, -1, -2};
     private final int[] upCenter = {2, 1, -1, -2};
-    private final int[] upBottom =  {1, 0, -1};;
+    private final int[] upTop =  {1, 0, -1};
 
 
     public NeighborsTriangle(int row, int col, Cell[][] grid) {
@@ -24,14 +24,14 @@ public class NeighborsTriangle extends Neighbors {
 
 
         if(isPointingUp){
-            index = addNeighbors(index, downBottom, myRow-1);
-            index = addNeighbors(index, downCenter, myRow);
-            addNeighbors(index, downTop, myRow+1);
+            index = addNeighbors(index, upBottom, myRow + 1);
+            index = addNeighbors(index, upCenter, myRow);
+            addNeighbors(index, upTop, myRow - 1);
         }
         else{
-            index = addNeighbors(index, upTop, myRow + 1);
-            index = addNeighbors(index, upCenter, myRow);
-            addNeighbors(index, upBottom, myRow - 1);
+            index = addNeighbors(index, downTop, myRow - 1);
+            index = addNeighbors(index, downCenter, myRow);
+            addNeighbors(index, downBottom, myRow + 1);
         }
 
 

@@ -39,12 +39,15 @@ abstract public class Neighbors {
     public void initializeEdgeAndIndexes(String edgeType, List<Integer> neighborIndexes){
         if(isValidEdgeType(edgeType)){
             myEdgeType = edgeType;
+            System.out.println(myEdgeType + ": is a valid edge type");
         }
         else{
             throw new IllegalArgumentException("Not a valid edgetype");
         }
 
         myNeighborIndexes = neighborIndexes;
+        System.out.println("Printing neighborIndex size");
+        System.out.println(myNeighborIndexes.size());
     }
 
     public ArrayList<Cell> getNeighborsList(){
@@ -59,8 +62,10 @@ abstract public class Neighbors {
     private boolean isValidEdgeType(String edgeType){
         switch (edgeType){
             case FINITE:
+                //System.out.println("Edgetype = " + edgeType);
                 return true;
             case TOROIDAL:
+                //System.out.println("Edgetype = " + edgeType);
                 return true;
         }
         return false;
@@ -78,7 +83,10 @@ abstract public class Neighbors {
     }
 
     protected void handleEdgesAndAddCoords(Integer key, int tempRow, int tempCol) {
+        //System.out.println("\t Checking bounds (" + (tempRow + myRow) + ", " + (tempCol + myCol) + ")");
         if (inBounds(tempRow, tempCol)) {
+            //System.out.println("\t \t was in bounds");
+            //System.out.println("\t \t Index Number: " + key);
             //System.out.println("\t was in bounds");
             ArrayList<Integer> temp = new ArrayList<>();
             temp.add(tempRow);
@@ -89,7 +97,7 @@ abstract public class Neighbors {
         } else {
             //System.out.println("\t Was not in bounds");
             if (myEdgeType.equals(TOROIDAL)) {
-                //System.out.println("\t toroidal coordinates");
+                //System.out.println("Made it to Toroidal part ofhandling edges");
                 myIndexMap.put(key, findToroidalCoords(tempRow, tempCol));
             }
         }
@@ -104,36 +112,41 @@ abstract public class Neighbors {
         } else if (row < 0) {
             wrappedRow = myGrid.length + row;
         } else {
-            throw new IndexOutOfBoundsException("Row was within bounds of the grid");
+            wrappedRow = row;
         }
+        //System.out.println("\t\tWrapped the row to: " + wrappedRow);
 
         if (col >= myGrid[0].length) {
             wrappedCol = col - myGrid[0].length;
         } else if (col < 0) {
             wrappedCol = myGrid[0].length + col;
         } else {
-            throw new IndexOutOfBoundsException("Col was within bounds of grid");
+            wrappedCol = col;
         }
+        //System.out.println("\t\tWrapped the col");
 
         ArrayList<Integer> coords = new ArrayList<>();
         coords.add(wrappedRow);
         coords.add(wrappedCol);
+        //System.out.println("\t \t Added Neighbor (" + wrappedRow + ", " + wrappedCol + ")");
         return coords;
     }
 
     abstract protected void setIndexMap();
 
     private void setDesiredNeighbors(){
+        System.out.println("Cell Row: " + myRow + " Col: " + myCol);
         for (Integer index : myNeighborIndexes) {
             if (myIndexMap.containsKey(index)) {
                 ArrayList<Integer> coords = myIndexMap.get(index);
                 int row = coords.get(0);
                 int col = coords.get(1);
+                System.out.println("\t index: " + index + "(" + row + ", " + col + ")");
 
                 myNeighbors.add(myGrid[row][col]);
             }
         }
-    };
+    }
 
 
 }
