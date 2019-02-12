@@ -5,7 +5,7 @@
     <Width>3</Width>
     <Height>3</Height>
     <SpecifiedConfig>true</SpecifiedConfig>
-    <CellShape>Triangle</CellShape>
+    <CellShape>Square</CellShape>
     <EdgeStyle>Finite</EdgeStyle>
     <NeighborStyle>0;1;2;3;4;5;6;7</NeighborStyle>
     <State>
