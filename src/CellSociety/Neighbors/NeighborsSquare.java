@@ -15,7 +15,7 @@ public class NeighborsSquare extends Neighbors {
     protected void setIndexMap() {
         int[] dRow = new int[]{-1, 0, 1};
         int[] dCol = new int[]{-1, 0, 1};
-        System.out.println("Setting Index map for Row: " + myRow + " Col: " + myCol);
+        //System.out.println("Setting Index map for Row: " + myRow + " Col: " + myCol);
         Integer key = -1;
         //System.out.println("Row: " + myRow + " Col: " + myCol);
         for (int k = 0; k < dRow.length; k++) {

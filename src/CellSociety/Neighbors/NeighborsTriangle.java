@@ -24,7 +24,6 @@ public class NeighborsTriangle extends Neighbors {
 
 
         if(isPointingUp){
-            System.out.println("\t Is pointing up");
             index = addNeighbors(index, upBottom, myRow + 1);
             index = addNeighbors(index, upCenter, myRow);
             addNeighbors(index, upTop, myRow - 1);
