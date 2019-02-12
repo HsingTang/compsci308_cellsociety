@@ -90,7 +90,7 @@ public abstract class Cell {
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
     public void findNeighbors(Cell[][] cell, String shapeType, String edgeType, List<Integer> neighborIndexes){
-        //System.out.println("Made it to find Neighbors");
+        System.out.println("Made it to find Neighbors");
         myGrid = cell;
         switch(shapeType){
             case SQUARE:
@@ -99,6 +99,8 @@ public abstract class Cell {
                 //System.out.println("Made it past constructing square neighbors");
                 squareNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
                 //System.out.println("Made it past initializing edges and indexes");
+                //System.out.println("Trying to print Neighbors list size");
+                //System.out.println(squareNeighbors.getNeighborsList().size());
                 myNeighbors =  squareNeighbors.getNeighborsList();
                 //System.out.println("Made it to end of square shape");
                 return;
@@ -135,8 +137,17 @@ public abstract class Cell {
     }
 
     public void userSwitchState(){
-        int rem = myNumUserCalls % (myStates.size() - 1);
-        myCurrentState = myStates.get(rem);
+        myNumUserCalls++;
+        int rem = myNumUserCalls % myStates.size();
+
+        if(myStates.get(rem).equals(myCurrentState)){
+            myNumUserCalls++;
+            userSwitchState();
+            return;
+        }
+        else{
+            myCurrentState = myStates.get(rem);
+        }
     }
 
     /**
