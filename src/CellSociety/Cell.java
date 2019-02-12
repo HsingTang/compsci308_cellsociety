@@ -24,7 +24,7 @@ public abstract class Cell {
     private final String SQUARE = "Square";
     private final String TRIANGLE = "Triangle";
 
-    private int myNumUserCalls;
+    protected int myNumUserCalls;
 
     /**
      * @author Carrie Hunner (clh87)
