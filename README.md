@@ -11,7 +11,7 @@ Start Date: Jan.24, 2018
 
 Finish Date: Feb.11, 2018
 
-Hours Spent:  
+Hours Spent:
 * First meeting (in class) ~ 2 hrs  
 * Planning meeting ~ 3 hours  
 * Putting it together the first time meeting ~3 hrs  
@@ -88,7 +88,7 @@ In addition to the five simulations (Fire, Game of Life, Percolation,
 Segregation and WaTor) implemented in the first sprint, we further 
 implemented a new RPS simulation. 
 
-###Configuration
+### Configuration
 * **Implement error checking for incorrect file data:**
     * Pop up alert dialogue boxes when mal-formatted xml configuration
      files are loaded (e.g. missing configuration information, out-of-bound 
@@ -112,7 +112,7 @@ implemented a new RPS simulation.
     cell is assigned based on location indices.
     
 
-###Visualization
+### Visualization
 * **Display a graph of the populations of all of the "kinds" of cells over the time of the simulation:**
     * UI scene displays a lineChart that contains multiple series that each correspond to one 
     of the cell states in the specific simulation type
@@ -135,7 +135,7 @@ implemented a new RPS simulation.
     simulation type
 
 
-##Assumptions or Simplifications:
+## Assumptions or Simplifications:
 * **Burning Simulation:** a cell will check if it should catch on fire
 once for every burning neighbor it has. This means that more burning neighbors
 increases the chance of a tree catching. This was decided because
@@ -181,7 +181,7 @@ extremely doable with our current structure.
     to load the file, so this feature still has some space for improvements.
 
 
-##Extra credit:
+## Extra credit:
 * **Setting up Simulation and XMLParser error messages without hard-coding:**  
     Messages/information that are displayed to users directly are set up in the 
     Simulation class and XMLAlerts by reading from source files. The data being 
