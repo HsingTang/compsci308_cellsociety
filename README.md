@@ -3,7 +3,7 @@ cell society
 
 This project implements a cellular automata simulator.
 
-Names: Hsing Tang, Irene Qiao, Carrie Hunner
+Names: Hsingchih Tang, Irene Qiao, Carrie Hunner
 
 ### Timeline
 
@@ -15,13 +15,14 @@ Hours Spent: **I'm thinking whoever fills out there hours last can add them all 
 First meeting (in class) ~ 2 hrs
 Planning meeting ~ 3 hours
 Putting it together the first time meeting ~3 hrs
-Putting it together this past sunday ~2 hrs? you guys may have stayed longer
+Putting it together this past sunday ~3 hrs? you guys may have stayed longer
 
 Outside of meetings:
 Carrie: ~20 (i think)
+Hsingchih: ~30
 
 ### Primary Roles
-Hsing Tang - Configuration: Created the Simulation, XMLParser and 
+Hsingchih Tang - Configuration: Created the Simulation, XMLParser and 
 XMLAlert classes. Implemented configuration file parsing, simulation 
 flow control, cell initialization and switching between scenes.
 
@@ -171,3 +172,5 @@ in a reasonable amount of time. Through this project, I got a better
 sense of what sort of things need to be planned ahead of time when
 working in a group, as well as grew far more adept at debugging and 
 locating the source of errors through print statements.
+
+Hsing: 
