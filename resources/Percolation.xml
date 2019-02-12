@@ -5,7 +5,7 @@
     <Width>50</Width>
     <Height>50</Height>
     <SpecifiedConfig>false</SpecifiedConfig>
-    <NeighborStyle>0;2;4;6</NeighborStyle>
+    <NeighborStyle>0;1;2;3;4;5;6;7</NeighborStyle>
     <State>
         <StateName>Open</StateName>
         <StateImage>White</StateImage>

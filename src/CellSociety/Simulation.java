@@ -1,5 +1,6 @@
 package CellSociety;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -145,7 +146,6 @@ public class Simulation extends Application {
             readXML();
         }
         catch (Exception e){
-            System.out.println("ParserConfig exception thrown");
             myParser.parserConfigAlert.showAlert();
             throw e;
         }
@@ -179,13 +179,9 @@ public class Simulation extends Application {
                 myGrid[i][j] = currCell;
             }
         }
-        System.out.println("grid initialized");
         initNeighbors();
-        System.out.println("Neighbor initialized");
         initUI();
-        System.out.println("UI initialized");
         initTimeline();
-        System.out.println("timeline initialized");
     }
 
 
@@ -228,19 +224,15 @@ public class Simulation extends Application {
      * Loop through all cells in the grid and initialize neighbors for each cell
      */
     private void initNeighbors(){
-        System.out.println("entered initNeighbor");
         int i = 0;
         for (Cell[] row :myGrid) {
             int j = 0;
             for (Cell currCell:row) {
-                System.out.println(cellShape);
                 currCell.findNeighbors(myGrid,cellShape,edgeType,neighborList);
-                System.out.println("neighbor initialized for cell row "+i+" col "+j);
                 j++;
             }
             i++;
         }
-        System.out.println("after initNeighbor");
     }
 
 
@@ -366,7 +358,8 @@ public class Simulation extends Application {
         try{
             initGrid();
         }catch (Exception e){
-            System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
+            System.out.println("Exception occurred at simulation "+SIM_TYPE+".");
+            System.out.println("Simulation terminated.");
             Platform.exit();
         }
     }
@@ -406,10 +399,12 @@ public class Simulation extends Application {
      */
     public void resetSimulation(){
         this.myTimeline.pause();
+        this.delay = (minDelay+maxDelay)/2;
         try {
             initGrid();
         }catch (Exception e){
-            System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
+            System.out.println("Exception occurred at simulation "+SIM_TYPE);
+            System.out.println("Simulation terminated.");
             Platform.exit();
         }
     }
@@ -426,7 +421,8 @@ public class Simulation extends Application {
         try{
             initGrid();
         }catch (Exception e){
-            System.out.println("XMLParserConfigurationException occurred at simulation "+SIM_TYPE);
+            System.out.println("Exception occurred at simulation "+SIM_TYPE);
+            System.out.println("Simulation terminated.");
             Platform.exit();
         }
 
@@ -440,8 +436,12 @@ public class Simulation extends Application {
     public void setSpeed(Double d) {
         this.myTimeline.stop();
         this.delay = maxDelay-d*(maxDelay-minDelay);
-        initTimeline();
-        playSimulation();
+        if(this.myTimeline.getStatus()== Animation.Status.RUNNING){
+            initTimeline();
+            playSimulation();
+        }else{
+            initTimeline();
+        }
     }
 
 
