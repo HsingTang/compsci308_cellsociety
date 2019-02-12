@@ -14,11 +14,11 @@ abstract public class Neighbors {
     protected List<Integer> myNeighborIndexes;
     protected String myEdgeType;
 
-    protected ArrayList<Cell> myNeighbors;
+    protected List<Cell> myNeighbors;
     protected HashMap<Integer, ArrayList<Integer>> myIndexMap;
 
-    protected final String FINITE = "Finite";
-    protected final String TOROIDAL = "Toroidal";
+    protected static final String FINITE = "Finite";
+    protected static final String TOROIDAL = "Toroidal";
 
 
     Neighbors(int row, int col, Cell[][] grid){
@@ -50,7 +50,7 @@ abstract public class Neighbors {
         System.out.println(myNeighborIndexes.size());
     }
 
-    public ArrayList<Cell> getNeighborsList(){
+    public List<Cell> getNeighborsList(){
         setIndexMap();
         //System.out.println("set index map");
         setDesiredNeighbors();

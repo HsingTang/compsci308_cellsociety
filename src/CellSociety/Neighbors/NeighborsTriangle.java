@@ -4,13 +4,15 @@ import CellSociety.Cell;
 
 public class NeighborsTriangle extends Neighbors {
     private boolean isPointingUp;
-    private final int[] downTop= {-2, -1, 0, 1, 2};
-    private final int[] downCenter = {-2, -1, 1, 2};
-    private final int[] downBottom = {-1, 0, 1};
 
-    private final int[] upBottom = {2, 1, 0, -1, -2};
-    private final int[] upCenter = {2, 1, -1, -2};
-    private final int[] upTop =  {1, 0, -1};
+    //these are all static because the design.cs website was setting alerts
+    private static final int[] downTop= {-2, -1, 0, 1, 2};
+    private static final int[] downCenter = {-2, -1, 1, 2};
+    private static final int[] downBottom = {-1, 0, 1};
+
+    private static final int[] upBottom = {2, 1, 0, -1, -2};
+    private static final int[] upCenter = {2, 1, -1, -2};
+    private static final int[] upTop =  {1, 0, -1};
 
 
     public NeighborsTriangle(int row, int col, Cell[][] grid) {
