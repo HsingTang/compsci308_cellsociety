@@ -103,22 +103,13 @@ public class CellWATOR extends Cell {
                 findEmptyNeighbors();
 
                 //checks if died
-                if(mySharkEnergy <= 0){
-                    myNextState = EMPTY;
-                    return;
-                }
+                if (sharkDied()) return;
                 //eating fish
                 if(!myFishNeighbors.isEmpty()){
-                    checkForBaby(SHARK);
-                    eatFish();
-                    resetCellIfNecessary();
+                    moveToFishNeighbor();
                 }
-                //no fish to eat
-                //moves to empty space
                 else if(!myEmptyNeighbors.isEmpty()){
-                    checkForBaby(SHARK);
-                    moveSharkToEmptyNeighbor();
-                    resetCellIfNecessary();
+                    moveToEmptyNeighbor();
                 }
                 else{
                     sharkStays();
@@ -129,6 +120,26 @@ public class CellWATOR extends Cell {
                     myNextState = EMPTY;
                 }
         }
+    }
+
+    private void moveToEmptyNeighbor() {
+        checkForBaby(SHARK);
+        moveSharkToEmptyNeighbor();
+        resetCellIfNecessary();
+    }
+
+    private void moveToFishNeighbor() {
+        checkForBaby(SHARK);
+        eatFish();
+        resetCellIfNecessary();
+    }
+
+    private boolean sharkDied() {
+        if(mySharkEnergy <= 0){
+            myNextState = EMPTY;
+            return true;
+        }
+        return false;
     }
 
     private void resetCellIfNecessary() {
