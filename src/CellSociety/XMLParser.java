@@ -29,8 +29,6 @@ public class XMLParser {
     // Immutable file path and XML tags for parsing file
     static final String ALERT_CONFIG_PATH = "resources/XMLAlertText.txt";
     static final String SIM_TYPE_TAG = "Type";
-    static final String TITLE_TAG = "Title";
-    static final String AUTHOR_TAG = "Author";
     static final String WIDTH_TAG = "Width";
     static final String HEIGHT_TAG = "Height";
     static final String CONFIG_TAG = "SpecifiedConfig";
