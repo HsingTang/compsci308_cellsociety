@@ -45,24 +45,16 @@ public class CellWATOR extends Cell {
         myFishNeighbors = new ArrayList<>();
 
         setParams();
-
+        mySharkEnergy = myNewSharkEnergy;
 
         myTurnsSurvived = 0;
     }
 
-    /**
-     * Sets the parameters of the simulation.
-     * @param params ArrayList of doubles.
-     *               Zero index: time it takes for a fish to reproduce
-     *               One index: time it takes for a shark to reproduce
-     *               Two Index: amount of energy a shark begins with
-     *               Three Index: amount of energy sharl gains from eating a fish
-     */
     @Override
     protected void setParams(){
         myFishReproTime = myParams.get(0);
         mySharkReproTime = myParams.get(1);
-        mySharkEnergy = myParams.get(2);
+
         myNewSharkEnergy = myParams.get(2);
         mySharkEatingEnergy = myParams.get(3);
     }
@@ -108,28 +100,13 @@ public class CellWATOR extends Cell {
                     findEmptyNeighbors();
                     ////System.out.println("\t Above has " + myEmptyNeighbors.size() + " Empty Neighbors");
 
-                    //can't move
-                    if(myEmptyNeighbors.isEmpty()){
-                        fishStays();
-                        ////System.out.println("\t Above can't move");
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
-                    else{
-                        moveFish();
-                        ////System.out.println("\t about to check for baby");
-                        checkForBaby(FISH);
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
+                    setFishNextState();
                 }
                 return;
             case SHARK:
-                //System.out.println(myCurrentState + " at Row: " + myRow + " Col: " + myCol);
-                //System.out.println("\t Turns Survived: " + myTurnsSurvived);
-                //System.out.println("\t Energy: " + mySharkEnergy);
+                System.out.println(myCurrentState + " at Row: " + myRow + " Col: " + myCol);
+                System.out.println("\t Turns Survived: " + myTurnsSurvived);
+                System.out.println("\t Energy: " + mySharkEnergy);
 
                 findFishNeighbors();
                 findEmptyNeighbors();
@@ -147,39 +124,41 @@ public class CellWATOR extends Cell {
 
                 //eating fish
                 if(!myFishNeighbors.isEmpty()){
-                    eatFish();
-                    ////System.out.println("\t about to check for baby");
                     checkForBaby(SHARK);
+                    eatFish();
+                    resetCellIfNecessary();
+                    ////System.out.println("\t about to check for baby");
+
                     ////System.out.println("\t\tFinal Next State: " + myNextState);
                     ////System.out.println("\t\tFinal Current State: " + myCurrentState);
                 }
                 //no fish to eat
                 //moves to empty space
                 else if(myEmptyNeighbors.size() != 0){
-                    moveSharkToEmptyNeighbor();
-                    ////System.out.println("\t about to check for baby");
                     checkForBaby(SHARK);
+                    moveSharkToEmptyNeighbor();
+                    resetCellIfNecessary();
+                    ////System.out.println("\t about to check for baby");
+
                     ////System.out.println("\t\tFinal Next State: " + myNextState);
                     ////System.out.println("\t\tFinal Current State: " + myCurrentState);
                 }
                 //can't move
+//                    //moves to empty space
+//                    if(!myEmptyNeighbors.isEmpty()){
+//                        moveSharkToEmptyNeighbor();
+//                        ////System.out.println("\t about to check for baby");
+//                        checkForBaby(SHARK);
+//                        ////System.out.println("\t\tFinal Next State: " + myNextState);
+//                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+//                        return;
+//                    }
+                //can't move
                 else{
-                    //moves to empty space
-                    if(!myEmptyNeighbors.isEmpty()){
-                        moveSharkToEmptyNeighbor();
-                        ////System.out.println("\t about to check for baby");
-                        checkForBaby(SHARK);
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
-                    //can't move
-                    else{
-                        sharkStays();
-                        ////System.out.println("\t\tFinal Next State: " + myNextState);
-                        ////System.out.println("\t\tFinal Current State: " + myCurrentState);
-                        return;
-                    }
+                    sharkStays();
+                    ////System.out.println("\t\tFinal Next State: " + myNextState);
+                    ////System.out.println("\t\tFinal Current State: " + myCurrentState);
+
                 }
                 return;
 
@@ -188,6 +167,14 @@ public class CellWATOR extends Cell {
                     myNextState = EMPTY;
                 }
         }
+    }
+
+    private void resetCellIfNecessary() {
+        //no baby
+        if(myNextState.equals("")){
+            myNextState = EMPTY;
+        }
+        myNextTurnsSurvived = 0;
     }
 
     private void setFishNextState() {
@@ -203,9 +190,11 @@ public class CellWATOR extends Cell {
             return;
         }
         else{
-            moveFish();
-            ////System.out.println("\t about to check for baby");
             checkForBaby(FISH);
+            moveFish();
+            resetCellIfNecessary();
+            ////System.out.println("\t about to check for baby");
+
             ////System.out.println("\t\tFinal Next State: " + myNextState);
             ////System.out.println("\t\tFinal Current State: " + myCurrentState);
             return;
@@ -243,7 +232,6 @@ public class CellWATOR extends Cell {
 
         nextCell.setNextSharkEnergy(mySharkEnergy - 1 + mySharkEatingEnergy);
         nextCell.setNextTurnsSurvived(myTurnsSurvived);
-        myNextState = EMPTY;
         ////System.out.println("\tSet above to EMPTY cuz eating fish");
         ////System.out.println("\tEaten Fish cell state: " + nextCell.getNextState());
     }
@@ -270,7 +258,7 @@ public class CellWATOR extends Cell {
     }
 
     private void checkForBaby(String s){
-        switch(myCurrentState){
+        switch(s){
             case SHARK:
                 if(myTurnsSurvived > mySharkReproTime){
                     myNextState = SHARK;
@@ -278,14 +266,8 @@ public class CellWATOR extends Cell {
                     myNextTurnsSurvived = 0;
                     myTurnsSurvived = 0;    //reset turns survived
                     myNextSharkEnergy = myNewSharkEnergy;
-                    return;
                 }
-                else{
-                    myNextState = EMPTY;
-                    myTurnsSurvived = 0;
-                    //System.out.println("\t no baby");
-                    return;
-                }
+                return;
             case FISH:
                 if(myTurnsSurvived > myFishReproTime){
                     //System.out.println("\t Turns: " + myTurnsSurvived + " > Repro " + myFishReproTime + " = BABY");
@@ -296,12 +278,7 @@ public class CellWATOR extends Cell {
 
                     return;
                 }
-                else{
-                    myTurnsSurvived = 0;
-                    myNextState = EMPTY;
-                    //System.out.println("\t no baby");
-                    return;
-                }
+                return;
         }
     }
 
@@ -350,6 +327,16 @@ public class CellWATOR extends Cell {
                 }
 
             }
+        }
+    }
+
+    @Override
+    public void userSwitchState(){
+        super.userSwitchState();
+        myTurnsSurvived = 0;
+
+        if(myCurrentState.equals(SHARK)){
+            mySharkEnergy = myNewSharkEnergy;
         }
     }
 
