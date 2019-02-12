@@ -63,7 +63,6 @@ of cell states and parameters for initializing a simulation process.
 Interesting data files:
 
 # Features implemented:
-
 ## Simulation
 * Allowing for a different number of neighbor rearrangements:
 The XML file can contain a list of integers that act
@@ -162,4 +161,15 @@ if its energy is too low. This may look like a glitch, or sometimes
 like a fish is eating a shark, but it is not.
 
 ### Impressions
+We spent a large amount of time planning for sprint 1 to make
+our code flexible and to try and anticipate what new features
+could be requested. As a result, most of the additions were
+relatively easy to add. 
 
+For simulation, some refactoring was required
+to better accommodate variables that affected the cell's neighbors 
+(ie edgetype and specifying specific neighbors) but most of the code
+was written and just needed to be separated and organized. Additionally,
+adding the RPS simulation was relatively easy, as it only
+required extending the super class and then writing the 
+findNextState method.
