@@ -52,9 +52,9 @@ abstract public class Neighbors {
 
     public ArrayList<Cell> getNeighborsList(){
         setIndexMap();
-        System.out.println("set index map");
+        //System.out.println("set index map");
         setDesiredNeighbors();
-        System.out.println("set desired neighbors");
+        //System.out.println("set desired neighbors");
 
         return myNeighbors;
     }
@@ -62,10 +62,10 @@ abstract public class Neighbors {
     private boolean isValidEdgeType(String edgeType){
         switch (edgeType){
             case FINITE:
-                System.out.println("Edgetype = " + edgeType);
+                //System.out.println("Edgetype = " + edgeType);
                 return true;
             case TOROIDAL:
-                System.out.println("Edgetype = " + edgeType);
+                //System.out.println("Edgetype = " + edgeType);
                 return true;
         }
         return false;
@@ -128,7 +128,7 @@ abstract public class Neighbors {
         ArrayList<Integer> coords = new ArrayList<>();
         coords.add(wrappedRow);
         coords.add(wrappedCol);
-        System.out.println("\t \t Added Neighbor (" + wrappedRow + ", " + wrappedCol + ")");
+        //System.out.println("\t \t Added Neighbor (" + wrappedRow + ", " + wrappedCol + ")");
         return coords;
     }
 
@@ -141,7 +141,7 @@ abstract public class Neighbors {
                 ArrayList<Integer> coords = myIndexMap.get(index);
                 int row = coords.get(0);
                 int col = coords.get(1);
-                System.out.println("\t (" + row + ", " + col + ")");
+                System.out.println("\t index: " + index + "(" + row + ", " + col + ")");
 
                 myNeighbors.add(myGrid[row][col]);
             }
