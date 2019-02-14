@@ -20,10 +20,23 @@ import java.util.*;
 
 /**
  * @author Hsingchih Tang
- * Trunk of the cell society project
- * Control the simulation flow by invoking and connecting XMLParser, IntroScene, UI and Cell classes
- * Retrieve simulation configuration parameters from XMLParser and pass arguments into UI and Cells
- * Respond to user action of playing/resuming/stepping/switching simulation
+ * Trunk of the cell society project. Control the flow (timeline) of simulation by invoking and
+ * connecting up Configurator, XMLAlert, XMLException, XMLParser, IntroScene, UI and Cell classes;
+ * Retrieve simulation configuration parameters from Configurator and pass arguments into UI and Cells;
+ * Respond to user action of playing/resuming/stepping/switching simulation.
+ *
+ *
+ * Code Refactoring:
+ * I split the original Simulation class into two by introducing a new class, Configurator.
+ * In comparison to Simulation, which has to somehow work with javaFX in order to control the timeline,
+ * Configurator contains purely back-end stuff and is thus the core of the whole program, whereas Simulation
+ * still implements some javaFX effects in order to work with purely front-end classes such as IntroScene and UI.
+ *
+ * Additionally, Simulation is also responsible for setting up text content for alert messages that will be displayed
+ * to users when Exceptions occur. The alert messages are stored in a source file; Simulation reads in the text, and
+ * creates different SimulationAlert objects for displaying the messages in Alert dialogue boxes. Any Exception that
+ * occurs at Configurator and XMLParser when parsing the XML files will eventually be thrown out to Simulation, who
+ * handles the Exception by popping up corresponding Alert dialogue to user.
  */
 public class Simulation extends Application {
 
@@ -44,8 +57,7 @@ public class Simulation extends Application {
     private UI myUIScene;
 
 
-    // XMLAlerts to pop up when encountering mal-formatted XML file
-    // package-private variables
+    // XMLAlerts to pop up if encounter exceptions when parsing XML configuration files
     SimulationAlert XMLFileNotFoundAlert = new SimulationAlert();
     SimulationAlert parserConfigAlert = new SimulationAlert();
     SimulationAlert SAXAlert = new SimulationAlert();
@@ -67,19 +79,20 @@ public class Simulation extends Application {
 
     /**
      * Constructor of a Simulation object
-     * Call readConfig() to set up the Simulation class with specific parameters
+     * Create a Configurator to read in the default simulation configuration parameters
+     * Retrieve parameters from Configurator and set up the simulation
      */
     public Simulation() throws IOException{
         super();
         try{
             myConfig = new Configurator();
         }catch (FileNotFoundException e){
-            throw new IOException("Simulation configuration file is missing.",e);
+            throw new IOException("Necessary simulation configuration file is missing.",e);
         }
         try {
             setupAlert();
         } catch (FileNotFoundException e) {
-            throw new IOException("Alert Setup file is missing.", e);
+            throw new IOException("Necessary alert setup file is missing.", e);
         }
         this.minDelay = myConfig.getMinDelay();
         this.maxDelay = myConfig.getMaxDelay();
@@ -89,7 +102,6 @@ public class Simulation extends Application {
         this.myGrid = myConfig.getGrid();
         resetDelay();
     }
-
 
 
     /**
@@ -102,12 +114,138 @@ public class Simulation extends Application {
     }
 
 
+    /**
+     * @return the 2D array of Cells for this simulation
+     * Want both UI and Simulation to both have direct access to the cell objects,
+     * so this method returns the exact original 2D cell array stored in Simulation.
+     */
+    public Cell[][] getGrid() {
+        return this.myGrid;
+    }
+
+
+    /**
+     * @return a map associating state and corresponding image visualization
+     * The original map is stored in Configurator, who hands out the map as an immutable object.
+     */
+    public Map<String, String> getStateImageMap(){
+        return myConfig.getStateImageMap();
+    }
+
+
+    /**
+     * @return the current simulation model's XML file path
+     */
+    public String getSimulationType() {
+        return this.SIM_TYPE;
+    }
+
+
+    /**
+     * External classes can call this method to change the simulation type, which affects the program choice of
+     * which file to read. Simulation will change both its own SIM_TYPE variable and the Configurator's SIM_TYPE.
+     * The corresponding XML file should be available in resources folder. If not, a FileNotFoundException will be
+     * thrown by XMLParser, received and rethrown by Configurator, and eventually handled by Simulation who pops up
+     * an alert dialogue box to user.
+     * @param s name of the new simulation's XML file
+     */
+    public void setSimType(String s) {
+        this.SIM_TYPE = s;
+        this.myConfig.setConfigSimType(s);
+    }
+
+
+    /**
+     * Modify the simulation speed by adjusting delay time between frames based on the passed-in double
+     * The double passed in is expected to be between 0 and 1, which indicates the desired delay
+     * with respect to default minDelay and maxDelay
+     */
+    public void setSpeed(Double d) {
+        Animation.Status prevStatus = this.myTimeline.getStatus();
+        this.myTimeline.stop();
+        this.delay = maxDelay-d*(maxDelay-minDelay);
+        if(prevStatus== Animation.Status.RUNNING){
+            initTimeline();
+            playSimulation();
+        }else{
+            initTimeline();
+        }
+    }
+
+
+    /**
+     * Public method for starting a new simulation.
+     * Reset all simulation model-specific parameters and initialize a new UI and animation timeline.
+     * Expected to be called from IntroScene after user has selected a simulation model.
+     */
+    public void startSimulation(){
+        initSimulation();
+        initUI();
+        initTimeline();
+    }
+
+
+    /**
+     * Pause the simulation by pausing the animation timeline.
+     * Expected to be called by UI when a pause button is pressed.
+     */
+    public void pauseSimulation() {
+        this.myTimeline.stop();
+    }
+
+
+    /**
+     * Run the simulation by resuming/starting the animation timeline.
+     * Expected to be called by UI when a start/resume button is pressed.
+     */
+    public void playSimulation() {
+        this.myTimeline.play();
+    }
+
+
+    /**
+     * Update Cell states to the next generation and then pause.
+     * Expected to be called by UI when a step button is pressed.
+     */
+    public void stepSimulation() {
+        this.myTimeline.pause();
+        updateGrid();
+    }
+
+
+    /**
+     * Reset all cell states according to XML file's configuration
+     * and still remain in the same simulation model
+     */
+    public void resetSimulation(){
+        this.myTimeline.pause();
+        resetDelay();
+        initSimulation();
+        initUI();
+        initTimeline();
+    }
+
+
+    /**
+     * Switch to the other simulation model by reading the corresponding XML file and reinitializing the grid
+     * Expected to be called by UI after User has selected a Simulation type from dropdown menu
+     * @param newSimType path to the XML file for the new Simulation
+     */
+    public void switchSimulation(String newSimType){
+        this.myTimeline.stop();
+        this.setSimType(newSimType);
+        initSimulation();
+        initUI();
+        resetDelay();
+        initTimeline();
+    }
+
 
     /**
      * Set up error messages of SimulationAlert
      * Alert dialogue boxes will pop up if an XML configuration file is mal-formatted
      *
-     * @throws FileNotFoundException if the source file storing error message text is not found
+     * @throws FileNotFoundException if the source file storing alert messages is not found
      */
     private void setupAlert() throws FileNotFoundException {
         Scanner sc;
@@ -139,26 +277,10 @@ public class Simulation extends Application {
 
 
     /**
-     * External classes can call this method to change the simulation type
-     * The corresponding XML file should be available in resources folder
-     * @param s name of the new simulation's XML file
-     */
-    public void setSimType(String s) {
-        this.SIM_TYPE = s;
-        this.myConfig.setConfigSimType(s);
-    }
-
-
-    private void resetDelay(){
-        this.delay = minDelay/2+maxDelay/2;
-    }
-
-    /**
-     * Initialize the UI class for creating visualization of the simulation
+     * Initialize the UI class for creating visualization of the simulation.
      */
     private void initUI() {
         Group myUIRoot = new Group();
-        //myUIScene = new UI(myUIRoot, myWidth, myHeight, this);
         myUIScene = new UI(myUIRoot, myWidth, myHeight, myConfig.getCellShape(), myConfig.getParamList(), this);
         myUIScene.drawGrid();
         myUIScene.drawGraph();
@@ -168,8 +290,8 @@ public class Simulation extends Application {
 
 
     /**
-     * Initialize a new timeline for the simulation
-     * updateGrid() is called by eventHandler of the frame each 'delay' interval
+     * Initialize a new timeline for the simulation.
+     * updateGrid() is called by eventHandler of the frame each 'delay' interval.
      */
     private void initTimeline() {
         var frame = new KeyFrame(Duration.millis(delay), e -> updateGrid());
@@ -178,6 +300,12 @@ public class Simulation extends Application {
         this.myTimeline.getKeyFrames().add(frame);
     }
 
+
+    /**
+     * Call the Configurator to read in XML file and initialize the grid of cells.
+     * Any Exception that occurs at XMLParser or Configurator will be thrown out and
+     * get handled here by popping up a corresponding alert dialogue box.
+     */
     private void initSimulation(){
         try{
             myGrid = myConfig.initGrid();
@@ -210,23 +338,16 @@ public class Simulation extends Application {
 
 
     /**
-     * @return the 2D array of Cells for this simulation
+     * Set the delay for the animation frame to the default value,
+     * which is the average of default minDelay and maxDelay.
      */
-    public Cell[][] getGrid() {
-        return this.myGrid;
+    private void resetDelay(){
+        this.delay = minDelay/2+maxDelay/2;
     }
 
 
     /**
-     * @return an immutable map associating state and corresponding image visualization
-     */
-    public Map<String, String> getStateImageMap(){
-        return myConfig.getStateImageMap();
-    }
-
-
-    /**
-     * Update all Cells' states in the grid
+     * Update all Cells' states in the grid and notify UI to update visualization.
      */
     private void updateGrid() {
         for (Cell[] row : myGrid) {
@@ -241,100 +362,6 @@ public class Simulation extends Application {
         }
         this.myUIScene.drawGrid();
         this.myUIScene.drawGraph();
-    }
-
-
-    /**
-     * Public method for starting a new simulation
-     * Expected to be called from IntroScene after user has selected a simulation model
-     */
-    public void startSimulation(){
-        initSimulation();
-        initUI();
-        initTimeline();
-    }
-
-
-    /**
-     * Pause the simulation
-     * Expected to be called by UI when a pause button is pressed
-     */
-    public void pauseSimulation() {
-        System.out.println("paused");
-        this.myTimeline.stop();
-    }
-
-
-    /**
-     * Run the simulation
-     * Expected to be called by UI when a start/resume button is pressed
-     */
-    public void playSimulation() {
-        this.myTimeline.play();
-    }
-
-
-    /**
-     * Update Cell states to the next generation and then pause
-     * Expected to be called by UI when a step button is pressed
-     */
-    public void stepSimulation() {
-        this.myTimeline.pause();
-        updateGrid();
-    }
-
-
-    /**
-     * Reset all cell states according to XML file's configuration
-     * and still remain in the same simulation model
-     */
-    public void resetSimulation(){
-        this.myTimeline.pause();
-        resetDelay();
-        initSimulation();
-        initUI();
-        initTimeline();
-    }
-
-
-    /**
-     * Switch to the other simulation model by reading the corresponding XML file and reinitializing the grid
-     * Expected to be called by UI after User has selected a Simulation type from dropdown menu
-     * @param newSimType path to the XML file for the new Simulation
-     */
-    public void switchSimulation(String newSimType){
-        this.myTimeline.stop();
-        System.out.println("stopped for switching");
-        this.setSimType(newSimType);
-        initSimulation();
-        initUI();
-        resetDelay();
-        initTimeline();
-    }
-
-
-    /**
-     * Modify the simulation speed by adjusting delay time between frames based on the passed-in double
-     * The double passed in is expected to be between 0 and 1
-     */
-    public void setSpeed(Double d) {
-        Animation.Status prevStatus = this.myTimeline.getStatus();
-        this.myTimeline.stop();
-        this.delay = maxDelay-d*(maxDelay-minDelay);
-        if(prevStatus== Animation.Status.RUNNING){
-            initTimeline();
-            playSimulation();
-        }else{
-            initTimeline();
-        }
-    }
-
-
-    /**
-     * @return the current simulation model's XML file path
-     */
-    public String getSimulationType() {
-        return this.SIM_TYPE;
     }
 
 

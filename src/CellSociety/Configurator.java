@@ -13,6 +13,19 @@ import java.util.*;
 
 import static java.lang.Math.ceil;
 
+/**
+ * @author Hsingchih Tang
+ * Core of the cell society project. Establish connection between Simulation and XMLParser for configuring
+ * the simulation with information parsed from text or xml files.
+ *
+ * Code Refactoring:
+ * This is a new class split from the original Simulation class, and serves as the pure back-end of the whole project.
+ * None of its mothods implements front-end effects (in this project, accomplished via JavaFX), so this class
+ * can be completely closed and still be compatible to different front-ends.
+ *
+ * Any parsing exception or file mal-formatting issue will be thrown out to Simulation class, who handles the Exceptions
+ * by popping up alert dialogue boxes to user.
+ */
 public class Configurator {
     static final String configFilePath = "resources/SimulationConfig.txt";
     static final String GOL_XML = "Game of Life";
@@ -45,107 +58,30 @@ public class Configurator {
     private Cell[][] myGrid;
 
 
+    /**
+     * Constructor of Configurator
+     * Reads in the general simulation configuration file (not specific to any model), which contains information about
+     * valid model types, associated number of states and parameters, as well as default simulation speed and grid size
+     * @throws FileNotFoundException if the general configuration file is missing
+     */
     public Configurator() throws FileNotFoundException{
         try{
             readConfig();
         }catch (FileNotFoundException e){
-            System.out.println("Simulation configuration file not found.");
+            System.out.println("General simulation configuration file not found.");
             throw e;
         }
     }
 
 
-    public double getMinDelay(){
-        return this.minDelay;
-    }
-
-
-    public double getMaxDelay(){
-        return this.maxDelay;
-    }
-
-    public int getWidth(){
-        return this.configWidth;
-    }
-
-    public int getHeight(){
-        return this.configHeight;
-    }
-
-    public String getTitle(){
-        return this.myTitle;
-    }
-
-    public String getCellShape(){
-        return this.cellShape;
-    }
-
-    public String getSimType(){
-        return this.SIM_TYPE;
-    }
-
-    public List<Double> getParamList(){
-        return this.parametersList;
-    }
-
-    public Map<String, String> getStateImageMap(){
-        return Collections.unmodifiableMap(this.stateImageMap);
-    }
-
-    public Cell[][] getGrid(){
-        return this.myGrid;
-    }
-
-    public void setConfigSimType(String s){
-        this.SIM_TYPE = s;
-    }
-
-
-
     /**
-     * Read the configuration text file for basic parameters (default size, simulation delay, etc.) in Simulation
-     * @throws FileNotFoundException if the configuration file is not found
-     */
-    private void readConfig() throws FileNotFoundException {
-        Scanner sc = new Scanner(new File(configFilePath));
-        myTitle = sc.nextLine();
-        configWidth = Integer.valueOf(sc.nextLine());
-        configHeight = Integer.valueOf(sc.nextLine());
-        distributionAccuracy = Double.valueOf(sc.nextLine());
-        minDelay = Double.valueOf(sc.nextLine());
-        maxDelay = Double.valueOf(sc.nextLine());
-        while(sc.hasNextLine()){
-            String modelName = sc.nextLine();
-            Integer paramNum = Integer.valueOf(sc.nextLine());
-            Integer stateNum = Integer.valueOf(sc.nextLine());
-            SIM_TYPE_LIST.add(modelName);
-            SIM_PARAM_NUM.put(modelName,paramNum);
-            SIM_STATE_NUM.put(modelName,stateNum);
-        }
-    }
-
-
-    /**
-     * Check for error in XML parsing results. Terminate further grid initialization if invalid.
-     * @param parser XMLParser object which handled the input file
-     * @return boolean value indicating whether the parsed information is valid
-     */
-    private boolean validateSimulation(XMLParser parser) throws ModelErrException, ParamErrException, StateErrException {
-        if(!SIM_TYPE_LIST.contains(parser.getSimType())){
-            throw new ModelErrException("Invalid simulation type");
-        }else if(SIM_PARAM_NUM.get(parser.getSimType())!=parser.getParameters().size()){
-            throw new ParamErrException("Invalid parameter configuration for current simulation "+SIM_TYPE);
-        }else if(SIM_STATE_NUM.get(parser.getSimType())!=parser.getStateImg().keySet().size()){
-            throw new StateErrException("Invalid state configuration for current simulation "+SIM_TYPE);
-        }
-        return true;
-    }
-
-
-    /**
-     * A private method that's expected to be called from switchSimulation() or resetSimulation()
+     * A public method that's expected to be called from Simulation class
      * Initialize the grid of cells of a specific concrete cell class and set each cell's initial state
-     * Then pipeline to the next step of creating UI scene for displaying visualization
+     * @return a 2-D array of cells of a concrete cell class
+     * @throws SimulationException if readXML() encounters invalid/missing data during parsing
+     * @throws IOException if the simulation model's configuration file is not found by the XMLParser
+     * @throws ParserConfigurationException if the user's java environment does not support XMLParser
+     * @throws SAXException if the XML file format is invalid
      */
     public Cell[][] initGrid() throws SimulationException, IOException, ParserConfigurationException,SAXException{
         try{
@@ -190,7 +126,175 @@ public class Configurator {
 
 
     /**
-     * Initialize a list of states with/without the percentage distribution read from XML file
+     * @return the default minimum delay value for setting up animation frame in Simulation
+     */
+    public double getMinDelay(){
+        return this.minDelay;
+    }
+
+
+    /**
+     * @return the default maximum delay value for setting up animation frame in Simulation
+     */
+    public double getMaxDelay(){
+        return this.maxDelay;
+    }
+
+
+    /**
+     * @return the default grid width for setting up IntroScene and UI in Simulation
+     */
+    public int getWidth(){
+        return this.configWidth;
+    }
+
+
+    /**
+     * @return the default grid height for setting up IntroScene and UI in Simulation
+     */
+    public int getHeight(){
+        return this.configHeight;
+    }
+
+
+    /**
+     * @return the title to display on the application window when program is launched
+     */
+    public String getTitle(){
+        return this.myTitle;
+    }
+
+
+    /**
+     * @return the cell shape specified in model configuration file for setting up UI visualization
+     */
+    public String getCellShape(){
+        return this.cellShape;
+    }
+
+
+    /**
+     * @return the list of parameters specified in model configuration file for setting up UI visualization
+     * This method is intended to return the modifiable object so that UI can change the parameters based on user action
+     */
+    public List<Double> getParamList(){
+        return this.parametersList;
+    }
+
+
+    /**
+     * @return immutable map indicating the visualization color for each state for setting up UI visualization
+     */
+    public Map<String, String> getStateImageMap(){
+        return Collections.unmodifiableMap(this.stateImageMap);
+    }
+
+
+    /**
+     * @return the 2D array of Cells for this simulation
+     * Want both Simulation and UI to have direct access to the cell objects,
+     * so this method returns the exact original 2D cell array created and stored in Configurator.
+     */
+    public Cell[][] getGrid(){
+        return this.myGrid;
+    }
+
+
+    /**
+     * Allows outside class to change the simulation type, which affects the choice of model config file to parse
+     * @param s the new simulation type
+     */
+    public void setConfigSimType(String s){
+        this.SIM_TYPE = s;
+    }
+
+
+    /**
+     * Read the configuration text file for general parameters (default size, simulation delay, etc.) in Simulation
+     * @throws FileNotFoundException if the general configuration file is not found
+     */
+    private void readConfig() throws FileNotFoundException {
+        Scanner sc = new Scanner(new File(configFilePath));
+        myTitle = sc.nextLine();
+        configWidth = Integer.valueOf(sc.nextLine());
+        configHeight = Integer.valueOf(sc.nextLine());
+        distributionAccuracy = Double.valueOf(sc.nextLine());
+        minDelay = Double.valueOf(sc.nextLine());
+        maxDelay = Double.valueOf(sc.nextLine());
+        while(sc.hasNextLine()){
+            String modelName = sc.nextLine();
+            Integer paramNum = Integer.valueOf(sc.nextLine());
+            Integer stateNum = Integer.valueOf(sc.nextLine());
+            SIM_TYPE_LIST.add(modelName);
+            SIM_PARAM_NUM.put(modelName,paramNum);
+            SIM_STATE_NUM.put(modelName,stateNum);
+        }
+    }
+
+
+    /**
+     * Read XML file containing specific configuration data for simulation model
+     * @throws SimulationException if encountering invalid/missing data during parsing
+     * @throws IOException if the simulation model's configuration file is missing
+     * @throws ParserConfigurationException if the user's java environment does not support XMLParser
+     * @throws SAXException if the XML file format is invalid
+     */
+    private void readXML() throws SimulationException, IOException, ParserConfigurationException,SAXException{
+        String myFilePath;
+        if(SIM_TYPE_LIST.contains(SIM_TYPE)){
+            myFilePath = "resources/"+SIM_TYPE+".xml";
+        }else{
+            myFilePath = SIM_TYPE;
+        }
+        File f = new File(myFilePath);
+        try{
+            myParser= new XMLParser(f);
+        }catch (SimulationException|IOException|ParserConfigurationException|SAXException e){
+            throw e;
+        }
+        boolean isValid;
+        try{
+            isValid = validateSimulation(myParser);
+        } catch (SimulationException e){
+            throw e;
+        }
+        if(isValid){
+            this.configWidth = myParser.getWidth();
+            this.configHeight = myParser.getHeight();
+            this.specConfig = myParser.isSpecConfig();
+            this.cellShape = myParser.getCellShape();
+            this.edgeType = myParser.getEdgeType();
+            this.neighborList = myParser.getNeighbors();
+            this.parametersList = myParser.getParameters();
+            this.stateImageMap = myParser.getStateImg();
+            this.statePercentMap = myParser.getStatePercent();
+            this.cellStateMap = myParser.getCellState();
+        }
+    }
+
+
+    /**
+     * Validate the XML parsing results with information previously read from general simulation configuration file
+     * @param parser XMLParser object who parsed the input file
+     * @return boolean value indicating whether the parsed information is valid
+     * @throws ModelErrException if the parsed simulation type is not a valid model type
+     * @throws ParamErrException if the number of parameters is incorrect for the certain model
+     * @throws StateErrException if the number of states is incorrect for the certain model
+     */
+    private boolean validateSimulation(XMLParser parser) throws ModelErrException, ParamErrException, StateErrException {
+        if(!SIM_TYPE_LIST.contains(parser.getSimType())){
+            throw new ModelErrException("Invalid simulation type");
+        }else if(SIM_PARAM_NUM.get(parser.getSimType())!=parser.getParameters().size()){
+            throw new ParamErrException("Invalid parameter configuration for current simulation "+SIM_TYPE);
+        }else if(SIM_STATE_NUM.get(parser.getSimType())!=parser.getStateImg().keySet().size()){
+            throw new StateErrException("Invalid state configuration for current simulation "+SIM_TYPE);
+        }
+        return true;
+    }
+
+
+    /**
+     * Initialize a list of states with or without the percentage distribution read from XML file
      */
     private void initStateList() {
         this.stateList = new ArrayList<>();
@@ -234,42 +338,5 @@ public class Configurator {
             }
         }
     }
-
-
-    /**
-     * Read XML file containing simulation parameters
-     */
-    private boolean readXML() throws SimulationException, IOException, ParserConfigurationException,SAXException{
-        String myFilePath;
-        if(SIM_TYPE_LIST.contains(SIM_TYPE)){
-            myFilePath = "resources/"+SIM_TYPE+".xml";
-        }else{
-            myFilePath = SIM_TYPE;
-        }
-        File f = new File(myFilePath);
-        try{
-            myParser= new XMLParser(f);
-        }catch (SimulationException|IOException|ParserConfigurationException|SAXException e){
-            throw e;
-        }
-        if(!validateSimulation(myParser)) {
-            return false;
-        }
-        this.configWidth = myParser.getWidth();
-        this.configHeight = myParser.getHeight();
-        this.specConfig = myParser.isSpecConfig();
-        this.cellShape = myParser.getCellShape();
-        this.edgeType = myParser.getEdgeType();
-        this.neighborList = myParser.getNeighbors();
-        this.parametersList = myParser.getParameters();
-        this.stateImageMap = myParser.getStateImg();
-        this.statePercentMap = myParser.getStatePercent();
-        this.cellStateMap = myParser.getCellState();
-        return true;
-    }
-
-
-
-
 
 }
