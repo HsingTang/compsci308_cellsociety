@@ -1,7 +1,14 @@
 package CellSociety;
 
+import CellSociety.Exceptions.ModelErrException;
+import CellSociety.Exceptions.ParamErrException;
+import CellSociety.Exceptions.StateErrException;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 import static java.lang.Math.ceil;
@@ -123,18 +130,15 @@ public class Configurator {
      * @param parser XMLParser object which handled the input file
      * @return boolean value indicating whether the parsed information is valid
      */
-    private boolean validateSimulation(XMLParser parser){
+    private boolean validateSimulation(XMLParser parser) throws ModelErrException, ParamErrException, StateErrException {
         if(!SIM_TYPE_LIST.contains(parser.getSimType())){
-            myParser.modelErrAlert.showAlert();
-            return false;
+            throw new ModelErrException("Invalid simulation type");
         }else if(SIM_PARAM_NUM.get(parser.getSimType())!=parser.getParameters().size()){
-            myParser.paramErrAlert.showAlert();
-            return false;
+            throw new ParamErrException("Invalid parameter configuration for current simulation "+SIM_TYPE);
         }else if(SIM_STATE_NUM.get(parser.getSimType())!=parser.getStateImg().keySet().size()){
-            myParser.stateErrAlert.showAlert();
-            return false;
+            throw new StateErrException("Invalid state configuration for current simulation "+SIM_TYPE);
         }
-        return parser.isParseSuccess();
+        return true;
     }
 
 
@@ -143,12 +147,11 @@ public class Configurator {
      * Initialize the grid of cells of a specific concrete cell class and set each cell's initial state
      * Then pipeline to the next step of creating UI scene for displaying visualization
      */
-    public Cell[][] initGrid() throws Exception{
+    public Cell[][] initGrid() throws SimulationException, IOException, ParserConfigurationException,SAXException{
         try{
             readXML();
         }
-        catch (Exception e){
-            myParser.parserConfigAlert.showAlert();
+        catch (SimulationException|IOException|ParserConfigurationException|SAXException e){
             throw e;
         }
         myGrid = new Cell[configHeight][configWidth];
@@ -225,14 +228,10 @@ public class Configurator {
      * Loop through all cells in the grid and initialize neighbors for each cell
      */
     private void initNeighbors(){
-        int i = 0;
         for (Cell[] row :myGrid) {
-            int j = 0;
             for (Cell currCell:row) {
                 currCell.findNeighbors(myGrid,cellShape,edgeType,neighborList);
-                j++;
             }
-            i++;
         }
     }
 
@@ -240,7 +239,7 @@ public class Configurator {
     /**
      * Read XML file containing simulation parameters
      */
-    private boolean readXML() throws Exception{
+    private boolean readXML() throws SimulationException, IOException, ParserConfigurationException,SAXException{
         String myFilePath;
         if(SIM_TYPE_LIST.contains(SIM_TYPE)){
             myFilePath = "resources/"+SIM_TYPE+".xml";
@@ -250,7 +249,7 @@ public class Configurator {
         File f = new File(myFilePath);
         try{
             myParser= new XMLParser(f);
-        }catch (Exception e){
+        }catch (SimulationException|IOException|ParserConfigurationException|SAXException e){
             throw e;
         }
         if(!validateSimulation(myParser)) {

@@ -3,6 +3,7 @@ package CellSociety;
 import javafx.scene.control.Alert;
 
 /**
+ * @author Hsingchih Tang
  * Trigger Alert dialogue boxes when XMLParser encounters error/exceptional cases
  * or if any information is missing or mismatched in the parsed XML configuration file
  */

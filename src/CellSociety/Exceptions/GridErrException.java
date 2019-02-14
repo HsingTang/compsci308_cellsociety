@@ -1,4 +1,6 @@
-package CellSociety;
+package CellSociety.Exceptions;
+
+import CellSociety.SimulationException;
 
 public class GridErrException extends SimulationException {
     public GridErrException(Throwable cause){
@@ -7,5 +9,9 @@ public class GridErrException extends SimulationException {
 
     public GridErrException(String message, Throwable cause){
         super(message,cause);
+    }
+
+    public GridErrException(String message){
+        super(message);
     }
 }

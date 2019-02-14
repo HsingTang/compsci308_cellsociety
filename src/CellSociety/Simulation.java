@@ -1,21 +1,21 @@
 package CellSociety;
 
+import CellSociety.Exceptions.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
-
-import static CellSociety.Configurator.*;
-import static java.lang.Math.ceil;
 
 
 /**
@@ -28,6 +28,7 @@ import static java.lang.Math.ceil;
 public class Simulation extends Application {
 
 
+    static final String ALERT_CONFIG_PATH = "resources/XMLAlertText.txt";
     private String myTitle;
     private String SIM_TYPE;
     private double minDelay;
@@ -43,26 +44,50 @@ public class Simulation extends Application {
     private UI myUIScene;
 
 
+    // XMLAlerts to pop up when encountering mal-formatted XML file
+    // package-private variables
+    SimulationAlert XMLFileNotFoundAlert = new SimulationAlert();
+    SimulationAlert parserConfigAlert = new SimulationAlert();
+    SimulationAlert SAXAlert = new SimulationAlert();
+    SimulationAlert gridErrAlert = new SimulationAlert();
+    SimulationAlert modelErrAlert = new SimulationAlert();
+    SimulationAlert paramErrAlert = new SimulationAlert();
+    SimulationAlert configErrAlert = new SimulationAlert();
+    SimulationAlert neighborErrAlert = new SimulationAlert();
+    SimulationAlert stateErrAlert = new SimulationAlert();
+    SimulationAlert cellIdxAlert = new SimulationAlert();
+    SimulationAlert cellStateAlert = new SimulationAlert();
+    SimulationAlert cellConfigAlert = new SimulationAlert();
+    SimulationAlert cellInfoAlert = new SimulationAlert();
+    private SimulationAlert[] myAlertArr = new SimulationAlert[]{XMLFileNotFoundAlert, parserConfigAlert, SAXAlert, gridErrAlert,
+            modelErrAlert, paramErrAlert, configErrAlert, neighborErrAlert, stateErrAlert, cellIdxAlert,
+            cellStateAlert, cellConfigAlert, cellInfoAlert};
+
 
 
     /**
      * Constructor of a Simulation object
      * Call readConfig() to set up the Simulation class with specific parameters
      */
-    public Simulation() throws FileNotFoundException{
+    public Simulation() throws IOException{
         super();
         try{
             myConfig = new Configurator();
         }catch (FileNotFoundException e){
-
+            throw new IOException("Simulation configuration file is missing.",e);
+        }
+        try {
+            setupAlert();
+        } catch (FileNotFoundException e) {
+            throw new IOException("Alert Setup file is missing.", e);
         }
         this.minDelay = myConfig.getMinDelay();
         this.maxDelay = myConfig.getMaxDelay();
-        this.delay = (this.minDelay+this.maxDelay)/2;
         this.myWidth = myConfig.getWidth();
         this.myHeight = myConfig.getHeight();
         this.myTitle = myConfig.getTitle();
         this.myGrid = myConfig.getGrid();
+        resetDelay();
     }
 
 
@@ -74,6 +99,29 @@ public class Simulation extends Application {
     public void start(Stage stage) {
         this.myStage = stage;
         initIntroScene();
+    }
+
+
+
+    /**
+     * Set up error messages of SimulationAlert
+     * Alert dialogue boxes will pop up if an XML configuration file is mal-formatted
+     *
+     * @throws FileNotFoundException if the source file storing error message text is not found
+     */
+    private void setupAlert() throws FileNotFoundException {
+        Scanner sc;
+        try{
+            sc=new Scanner(new File(ALERT_CONFIG_PATH));
+        } catch (FileNotFoundException e){
+            throw e;
+        }
+        int idx = 0;
+        while (sc.hasNextLine() && idx < myAlertArr.length) {
+            String[] alertText = sc.nextLine().split(";");
+            myAlertArr[idx].setText(alertText[0], alertText[1], alertText[2]);
+            idx++;
+        }
     }
 
 
@@ -101,6 +149,9 @@ public class Simulation extends Application {
     }
 
 
+    private void resetDelay(){
+        this.delay = minDelay/2+maxDelay/2;
+    }
 
     /**
      * Initialize the UI class for creating visualization of the simulation
@@ -127,6 +178,35 @@ public class Simulation extends Application {
         this.myTimeline.getKeyFrames().add(frame);
     }
 
+    private void initSimulation(){
+        try{
+            myGrid = myConfig.initGrid();
+        }catch (CellIdxException e){
+            cellIdxAlert.showAlert();
+        }catch (CellInfoException e){
+            cellInfoAlert.showAlert();
+        }catch (CellSpecException e){
+            cellConfigAlert.showAlert();
+        }catch (SpecErrException e){
+            configErrAlert.showAlert();
+        }catch (GridErrException e){
+            gridErrAlert.showAlert();
+        }catch (ModelErrException e){
+            modelErrAlert.showAlert();
+        }catch (NeighborErrException e){
+            neighborErrAlert.showAlert();
+        }catch (ParamErrException e){
+            paramErrAlert.showAlert();
+        }catch (StateErrException e){
+            stateErrAlert.showAlert();
+        }catch (SAXException e){
+            SAXAlert.showAlert();
+        }catch (IOException e){
+            XMLFileNotFoundAlert.showAlert();
+        }catch (ParserConfigurationException e){
+            parserConfigAlert.showAlert();
+        }
+    }
 
 
     /**
@@ -169,13 +249,7 @@ public class Simulation extends Application {
      * Expected to be called from IntroScene after user has selected a simulation model
      */
     public void startSimulation(){
-        try{
-            myGrid = myConfig.initGrid();
-        }catch (Exception e){
-            System.out.println("Exception occurred at simulation "+SIM_TYPE+".");
-            System.out.println("Simulation terminated.");
-            Platform.exit();
-        }
+        initSimulation();
         initUI();
         initTimeline();
     }
@@ -186,6 +260,7 @@ public class Simulation extends Application {
      * Expected to be called by UI when a pause button is pressed
      */
     public void pauseSimulation() {
+        System.out.println("paused");
         this.myTimeline.stop();
     }
 
@@ -215,14 +290,8 @@ public class Simulation extends Application {
      */
     public void resetSimulation(){
         this.myTimeline.pause();
-        this.delay = (minDelay+maxDelay)/2;
-        try {
-            myGrid = myConfig.initGrid();
-        }catch (Exception e){
-            System.out.println("Exception occurred at simulation "+SIM_TYPE);
-            System.out.println("Simulation terminated.");
-            Platform.exit();
-        }
+        resetDelay();
+        initSimulation();
         initUI();
         initTimeline();
     }
@@ -235,15 +304,11 @@ public class Simulation extends Application {
      */
     public void switchSimulation(String newSimType){
         this.myTimeline.stop();
+        System.out.println("stopped for switching");
         this.setSimType(newSimType);
-        try{
-            myGrid = myConfig.initGrid();
-        }catch (Exception e){
-            System.out.println("Exception occurred at simulation "+SIM_TYPE);
-            System.out.println("Simulation terminated.");
-            Platform.exit();
-        }
+        initSimulation();
         initUI();
+        resetDelay();
         initTimeline();
     }
 
@@ -253,9 +318,10 @@ public class Simulation extends Application {
      * The double passed in is expected to be between 0 and 1
      */
     public void setSpeed(Double d) {
+        Animation.Status prevStatus = this.myTimeline.getStatus();
         this.myTimeline.stop();
         this.delay = maxDelay-d*(maxDelay-minDelay);
-        if(this.myTimeline.getStatus()== Animation.Status.RUNNING){
+        if(prevStatus== Animation.Status.RUNNING){
             initTimeline();
             playSimulation();
         }else{

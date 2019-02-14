@@ -1,5 +1,5 @@
 Alert;XML file is not found.;Upload a valid XML file or verify that default XML file exists in resources folder.
-Alert;Something went wrong when initializing XMLParser;Parsing failed.;Relaunch the program and try again. Contact the developer if the issue is not resolved.
+Alert;The program is not supported by your Java environment.;Libraries for parsing configuration files are missing.
 Alert;XML file is invalid.;Upload a valid simulation XML configuration file.
 Alert;Grid width/height not specified.;Upload a valid simulation XML configuration file.
 Alert;The simulation model type is not specified or invalid.;Upload a valid simulation XML configuration file.

@@ -1,6 +1,6 @@
 package CellSociety;
 
-
+import CellSociety.Exceptions.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,7 +27,6 @@ import static java.util.Map.entry;
  */
 public class XMLParser {
     // Immutable file path and XML tags for parsing file
-    static final String ALERT_CONFIG_PATH = "resources/XMLAlertText.txt";
     static final String SIM_TYPE_TAG = "Type";
     static final String WIDTH_TAG = "Width";
     static final String HEIGHT_TAG = "Height";
@@ -51,25 +50,6 @@ public class XMLParser {
             "Finite",
             "Toroidal");
 
-    // XMLAlerts to pop up when encountering mal-formatted XML file
-    // package-private variables
-    SimulationAlert fileNotFoundAlert = new SimulationAlert();
-    SimulationAlert parserConfigAlert = new SimulationAlert();
-    SimulationAlert SAXAlert = new SimulationAlert();
-    SimulationAlert gridErrAlert = new SimulationAlert();
-    SimulationAlert modelErrAlert = new SimulationAlert();
-    SimulationAlert paramErrAlert = new SimulationAlert();
-    SimulationAlert configErrAlert = new SimulationAlert();
-    SimulationAlert neighborErrAlert = new SimulationAlert();
-    SimulationAlert stateErrAlert = new SimulationAlert();
-    SimulationAlert cellIdxAlert = new SimulationAlert();
-    SimulationAlert cellStateAlert = new SimulationAlert();
-    SimulationAlert cellConfigAlert = new SimulationAlert();
-    SimulationAlert cellInfoAlert = new SimulationAlert();
-    private SimulationAlert[] myAlertArr = new SimulationAlert[]{fileNotFoundAlert, parserConfigAlert, SAXAlert, gridErrAlert,
-            modelErrAlert, paramErrAlert, configErrAlert, neighborErrAlert, stateErrAlert, cellIdxAlert,
-            cellStateAlert, cellConfigAlert, cellInfoAlert};
-
     // private variables for storing parsing results
     private DocumentBuilder myDBuilder;
     private String mySimulationType = "";
@@ -84,7 +64,7 @@ public class XMLParser {
     private ArrayList<Double> parameters = new ArrayList<>();
     private ArrayList<Integer> neighbors = new ArrayList<>();
     private boolean specConfig = false;
-    private boolean parseSuccess = true;
+//    private boolean parseSuccess = true;
 
 
     /**
@@ -94,67 +74,47 @@ public class XMLParser {
      * @throws Exception ParserConfigurationException to be handled in Simulation class,
      *                   which will terminate the program and print error message to console
      */
-    public XMLParser(File f) throws Exception {
-        try {
-            setupAlert();
-        } catch (Exception e) {
-            throw new Exception("Alert Setup went wrong", e);
-        }
+    public XMLParser(File f) throws SimulationException, IOException, ParserConfigurationException,SAXException {
         try {
             this.myDBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             // Error case: ParserConfigurationException handling
-            throw new Exception("ParserConfigurationException occurs", e);
+            throw e;
         }
         try {
             this.mySimRoot = getRootElement(f);
-        } catch (SAXException e) {
-            callAlert(SAXAlert);
-        } catch (IOException e) {
-            callAlert(fileNotFoundAlert);
+        } catch (SAXException | IOException e) {
+            throw e;
         }
-
         if (this.mySimRoot != null) {
-            this.parseSimConfig();
-            specConfig = this.parseSpecConfig();
-            this.parseCellShape();
-            this.parseEdgeType();
-            this.parseCellNeighbor();
-            this.parseState();
-            this.parseParam();
-            if (this.specConfig) {
-                this.parseCell();
+            try{
+                this.parseSimConfig();
+                specConfig = this.parseSpecConfig();
+                this.parseCellShape();
+                this.parseEdgeType();
+                this.parseCellNeighbor();
+                this.parseState();
+                this.parseParam();
+                if (this.specConfig) {
+                    this.parseCell();
+                }
+            }catch (SimulationException e){
+                throw e;
             }
         }
-
     }
 
 
-    /**
-     * Set up error messages of SimulationAlert
-     * Alert dialogue boxes will pop up if an XML configuration file is mal-formatted
-     *
-     * @throws IOException if the source file storing error message text is not found
-     */
-    private void setupAlert() throws IOException {
-        Scanner sc = new Scanner(new File(ALERT_CONFIG_PATH));
-        int idx = 0;
-        while (sc.hasNextLine() && idx < myAlertArr.length) {
-            String[] alertText = sc.nextLine().split(";");
-            myAlertArr[idx].setText(alertText[0], alertText[1], alertText[2]);
-            idx++;
-        }
-    }
 
-    /**
-     * Pop up an SimulationAlert's dialogue box and set flag for notifying Simulation of the parsing failure
-     *
-     * @param a the corresponding SimulationAlert to pop up
-     */
-    private void callAlert(SimulationAlert a) {
-        a.showAlert();
-        this.parseSuccess = false;
-    }
+//    /**
+//     * Pop up an SimulationAlert's dialogue box and set flag for notifying Simulation of the parsing failure
+//     *
+//     * @param a the corresponding SimulationAlert to pop up
+//     */
+//    private void callAlert(SimulationAlert a) {
+//        a.showAlert();
+//        this.parseSuccess = false;
+//    }
 
 
     // Get root element of an XML file
@@ -167,9 +127,9 @@ public class XMLParser {
         }
         // Error case: exception handling
         catch (SAXException e) {
-            throw new SAXException("SAX Exception occurs", e);
+            throw new SAXException("XML file is mal-formatted", e);
         } catch (IOException e) {
-            throw new IOException("IO Exception occurs", e);
+            throw e;
         }
     }
 
@@ -178,19 +138,17 @@ public class XMLParser {
      * Parse the simulation's type, grid width and grid height
      * Display alert dialogue box if information is missing
      */
-    private void parseSimConfig() {
+    private void parseSimConfig() throws ModelErrException, GridErrException{
         NodeList simTypeNode = this.mySimRoot.getElementsByTagName(SIM_TYPE_TAG);
         // Error case: missing simulation type information
         if (simTypeNode.getLength() == 0) {
-            callAlert(modelErrAlert);
-            return;
+            throw new ModelErrException("Missing simulation type information");
         }
         NodeList widthNode = this.mySimRoot.getElementsByTagName(WIDTH_TAG);
         NodeList heightNode = this.mySimRoot.getElementsByTagName(HEIGHT_TAG);
         // Error case: missing simulation grid size information
         if (widthNode.getLength() == 0 || heightNode.getLength() == 0) {
-            callAlert(gridErrAlert);
-            return;
+            throw new GridErrException("Missing simulation grid size information");
         }
         mySimulationType = simTypeNode.item(0).getTextContent();
         myWidth = Integer.valueOf(widthNode.item(0).getTextContent());
@@ -201,15 +159,13 @@ public class XMLParser {
     /**
      * Parse the flag indicating whether cells initial states are explicitly defined in file
      * or should be randomly generated based on distribution percentage
-     *
-     * @return
+     * @return boolean value indicating whether cell initial states are specifically defined in file
      */
-    private boolean parseSpecConfig() {
+    private boolean parseSpecConfig() throws CellSpecException{
         NodeList specNode = this.mySimRoot.getElementsByTagName(CONFIG_TAG);
         // Error case: Missing file parsing specification info
         if (specNode.getLength() == 0) {
-            callAlert(configErrAlert);
-            return false;
+            throw new CellSpecException("Missing cell parsing specification info");
         }
         return Boolean.valueOf(specNode.item(0).getTextContent());
     }
@@ -249,20 +205,19 @@ public class XMLParser {
      * Parse the configuration of neighboring cells for a cell
      * Neighbors are numbered by integers (0-7 for Rectangle shape; 0-11 for Triangle shape) and stored in a list
      */
-    private void parseCellNeighbor() {
+    private void parseCellNeighbor() throws NeighborErrException{
         NodeList neighborNode = this.mySimRoot.getElementsByTagName(CELL_NEIGHBOR_TAG);
         if (neighborNode.getLength() != 0) {
             String[] neighborsInString = neighborNode.item(0).getTextContent().split(";");
             for (String s : neighborsInString) {
                 Integer neighborIdx = Integer.valueOf(s);
                 if (neighborIdx >= VALID_CELL_SHAPE_MAXNEIGHBOR.get(myCellShape)) {
-                    callAlert(neighborErrAlert);
-                    return;
+                    throw new NeighborErrException("Invalid neighbor indices provided");
                 }
                 neighbors.add(neighborIdx);
             }
         } else {
-            callAlert(neighborErrAlert);
+            throw new NeighborErrException("Missing cell neighbor information");
         }
     }
 
@@ -270,12 +225,11 @@ public class XMLParser {
     /**
      * Parse the names, associated visualization colors, and percentage distribution of the states in this simulation
      */
-    private void parseState() {
+    private void parseState() throws StateErrException{
         NodeList stateList = this.mySimRoot.getElementsByTagName(STATE_TAG);
         // Error case: missing state information
         if (stateList.getLength() == 0) {
-            callAlert(stateErrAlert);
-            return;
+            throw new StateErrException("Missing state information");
         }
         for (int i = 0; i < stateList.getLength(); i++) {
             Node stateNode = stateList.item(i);
@@ -283,8 +237,7 @@ public class XMLParser {
             NodeList currImg = ((Element) stateNode).getElementsByTagName(STATE_IMG_TAG);
             // Error case: missing image for the specified state
             if (currImg.getLength() == 0 || currName.getLength() == 0) {
-                callAlert(stateErrAlert);
-                return;
+                throw new StateErrException("Missing state image");
             }
             String currStateName = currName.item(0).getTextContent();
             stateImage.put(currStateName, currImg.item(0).getTextContent());
@@ -296,7 +249,7 @@ public class XMLParser {
         }
         // Error case: number of states does not match state percentage map size
         if (stateImage.keySet().size() != statePercent.keySet().size() && !statePercent.keySet().isEmpty()) {
-            callAlert(stateErrAlert);
+            throw new StateErrException("State count does not match percentage information provided");
         }
     }
 
@@ -317,38 +270,34 @@ public class XMLParser {
      * Parse cell's initial state if specConfig flag is raised
      * All cells' states are stored in a map and associated with row/column indices
      */
-    private void parseCell() {
+    private void parseCell() throws CellSpecException, CellIdxException, CellStateException,CellInfoException{
         NodeList cellList = this.mySimRoot.getElementsByTagName(CELL_TAG);
         // Error case: file parsing specification does not match cell info
         if (cellList.getLength() == 0) {
-            callAlert(cellConfigAlert);
-            return;
+            throw new CellSpecException("File parsing style does not match specific cell info provided");
         }
         for (int i = 0; i < cellList.getLength(); i++) {
             Node currCellNode = cellList.item(i);
             // Error case: missing cell information
             if (!validateCellInfo(currCellNode)) {
-                callAlert(cellInfoAlert);
-                return;
+                throw new CellInfoException("Missing cell information");
             }
             int currRow = Integer.valueOf(((Element) currCellNode).getElementsByTagName(CELL_ROW_TAG).item(0).getTextContent());
             int currCol = Integer.valueOf(((Element) currCellNode).getElementsByTagName(CELL_COL_TAG).item(0).getTextContent());
             // Error case: cell index out of bounds
             if (!validateCellIdx(currRow, currCol)) {
-                callAlert(cellIdxAlert);
-                return;
+                throw new CellIdxException("Cell index out of bounds");
             }
             String currState = ((Element) currCellNode).getElementsByTagName(CELL_STATE_TAG).item(0).getTextContent();
             // Error case: invalid cell state configuration
             if (!this.stateImage.containsKey(currState)) {
-                callAlert(cellStateAlert);
-                return;
+                throw new CellStateException("Invalid cell state configuration");
             }
             cellState.put(Arrays.asList(currRow, currCol), currState);
         }
         // Error case: number of cells does not match grid width/height configuration
         if (cellState.keySet().size() != myWidth * myHeight) {
-            callAlert(cellInfoAlert);
+            throw new CellInfoException("Cell count does not match grid width/height configuration");
         }
     }
 
@@ -462,12 +411,12 @@ public class XMLParser {
     }
 
 
-    /**
-     * @return boolean flag indicating whether the XML parsing process is completed successfully
-     */
-    public boolean isParseSuccess() {
-        return this.parseSuccess;
-    }
+//    /**
+//     * @return boolean flag indicating whether the XML parsing process is completed successfully
+//     */
+//    public boolean isParseSuccess() {
+//        return this.parseSuccess;
+//    }
 
 
     /**
