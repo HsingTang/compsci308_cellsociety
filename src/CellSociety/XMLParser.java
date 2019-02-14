@@ -29,8 +29,6 @@ public class XMLParser {
     // Immutable file path and XML tags for parsing file
     static final String ALERT_CONFIG_PATH = "resources/XMLAlertText.txt";
     static final String SIM_TYPE_TAG = "Type";
-    static final String TITLE_TAG = "Title";
-    static final String AUTHOR_TAG = "Author";
     static final String WIDTH_TAG = "Width";
     static final String HEIGHT_TAG = "Height";
     static final String CONFIG_TAG = "SpecifiedConfig";
@@ -75,8 +73,6 @@ public class XMLParser {
     // private variables for storing parsing results
     private DocumentBuilder myDBuilder;
     private String mySimulationType = "";
-    //private String mySimulationTitle = "";
-    //private String myAuthor = "";
     private String myCellShape = "Square";
     private String myEdgeType = "Finite";
     private Element mySimRoot;
@@ -121,8 +117,6 @@ public class XMLParser {
         if (this.mySimRoot != null) {
             this.parseSimConfig();
             specConfig = this.parseSpecConfig();
-            //this.parseTitle();
-            //this.parseAuthor();
             this.parseCellShape();
             this.parseEdgeType();
             this.parseCellNeighbor();
@@ -202,28 +196,6 @@ public class XMLParser {
         myWidth = Integer.valueOf(widthNode.item(0).getTextContent());
         myHeight = Integer.valueOf(heightNode.item(0).getTextContent());
     }
-
-
-//    /**
-//     * Parse the title of the simulation configuration file
-//     */
-//    private void parseTitle() {
-//        NodeList titleNode = this.mySimRoot.getElementsByTagName(TITLE_TAG);
-//        if (titleNode.getLength() != 0) {
-//            mySimulationTitle = titleNode.item(0).getTextContent();
-//        }
-//    }
-//
-//
-//    /**
-//     * Parse the file's author name
-//     */
-//    private void parseAuthor() {
-//        NodeList authorNode = this.mySimRoot.getElementsByTagName(AUTHOR_TAG);
-//        if (authorNode.getLength() != 0) {
-//            myAuthor = authorNode.item(0).getTextContent();
-//        }
-//    }
 
 
     /**
@@ -415,30 +387,6 @@ public class XMLParser {
     }
 
 
-//    /**
-//     * @return the root for parsing XML file
-//     */
-//    public Element getSimRoot() {
-//        return this.mySimRoot;
-//    }
-//
-//
-//    /**
-//     * @return title of the XML configuration document
-//     */
-//    public String getSimTitle() {
-//        return this.mySimulationTitle;
-//    }
-//
-//
-//    /**
-//     * @return Author of the XML configuration document
-//     */
-//    public String getAuthor() {
-//        return this.myAuthor;
-//    }
-
-
     /**
      * @return String indicating the cell's visualization shape
      * Can be Rectangle or Triangle
@@ -530,33 +478,6 @@ public class XMLParser {
         return this.specConfig;
     }
 
-
-//    public class XMLException extends RuntimeException {
-//        // for serialization
-//        private static final long serialVersionUID = 1L;
-//
-//
-//        /**
-//         * Create an exception based on an issue in our code.
-//         */
-//        public XMLException (String message, Object ... values) {
-//            super(String.format(message, values));
-//        }
-//
-//        /**
-//         * Create an exception based on a caught exception with a different message.
-//         */
-//        public XMLException (Throwable cause, String message, Object ... values) {
-//            super(String.format(message, values), cause);
-//        }
-//
-//        /**
-//         * Create an exception based on a caught exception, with no additional message.
-//         */
-//        public XMLException (Throwable cause) {
-//            super(cause);
-//        }
-//    }
 
 
 }
