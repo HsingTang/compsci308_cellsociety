@@ -21,6 +21,14 @@ import javafx.scene.chart.XYChart;
 
 import java.util.*;
 
+/** @author Irene Qiao
+ * Main scene of the project where the grid of Cell objects is displayed and updated each round of the simulation.
+ * Contains specifications for layout of grid, buttons/sliders, graph, and window.
+ * Contains buttons that can be clicked to step, start, reset, stop, resume the simulation.
+ * Contains sliders that can be altered to adjust speed and parameter values of the simulation.
+ * Graph contains series that track the percentage of cells in each state at each generation of the simulation.
+ * Can accomodate different grid cell shapes, such as Square or Triangle
+ */
 public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 775;
     private static final int WINDOW_WIDTH = 700;
@@ -68,6 +76,19 @@ public class UI extends Scene {
     private int stepNum;
     private List<Double> parametersList;
 
+    /**
+     *
+     * @param root root of Scene
+     * @param width number of Cell objects per row
+     * @param height number of Cell rows
+     * @param cellShape shape of Cell displayed in Grid, either Square or Triangle
+     * @param paramList list of parameters for simulation
+     * @param s simulation in which UI is instantiated
+     *          Sets size of window, gets appropriate resource bundle that stores text that will be displayed,
+     *          initializes coordinates of the first cells depending on cell shape
+     *          initializes map of each Cell to its corresponding Shape that is displayed
+     *          sets up layout of the scene - buttons, parameters, graph, grid
+     */
     public UI(Group root, int width, int height, String cellShape, List<Double> paramList, Simulation s){
         super(root, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_FILL);
         this.mySimulation = s;
@@ -91,6 +112,9 @@ public class UI extends Scene {
         setupLayout();
     }
 
+    /**
+     * Draws the grid of Shape objects that represent Cell objects according to the current state of each Cell
+     */
     public void drawGrid(){
         for (Cell key: cellVisMap.keySet()){
             String stateVis = stateMap.get(key.getState());
@@ -98,6 +122,10 @@ public class UI extends Scene {
         }
     }
 
+    /**
+     * Draws the data on the graph for each state of the simulation, according to the current percentage of cells in
+     * that state in the simulation
+     */
     public void drawGraph(){
         for (Map.Entry<String, XYChart.Series> stateSeries: stateSeriesMap.entrySet()){
             double statePercent = calcCellStatePercentage(stateSeries.getKey());

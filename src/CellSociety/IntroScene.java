@@ -15,6 +15,10 @@ import java.io.File;
 import java.security.spec.ECField;
 import java.util.ResourceBundle;
 
+/** @author Irene Qiao
+ * Presents splash screen to user displaying buttons that the user can click to open a type of simulation or to upload
+ * the user's own XML file
+ */
 public class IntroScene extends Scene {
     private static final int WINDOW_HEIGHT = 600;
     private static final int WINDOW_WIDTH = 600;
@@ -29,6 +33,16 @@ public class IntroScene extends Scene {
     private Simulation mySimulation;
     private Group myRoot;
 
+    /**
+     *
+     * @param root root of Scene
+     * @param width unused
+     * @param height unused
+     * @param s the simulation in which IntroScene is instantiated
+     *          Creates Scene object with specified size
+     *          Access resource bundle that contains text to be displayed
+     *          Sets up buttons to begin each simulation type or to upload user XML file
+     */
     public IntroScene(Group root, double width, double height, Simulation s){ //width and height params unused
         super(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         myRoot = root;
