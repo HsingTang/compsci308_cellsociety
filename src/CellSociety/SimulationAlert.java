@@ -6,17 +6,17 @@ import javafx.scene.control.Alert;
  * Trigger Alert dialogue boxes when XMLParser encounters error/exceptional cases
  * or if any information is missing or mismatched in the parsed XML configuration file
  */
-public class XMLAlert{
+public class SimulationAlert {
     private Alert myAlertBox;
 
     /**
-     * Constructor of an XMLAlert
+     * Constructor of an SimulationAlert
      * Define information to display in the Alert dialogue box by arguments passed in through constructor
-     * @param title title of the pop-up AlertBox for this XMLAlert object
-     * @param header header of the pop-up AlertBox for this XMLAlert object
-     * @param content title of the pop-up AlertBox for this XMLAlert object
+     * @param title title of the pop-up AlertBox for this SimulationAlert object
+     * @param header header of the pop-up AlertBox for this SimulationAlert object
+     * @param content title of the pop-up AlertBox for this SimulationAlert object
      */
-    public XMLAlert(String title, String header, String content){
+    public SimulationAlert(String title, String header, String content){
         this.myAlertBox = new Alert(Alert.AlertType.ERROR);
         this.myAlertBox.setTitle(title);
         this.myAlertBox.setHeaderText(header);
@@ -27,7 +27,7 @@ public class XMLAlert{
      * Empty constructor
      * Initialize nothing but the associated AlertBox as empty
      */
-    public XMLAlert(){
+    public SimulationAlert(){
         this.myAlertBox = new Alert(Alert.AlertType.ERROR);
     }
 

@@ -15,6 +15,8 @@ import java.io.File;
 import java.security.spec.ECField;
 import java.util.ResourceBundle;
 
+import static CellSociety.Configurator.*;
+
 /** @author Irene Qiao
  * Presents splash screen to user displaying buttons that the user can click to open a type of simulation or to upload
  * the user's own XML file
@@ -81,7 +83,7 @@ public class IntroScene extends Scene {
     private Button fireSimButton(){
         Button fireSimButton = new Button(myResources.getString("Fire"));
             fireSimButton.setOnMouseClicked(e -> {
-                mySimulation.setSimType(mySimulation.FIRE_XML);
+                mySimulation.setSimType(FIRE_XML);
                 mySimulation.startSimulation();
             });
         return fireSimButton;
@@ -90,7 +92,7 @@ public class IntroScene extends Scene {
     private Button GOLSimButton(){
         Button GOLSimButton = new Button(myResources.getString("GOL"));
             GOLSimButton.setOnMouseClicked(e -> {
-                mySimulation.setSimType(mySimulation.GOL_XML);
+                mySimulation.setSimType(GOL_XML);
                 mySimulation.startSimulation();
             });
         return GOLSimButton;
@@ -99,7 +101,7 @@ public class IntroScene extends Scene {
     private Button PercSimButton(){
         Button PercSimButton = new Button(myResources.getString("Perc"));
         PercSimButton.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.PERC_XML);
+            mySimulation.setSimType(PERC_XML);
             mySimulation.startSimulation();
         });
         return PercSimButton;
@@ -108,7 +110,7 @@ public class IntroScene extends Scene {
     private Button SegSimButton(){
         Button SegSimButton = new Button(myResources.getString("Seg"));
         SegSimButton.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.SEG_XML);
+            mySimulation.setSimType(SEG_XML);
             mySimulation.startSimulation();
         });
         return SegSimButton;
@@ -117,7 +119,7 @@ public class IntroScene extends Scene {
     private Button WaTorSimButton(){
         Button WaTorSimButton = new Button(myResources.getString("WaTor"));
         WaTorSimButton.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.WATOR_XML);
+            mySimulation.setSimType(WATOR_XML);
             mySimulation.startSimulation();
         });
         return WaTorSimButton;
@@ -126,7 +128,7 @@ public class IntroScene extends Scene {
     private Button RPSSimButton(){
         Button rps = new Button(myResources.getString("RPS"));
         rps.setOnMouseClicked(e -> {
-            mySimulation.setSimType(mySimulation.RPS_XML);
+            mySimulation.setSimType(RPS_XML);
             mySimulation.startSimulation();
         });
         return rps;
@@ -147,12 +149,11 @@ public class IntroScene extends Scene {
                 super.show(window);
             }
         });
-        if (file.toString().equals(
-                mySimulation.GOL_XML)
-            || file.toString().equals(mySimulation.WATOR_XML)
-            || file.toString().equals(mySimulation.FIRE_XML)
-                || file.toString().equals(mySimulation.SEG_XML)
-                || file.toString().equals(mySimulation.PERC_XML
+        if (file.toString().equals(GOL_XML)
+            || file.toString().equals(WATOR_XML)
+            || file.toString().equals(FIRE_XML)
+                || file.toString().equals(SEG_XML)
+                || file.toString().equals(PERC_XML
     )){
             mySimulation.setSimType(file.toString());
             mySimulation.startSimulation();

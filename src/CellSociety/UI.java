@@ -169,7 +169,6 @@ public class UI extends Scene {
                         CELL_WIDTH, 0};
                 return;
             }
-        System.out.println("Invalid shape " + shape);
     }
 
     private LineChart<Number, Number> addGraph(){
@@ -208,7 +207,6 @@ public class UI extends Scene {
     private double calcCellStatePercentage(String state){
         int numCells = makeStateNumMap().get(state);
         double percent = (double) numCells/(GRID_COL_NUM * GRID_ROW_NUM);
-        System.out.println(percent + state);
         return percent;
     }
 
@@ -249,7 +247,6 @@ public class UI extends Scene {
             if (i % 2 == 0){ //assign x coordinate
                 if (shape.equals("Square")){
                     myCoordinates[i] = calcXCoordinateSquare(col, row, i);
-                    System.out.println("square coordinates " + row + "," + col);
                 }
                 else if (shape.equals("Triangle")){
                     myCoordinates[i] = calcXCoordinateTriangle(col, row, i);
@@ -374,7 +371,6 @@ public class UI extends Scene {
     private Button pauseButton(){
         Button pauseButton = new Button(myResources.getString("PauseButton"));
         pauseButton.setOnMouseClicked(e -> mySimulation.pauseSimulation());
-        System.out.println("paused");
         return pauseButton;
     }
 

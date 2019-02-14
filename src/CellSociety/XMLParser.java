@@ -53,20 +53,20 @@ public class XMLParser {
 
     // XMLAlerts to pop up when encountering mal-formatted XML file
     // package-private variables
-    XMLAlert fileNotFoundAlert = new XMLAlert();
-    XMLAlert parserConfigAlert = new XMLAlert();
-    XMLAlert SAXAlert = new XMLAlert();
-    XMLAlert gridErrAlert = new XMLAlert();
-    XMLAlert modelErrAlert = new XMLAlert();
-    XMLAlert paramErrAlert = new XMLAlert();
-    XMLAlert configErrAlert = new XMLAlert();
-    XMLAlert neighborErrAlert = new XMLAlert();
-    XMLAlert stateErrAlert = new XMLAlert();
-    XMLAlert cellIdxAlert = new XMLAlert();
-    XMLAlert cellStateAlert = new XMLAlert();
-    XMLAlert cellConfigAlert = new XMLAlert();
-    XMLAlert cellInfoAlert = new XMLAlert();
-    private XMLAlert[] myAlertArr = new XMLAlert[]{fileNotFoundAlert, parserConfigAlert, SAXAlert, gridErrAlert,
+    SimulationAlert fileNotFoundAlert = new SimulationAlert();
+    SimulationAlert parserConfigAlert = new SimulationAlert();
+    SimulationAlert SAXAlert = new SimulationAlert();
+    SimulationAlert gridErrAlert = new SimulationAlert();
+    SimulationAlert modelErrAlert = new SimulationAlert();
+    SimulationAlert paramErrAlert = new SimulationAlert();
+    SimulationAlert configErrAlert = new SimulationAlert();
+    SimulationAlert neighborErrAlert = new SimulationAlert();
+    SimulationAlert stateErrAlert = new SimulationAlert();
+    SimulationAlert cellIdxAlert = new SimulationAlert();
+    SimulationAlert cellStateAlert = new SimulationAlert();
+    SimulationAlert cellConfigAlert = new SimulationAlert();
+    SimulationAlert cellInfoAlert = new SimulationAlert();
+    private SimulationAlert[] myAlertArr = new SimulationAlert[]{fileNotFoundAlert, parserConfigAlert, SAXAlert, gridErrAlert,
             modelErrAlert, paramErrAlert, configErrAlert, neighborErrAlert, stateErrAlert, cellIdxAlert,
             cellStateAlert, cellConfigAlert, cellInfoAlert};
 
@@ -131,7 +131,7 @@ public class XMLParser {
 
 
     /**
-     * Set up error messages of XMLAlert
+     * Set up error messages of SimulationAlert
      * Alert dialogue boxes will pop up if an XML configuration file is mal-formatted
      *
      * @throws IOException if the source file storing error message text is not found
@@ -147,11 +147,11 @@ public class XMLParser {
     }
 
     /**
-     * Pop up an XMLAlert's dialogue box and set flag for notifying Simulation of the parsing failure
+     * Pop up an SimulationAlert's dialogue box and set flag for notifying Simulation of the parsing failure
      *
-     * @param a the corresponding XMLAlert to pop up
+     * @param a the corresponding SimulationAlert to pop up
      */
-    private void callAlert(XMLAlert a) {
+    private void callAlert(SimulationAlert a) {
         a.showAlert();
         this.parseSuccess = false;
     }

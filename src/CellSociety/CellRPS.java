@@ -51,7 +51,6 @@ public class CellRPS extends Cell implements Comparator<String> {
         setUneatenNeighbors();
 
         if(!myUneatenNeighbors.isEmpty()) {
-            System.out.println("Uneaten neighbor size: " + myUneatenNeighbors.size());
             int neighborIndex = myRand.nextInt(myUneatenNeighbors.size());
             Cell cellNeighbor = myUneatenNeighbors.get(neighborIndex);
             String neighborState = myUneatenNeighbors.get(neighborIndex).getState();
