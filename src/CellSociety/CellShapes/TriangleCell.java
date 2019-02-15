@@ -3,6 +3,13 @@ package CellSociety.CellShapes;
 import CellSociety.UI;
 import javafx.scene.shape.Polygon;
 
+/**
+ * TriangleCell class extends CellShape so that it contains the basic features of a CellShape but assigns x and y
+ * coordinates that form a triangle shape by overriding methods from CellShape superclass.
+ *
+ * This is well-designed because it simply overrides superclass methods to create a distinct triangle shape. All other
+ * methods are handled by the superclass. All triangle-specific information is encapsulated in this subclass.
+ */
 public class TriangleCell extends CellShape{
     private final static int TRIANGLE_NUM_COORDINATES = 6;
     private final double[] STARTING_COORDINATES_UP_EVEN = new double[]{CELL_WIDTH/2, 0,
@@ -74,5 +81,4 @@ public class TriangleCell extends CellShape{
         }
         return y;
     }
-
 }
