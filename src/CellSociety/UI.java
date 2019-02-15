@@ -1,5 +1,8 @@
 package CellSociety;
 
+import CellSociety.CellShapes.CellShape;
+import CellSociety.CellShapes.SquareCell;
+import CellSociety.CellShapes.TriangleCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -64,12 +67,6 @@ public class UI extends Scene {
     private Simulation mySimulation;
     private Map<Cell, Polygon> cellVisMap;
     private String shape;
-    private int numCoordinates;
-    private Integer[] myStartingCoordinatesUpEven;
-    private Integer[] myStartingCoordinatesDownEven;
-    private Integer[] myStartingCoordinatesUpOdd;
-    private Integer[] myStartingCoordinatesDownOdd;
-    private Integer[] myStartingCoordinates;
 
     private Map<String, String> stateMap;
     private Map<String, XYChart.Series> stateSeriesMap;
@@ -105,8 +102,8 @@ public class UI extends Scene {
                 myResources.getString("WaTor"),
                 myResources.getString("RPS"));
         parametersList = paramList;
-        initStartingCoordinates(cellShape);
         stepNum = 0;
+        System.out.println("step num assignment reached");
         initCellVisMap();
         setOnMouseClicked(e -> handleCellClick(e.getX(), e.getY()));
         setupLayout();
@@ -132,44 +129,6 @@ public class UI extends Scene {
             stateSeries.getValue().getData().add(new XYChart.Data(stepNum, statePercent));
         }
         stepNum++;
-    }
-
-    private void initStartingCoordinates(String shape){
-        switch (shape){
-            case "Square":
-                numCoordinates = NUM_SQUARE_COORDINATES;
-                CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
-                CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
-                myStartingCoordinates = new Integer[]{
-                        0, 0,
-                        0, CELL_HEIGHT,
-                        CELL_WIDTH, CELL_HEIGHT,
-                        CELL_WIDTH, 0
-                };
-                return;
-            case "Triangle":
-                numCoordinates = NUM_TRIANGLE_COORDINATES;
-                CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
-                CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
-                myStartingCoordinatesUpEven = new Integer[]{
-                        CELL_WIDTH/2, 0,
-                        0, CELL_HEIGHT,
-                        CELL_WIDTH, CELL_HEIGHT};
-                myStartingCoordinatesDownEven = new Integer[]{
-                        CELL_WIDTH/2, 0,
-                        CELL_WIDTH, CELL_HEIGHT,
-                        CELL_WIDTH + CELL_WIDTH/2, 0};
-                myStartingCoordinatesUpOdd = new Integer[]{
-                        CELL_WIDTH, 0,
-                        CELL_WIDTH/2, CELL_HEIGHT,
-                        CELL_WIDTH + CELL_WIDTH/2, CELL_HEIGHT};
-                myStartingCoordinatesDownOdd = new Integer[]{
-                        0, 0,
-                        CELL_WIDTH/2, CELL_HEIGHT,
-                        CELL_WIDTH, 0};
-                return;
-            }
-        System.out.println("Invalid shape " + shape);
     }
 
     private LineChart<Number, Number> addGraph(){
@@ -218,17 +177,26 @@ public class UI extends Scene {
         cellVisMap = new HashMap<>();
         for (int i = 0; i < GRID_ROW_NUM; i++){
             for (int j = 0; j < GRID_COL_NUM; j++){
+                System.out.println("for loop reached" + i + "," + j);
                 Cell cell = cells[i][j];
-                Polygon cellShape = new Polygon(assignCurrentCoordinates(i, j));
-                cellShape.setFill(Color.web(stateMap.get(cell.getState())));
-                cellShape.setStroke(Color.BLACK);
-                cellShape.setStrokeWidth(1);
-                cellVisMap.put(cell, cellShape);
+                CellShape cellShape;
+                if (shape.equals("Triangle")){
+                    cellShape = new TriangleCell(this, i, j);
+                    System.out.println("Triangle cell created at " + i + "," + j);
+                }
+                else {
+                    cellShape = new SquareCell(this, i, j);
+                }
+                cellShape.getMyShape().setFill(Color.web(stateMap.get(cell.getState())));
+                cellShape.getMyShape().setStroke(Color.BLACK);
+                cellShape.getMyShape().setStrokeWidth(1);
+                cellVisMap.put(cell, cellShape.getMyShape());
             }
         }
         for (Cell key: cellVisMap.keySet()){
             myRoot.getChildren().add(cellVisMap.get(key));
         }
+        System.out.println("done init cell vis map");
     }
 
     private void handleCellClick(double x, double y){
@@ -242,83 +210,6 @@ public class UI extends Scene {
             }
         }
     }
-
-    private double[] assignCurrentCoordinates(int row, int col){
-        double [] myCoordinates = new double[numCoordinates];
-        for (int i = 0; i < numCoordinates; i++) {
-            if (i % 2 == 0){ //assign x coordinate
-                if (shape.equals("Square")){
-                    myCoordinates[i] = calcXCoordinateSquare(col, row, i);
-                    System.out.println("square coordinates " + row + "," + col);
-                }
-                else if (shape.equals("Triangle")){
-                    myCoordinates[i] = calcXCoordinateTriangle(col, row, i);
-                }
-            }
-            else {
-                if (shape.equals("Square")){
-                    myCoordinates[i] = calcYCoordinateSquare(col, row, i);
-                }
-                else if (shape.equals("Triangle")){
-                    myCoordinates[i] = calcYCoordinateTriangle(col, row, i);
-                }
-            }
-        }
-        return myCoordinates;
-    }
-
-    private int calcXCoordinateTriangle(int col, int row, int i){
-        int x;
-        if (row % 2 == 0){
-            if (col % 2 == 0){
-                x = myStartingCoordinatesUpEven[i] + col * CELL_WIDTH/2;
-            }
-            else {
-                x = myStartingCoordinatesDownEven[i] + col * CELL_WIDTH/2 + CELL_WIDTH/2 - CELL_WIDTH;
-            }
-        }
-        else {
-            if (col % 2 == 0){
-                x = myStartingCoordinatesDownOdd[i] + col * CELL_WIDTH/2;
-            }
-            else {
-                x = myStartingCoordinatesUpOdd[i] + col * CELL_WIDTH/2 + CELL_WIDTH/2 - CELL_WIDTH;
-            }
-        }
-        return x;
-    }
-
-    private int calcXCoordinateSquare(int col, int row, int i){
-        int x = myStartingCoordinates[i] + col * CELL_WIDTH;
-        return x;
-    }
-
-    private int calcYCoordinateTriangle(int col, int row, int i) {
-        int y;
-        if (row % 2 == 0){
-            if (col % 2 == 0){
-                y = myStartingCoordinatesUpEven[i] + row * CELL_HEIGHT;
-            }
-            else {
-                y = myStartingCoordinatesDownEven[i] + row * CELL_HEIGHT;
-            }
-        }
-        else {
-            if (col % 2 == 0){
-                y = myStartingCoordinatesDownOdd[i] + row * CELL_HEIGHT;
-            }
-            else {
-                y = myStartingCoordinatesUpOdd[i] + row * CELL_HEIGHT;
-            }
-        }
-        return y;
-    }
-
-    private int calcYCoordinateSquare(int col, int row, int i) {
-        int y = myStartingCoordinates[i] + row * CELL_HEIGHT;
-        return y;
-    }
-
 
     private void setupLayout(){
         BorderPane borderPane = new BorderPane();

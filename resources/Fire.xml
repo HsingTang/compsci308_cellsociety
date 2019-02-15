@@ -2,8 +2,8 @@
     <Type>Fire</Type>
     <Title>Fire_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>150</Width>
-    <Height>150</Height>
+    <Width>50</Width>
+    <Height>50</Height>
     <SpecifiedConfig>false</SpecifiedConfig>
     <NeighborStyle>0;1;3;5;7</NeighborStyle>
     <CellShape>Triangle</CellShape>

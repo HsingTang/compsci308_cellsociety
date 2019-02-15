@@ -1,25 +1,35 @@
 package CellSociety.CellShapes;
+
 import CellSociety.UI;
+import javafx.scene.shape.Polygon;
 
 public class SquareCell extends CellShape {
-    private final static int NUM_COORDINATES = 8;
-    private final static double[] STARTING_COORDINATES = new double[NUM_COORDINATES];
+    private final static int SQUARE_NUM_COORDINATES = 8;
+    private final double[] STARTING_COORDINATES = new double[]{
+            0, 0,
+            0, CELL_HEIGHT,
+            CELL_WIDTH, CELL_HEIGHT,
+            CELL_WIDTH, 0
+    };
 
-    public SquareCell(UI ui){
-        super(STARTING_COORDINATES, ui);
-        setStartingCoordinates();
-
+    private double[] myCoordinates;
+    public SquareCell(UI ui, int row, int col){
+        super(ui, row, col);
+        myCoordinates = new double[SQUARE_NUM_COORDINATES];
+        assignCoordinates(myCoordinates, SQUARE_NUM_COORDINATES);
+        myShape = new Polygon(myCoordinates);
     }
 
-    private void setStartingCoordinates(){
-        STARTING_COORDINATES[0] = 0;
-        STARTING_COORDINATES[1] = 0;
-        STARTING_COORDINATES[2] = 0;
-        STARTING_COORDINATES[3] = super.CELL_HEIGHT;
-        STARTING_COORDINATES[4] = super.CELL_WIDTH;
-        STARTING_COORDINATES[5] = super.CELL_HEIGHT;
-        STARTING_COORDINATES[6] = super.CELL_WIDTH;
-        STARTING_COORDINATES[7] = 0;
-
+    @Override
+    protected double calcXCoordinate(int i){
+        double x = STARTING_COORDINATES[i] + COL * CELL_WIDTH;
+        return x;
     }
+
+    @Override
+    protected double calcYCoordinate(int i){
+        double y = STARTING_COORDINATES[i] + ROW * CELL_HEIGHT;
+        return y;
+    }
+
 }
