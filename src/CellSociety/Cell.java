@@ -10,7 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
 
-
+/**
+ * @author Carrie Hunner
+ * This is a cell abstract class designed to store all the information
+ * necessary to a cell, ie its current state, its next state, its neighbors, etc.
+ * It has public methods necessary to pass on information, such as its state, for
+ * the use in the UI class.
+ *
+ * It is intended to have concrete implementations that define what the rules of the
+ * simulation are, as well as what possible states exist.
+ */
 public abstract class Cell {
     protected String myCurrentState;
     protected String myNextState;
@@ -27,8 +36,6 @@ public abstract class Cell {
     protected int myNumUserCalls;
 
     /**
-     * @author Carrie Hunner (clh87)
-     *
      * @param row int index of the row of the cell in a grid of cells that will be passed through
      *            when setting neighbors
      * @param col int index of the column of the cell in a grid of cells that will be passed through when]
@@ -136,6 +143,13 @@ public abstract class Cell {
         myNextState = state;
     }
 
+    /**
+     * This switches the current state to one of the other valid states.
+     * Every time this method is called, it keeps track such that it can
+     * keep being called and it will cycle through all possible states.
+     * This was created for the purpose of UI calling it when a user clicks
+     * on a cell.
+     */
     public void userSwitchState(){
         myNumUserCalls++;
         int rem = myNumUserCalls % myStates.size();
