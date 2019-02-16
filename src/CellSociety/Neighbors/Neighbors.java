@@ -6,6 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author Carrie Hunner
+ * This class is a superclass that is designed to have concrete implementations
+ * such that it can find all possible neighbors for a shape, take in a list of
+ * desired neighbor indexes, and return a list of the indexes of those neighbors
+ * when called.
+ *
+ * After the Neighbors class is instantiated, the initializeAndSetEdgeType method
+ * needs to be called.
+ */
 abstract public class Neighbors {
     protected int myRow;
     protected int myCol;
@@ -21,6 +31,12 @@ abstract public class Neighbors {
     protected static final String TOROIDAL = "Toroidal";
 
 
+    /**
+     * Sets all of the instance variables for the Neighbor class.
+     * @param row   int of the row index of the current cell
+     * @param col   int of the cell index of the current cell
+     * @param grid  2D cell array grid of all the cells
+     */
     Neighbors(int row, int col, Cell[][] grid){
         myRow = row;
         myCol = col;
@@ -50,6 +66,10 @@ abstract public class Neighbors {
         //System.out.println(myNeighborIndexes.size());
     }
 
+    /**
+     * Find the neighbors of the current cell and returns them in a list.
+     * @return List of Cells that are the current cell's desired neighbors.
+     */
     public List<Cell> getNeighborsList(){
         setIndexMap();
         ////System.out.println("set index map");
@@ -59,6 +79,7 @@ abstract public class Neighbors {
         return myNeighbors;
     }
 
+    //checks if the edge type is valid
     private boolean isValidEdgeType(String edgeType){
         switch (edgeType){
             case FINITE:
@@ -82,6 +103,7 @@ abstract public class Neighbors {
         return true;
     }
 
+    //deals with edges, finite and toroidal
     protected void handleEdgesAndAddCoords(Integer key, int tempRow, int tempCol) {
         ////System.out.println("\t Checking bounds (" + (tempRow + myRow) + ", " + (tempCol + myCol) + ")");
         if (inBounds(tempRow, tempCol)) {
@@ -103,6 +125,7 @@ abstract public class Neighbors {
         }
     }
 
+    //finds the coordinates for the edge neighbors with toroidal rules
     private ArrayList<Integer> findToroidalCoords(int row, int col) {
         int wrappedRow;
         int wrappedCol;
@@ -132,8 +155,10 @@ abstract public class Neighbors {
         return coords;
     }
 
+    //sets up the map of all possible neighbors for the shape type
     abstract protected void setIndexMap();
 
+    //finds the desired neighbors in the index map and adds them to a list
     private void setDesiredNeighbors(){
         //System.out.println("Cell Row: " + myRow + " Col: " + myCol);
         for (Integer index : myNeighborIndexes) {
@@ -147,6 +172,4 @@ abstract public class Neighbors {
             }
         }
     }
-
-
 }
