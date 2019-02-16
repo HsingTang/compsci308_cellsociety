@@ -358,8 +358,6 @@ public class Simulation extends Application {
         try{
             initGrid();
         }catch (Exception e){
-            System.out.println("Exception occurred at simulation "+SIM_TYPE+".");
-            System.out.println("Simulation terminated.");
             Platform.exit();
         }
     }
@@ -403,8 +401,6 @@ public class Simulation extends Application {
         try {
             initGrid();
         }catch (Exception e){
-            System.out.println("Exception occurred at simulation "+SIM_TYPE);
-            System.out.println("Simulation terminated.");
             Platform.exit();
         }
     }
@@ -421,8 +417,6 @@ public class Simulation extends Application {
         try{
             initGrid();
         }catch (Exception e){
-            System.out.println("Exception occurred at simulation "+SIM_TYPE);
-            System.out.println("Simulation terminated.");
             Platform.exit();
         }
 

@@ -47,6 +47,20 @@ public class UI extends Scene {
     private static final int LINECHART_MAX_WIDTH = 600;
     private static final int LINECHART_MAX_HEIGHT = 350;
 
+    private static final String X_AXIS_LABEL = "XAxisLabel";
+    private static final String Y_AXIS_LABEL = "YAxisLabel";
+    private static final String LINE_CHART_TITLE = "LineChartTitle";
+    
+    private static final String SQUARE = "Square";
+    private static final String TRIANGLE = "Triangle";
+
+    private static final String ENGLISH = "English";
+    private static final String GOL = "GOL";
+    private static final String FIRE = "Fire";
+    private static final String PERCOLATION = "Perc";
+    private static final String SEGREGATION = "Seg";
+    private static final String WATOR = "WaTor";
+    private static final String RPS = "RPS";
 
     private final int GRID_ROW_NUM;
     private final int GRID_COL_NUM;
@@ -96,14 +110,14 @@ public class UI extends Scene {
         GRID_COL_NUM = width;
         GRID_ROW_NUM = height;
         shape = cellShape;
-        myResources = ResourceBundle.getBundle("English");
+        myResources = ResourceBundle.getBundle(ENGLISH);
         SIM_OPTIONS = FXCollections.observableArrayList(
-                myResources.getString("Fire"),
-                myResources.getString("GOL"),
-                myResources.getString("Perc"),
-                myResources.getString("Seg"),
-                myResources.getString("WaTor"),
-                myResources.getString("RPS"));
+                myResources.getString(FIRE),
+                myResources.getString(GOL),
+                myResources.getString(PERCOLATION),
+                myResources.getString(SEGREGATION),
+                myResources.getString(WATOR),
+                myResources.getString(RPS));
         parametersList = paramList;
         initStartingCoordinates(cellShape);
         stepNum = 0;
@@ -136,49 +150,56 @@ public class UI extends Scene {
 
     private void initStartingCoordinates(String shape){
         switch (shape){
-            case "Square":
-                numCoordinates = NUM_SQUARE_COORDINATES;
-                CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
-                CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
-                myStartingCoordinates = new Integer[]{
-                        0, 0,
-                        0, CELL_HEIGHT,
-                        CELL_WIDTH, CELL_HEIGHT,
-                        CELL_WIDTH, 0
-                };
+            case SQUARE:
+                handleSquareCoords();
                 return;
-            case "Triangle":
-                numCoordinates = NUM_TRIANGLE_COORDINATES;
-                CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
-                CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM * 2;
-                myStartingCoordinatesUpEven = new Integer[]{
-                        CELL_WIDTH/2, 0,
-                        0, CELL_HEIGHT,
-                        CELL_WIDTH, CELL_HEIGHT};
-                myStartingCoordinatesDownEven = new Integer[]{
-                        CELL_WIDTH/2, 0,
-                        CELL_WIDTH, CELL_HEIGHT,
-                        CELL_WIDTH + CELL_WIDTH/2, 0};
-                myStartingCoordinatesUpOdd = new Integer[]{
-                        CELL_WIDTH, 0,
-                        CELL_WIDTH/2, CELL_HEIGHT,
-                        CELL_WIDTH + CELL_WIDTH/2, CELL_HEIGHT};
-                myStartingCoordinatesDownOdd = new Integer[]{
-                        0, 0,
-                        CELL_WIDTH/2, CELL_HEIGHT,
-                        CELL_WIDTH, 0};
+            case TRIANGLE:
+                handleTriangleCoords();
                 return;
             }
-        System.out.println("Invalid shape " + shape);
+    }
+
+    private void handleTriangleCoords() {
+        numCoordinates = NUM_TRIANGLE_COORDINATES;
+        CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
+        CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM * 2;
+        myStartingCoordinatesUpEven = new Integer[]{
+                CELL_WIDTH/2, 0,
+                0, CELL_HEIGHT,
+                CELL_WIDTH, CELL_HEIGHT};
+        myStartingCoordinatesDownEven = new Integer[]{
+                CELL_WIDTH/2, 0,
+                CELL_WIDTH, CELL_HEIGHT,
+                CELL_WIDTH + CELL_WIDTH/2, 0};
+        myStartingCoordinatesUpOdd = new Integer[]{
+                CELL_WIDTH, 0,
+                CELL_WIDTH/2, CELL_HEIGHT,
+                CELL_WIDTH + CELL_WIDTH/2, CELL_HEIGHT};
+        myStartingCoordinatesDownOdd = new Integer[]{
+                0, 0,
+                CELL_WIDTH/2, CELL_HEIGHT,
+                CELL_WIDTH, 0};
+    }
+
+    private void handleSquareCoords() {
+        numCoordinates = NUM_SQUARE_COORDINATES;
+        CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
+        CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
+        myStartingCoordinates = new Integer[]{
+                0, 0,
+                0, CELL_HEIGHT,
+                CELL_WIDTH, CELL_HEIGHT,
+                CELL_WIDTH, 0
+        };
     }
 
     private LineChart<Number, Number> addGraph(){
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         final LineChart<Number, Number> lineChart = new LineChart<>(xAxis,yAxis);
-        xAxis.setLabel(myResources.getString("XAxisLabel"));
-        yAxis.setLabel(myResources.getString("YAxisLabel"));
-        lineChart.setTitle(myResources.getString("LineChartTitle"));
+        xAxis.setLabel(myResources.getString(X_AXIS_LABEL));
+        yAxis.setLabel(myResources.getString(Y_AXIS_LABEL));
+        lineChart.setTitle(myResources.getString(LINE_CHART_TITLE));
         lineChart.setMaxSize(LINECHART_MAX_WIDTH, LINECHART_MAX_HEIGHT);
         initStateSeriesMap(lineChart);
         return lineChart;
@@ -208,7 +229,6 @@ public class UI extends Scene {
     private double calcCellStatePercentage(String state){
         int numCells = makeStateNumMap().get(state);
         double percent = (double) numCells/(GRID_COL_NUM * GRID_ROW_NUM);
-        System.out.println(percent + state);
         return percent;
     }
 
@@ -247,19 +267,17 @@ public class UI extends Scene {
         double [] myCoordinates = new double[numCoordinates];
         for (int i = 0; i < numCoordinates; i++) {
             if (i % 2 == 0){ //assign x coordinate
-                if (shape.equals("Square")){
+                if (shape.equals(SQUARE)){
                     myCoordinates[i] = calcXCoordinateSquare(col, row, i);
-                    System.out.println("square coordinates " + row + "," + col);
                 }
-                else if (shape.equals("Triangle")){
-                    myCoordinates[i] = calcXCoordinateTriangle(col, row, i);
+                else if (shape.equals(TRIANGLE)){
                 }
             }
             else {
-                if (shape.equals("Square")){
+                if (shape.equals(SQUARE)){
                     myCoordinates[i] = calcYCoordinateSquare(col, row, i);
                 }
-                else if (shape.equals("Triangle")){
+                else if (shape.equals(TRIANGLE)){
                     myCoordinates[i] = calcYCoordinateTriangle(col, row, i);
                 }
             }
@@ -374,7 +392,6 @@ public class UI extends Scene {
     private Button pauseButton(){
         Button pauseButton = new Button(myResources.getString("PauseButton"));
         pauseButton.setOnMouseClicked(e -> mySimulation.pauseSimulation());
-        System.out.println("paused");
         return pauseButton;
     }
 
@@ -383,18 +400,6 @@ public class UI extends Scene {
         stopButton.setOnMouseClicked(e -> mySimulation.playSimulation());
         return stopButton;
     }
-
-    /*private Button slowDownButton(){
-        Button slowDownButton = new Button(myResources.getString("SlowDownButton"));
-        slowDownButton.setOnMouseClicked(e -> mySimulation.slowdown());
-        return slowDownButton;
-    }
-
-    private Button speedUpButton(){
-        Button speedUpButton = new Button(myResources.getString("SpeedUpButton"));
-        speedUpButton.setOnMouseClicked(e -> mySimulation.speedup());
-        return speedUpButton;
-    }*/
 
     private Slider speedSlider(){
         Slider slider = createGenericSlider();
