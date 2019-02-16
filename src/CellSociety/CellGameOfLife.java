@@ -8,9 +8,10 @@ import java.util.ArrayList;
  */
 public class CellGameOfLife extends Cell {
 
-    private final String DEAD = "Dead";
-    private final String ALIVE = "Alive";
-
+    private static final String DEAD = "Dead";
+    private static final String ALIVE = "Alive";
+    private static final int THRESHOLD_ALIVE = 3;
+    private static final int THRESHOLD_DEAD = 2;
     private int numNeighborsAlive;
 
     /**
@@ -43,20 +44,30 @@ public class CellGameOfLife extends Cell {
         for(String s : myStates){
             switch(s){
                 case DEAD:
-                    if(numNeighborsAlive == 3){
-                        myNextState = ALIVE;
-                    }
+                    handleDead();
+                    break;
                 case ALIVE:
-                    if(numNeighborsAlive < 2){
-                        myNextState = DEAD;
-                    }
-                    else if(numNeighborsAlive <= 3){
-                        myNextState = ALIVE;
-                    }
-                    else if(numNeighborsAlive > 3){
-                        myNextState = DEAD;
-                    }
+                    handleAlive();
+                    break;
             }
+        }
+    }
+
+    private void handleDead() {
+        if(numNeighborsAlive == THRESHOLD_ALIVE){
+            myNextState = ALIVE;
+        }
+    }
+
+    private void handleAlive() {
+        if(numNeighborsAlive < THRESHOLD_DEAD){
+            myNextState = DEAD;
+        }
+        else if(numNeighborsAlive == THRESHOLD_ALIVE){
+            myNextState = ALIVE;
+        }
+        else if(numNeighborsAlive > THRESHOLD_ALIVE){
+            myNextState = DEAD;
         }
     }
 
