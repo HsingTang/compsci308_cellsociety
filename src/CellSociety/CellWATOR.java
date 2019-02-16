@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author Carrie Hunner
+ * This is a cell concrete implementation that uses the rules of the WATOR simulation.
+ */
 public class CellWATOR extends Cell {
 
     private static final String FISH = "Fish";
@@ -26,8 +30,6 @@ public class CellWATOR extends Cell {
     private CellWATOR myNextLocCell;
 
     /**
-     * @author Carrie Hunner (clh87)
-     *
      * @param row int index of the row of the cell in a grid of cells that will be passed through
      *            when setting neighbors
      * @param col int index of the column of the cell in a grid of cells that will be passed through when]
@@ -50,6 +52,7 @@ public class CellWATOR extends Cell {
         myTurnsSurvived = 0;
     }
 
+    //sets the parameters of the simulation
     @Override
     protected void setParams(){
         myFishReproTime = myParams.get(0);
@@ -59,6 +62,7 @@ public class CellWATOR extends Cell {
         mySharkEatingEnergy = myParams.get(3);
     }
 
+    //adds all possible states to a list
     @Override
     protected void initializeStatesList() {
         myStates.add(FISH);
@@ -66,6 +70,9 @@ public class CellWATOR extends Cell {
         myStates.add(SHARK);
     }
 
+    /**
+     * Updates the cell's current state.
+     */
     @Override
     public void updateState(){
         myCurrentState = myNextState;
@@ -122,18 +129,21 @@ public class CellWATOR extends Cell {
         }
     }
 
+    //moves the shark to an empty neighbor
     private void moveToEmptyNeighbor() {
         checkForBaby(SHARK);
         moveSharkToEmptyNeighbor();
         resetCellIfNecessary();
     }
 
+    //moves the fish to an empty neighbor
     private void moveToFishNeighbor() {
         checkForBaby(SHARK);
         eatFish();
         resetCellIfNecessary();
     }
 
+    //checks if a shark died and adjusts its state if it did
     private boolean sharkDied() {
         if(mySharkEnergy <= 0){
             myNextState = EMPTY;
@@ -142,6 +152,7 @@ public class CellWATOR extends Cell {
         return false;
     }
 
+    //if an animal moves and doesn't have a baby, this resets the cell to be empty
     private void resetCellIfNecessary() {
         //no baby
         if(myNextState.equals("")){
@@ -150,6 +161,7 @@ public class CellWATOR extends Cell {
         myNextTurnsSurvived = 0;
     }
 
+    //handles setting the fish's next state ie if it moves, stays, has a baby
     private void setFishNextState() {
         findEmptyNeighbors();
         //can't move
@@ -165,6 +177,7 @@ public class CellWATOR extends Cell {
         }
     }
 
+    //shark doesn't move
     private void sharkStays() {
         myNextState = SHARK;
         mySharkEnergy--;
@@ -206,6 +219,10 @@ public class CellWATOR extends Cell {
         return;
     }
 
+    /**
+     * Takes a cell and returns where it is intending to move to.
+     * @return Cell where the animal is intending to move to.
+     */
     public CellWATOR getNextLocCell(){
         return myNextLocCell;
     }
@@ -221,6 +238,7 @@ public class CellWATOR extends Cell {
         nextCell.setNextTurnsSurvived(myTurnsSurvived);
     }
 
+    //checks if an animal is qualified to have a baby
     private void checkForBaby(String s){
         switch(s){
             case SHARK:
@@ -246,6 +264,7 @@ public class CellWATOR extends Cell {
         }
     }
 
+    //finds all neighbors that are fish
     private void findFishNeighbors(){
         for(Cell c: myNeighbors){
             if(c.getState().equals(FISH)){
@@ -294,6 +313,13 @@ public class CellWATOR extends Cell {
         }
     }
 
+    /**
+     * This switches the current state to one of the other valid states.
+     * Every time this method is called, it keeps track such that it can
+     * keep being called and it will cycle through all possible states.
+     * This was created for the purpose of UI calling it when a user clicks
+     * on a cell.
+     */
     @Override
     public void userSwitchState(){
         super.userSwitchState();

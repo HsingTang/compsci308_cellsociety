@@ -2,6 +2,10 @@ package CellSociety;
 
 import java.util.ArrayList;
 
+/**
+ * @author Carrie Hunner
+ * This is a cell concrete implementation that uses the rules of the Segregation simulation.
+ */
 public class CellSegregation extends Cell {
     private final String GROUP1 = "Group1";
     private final String GROUP2 = "Group2";
@@ -12,8 +16,6 @@ public class CellSegregation extends Cell {
 
 
     /**
-     * @author Carrie Hunner (clh87)
-     *
      * @param row int index of the row of the cell in a grid of cells that will be passed through
      *            when setting neighbors
      * @param col int index of the column of the cell in a grid of cells that will be passed through when]
@@ -35,6 +37,7 @@ public class CellSegregation extends Cell {
     }
 
 
+    //adds all possible states to a list
     @Override
     protected void initializeStatesList() {
         myStates.add(GROUP1);
@@ -75,6 +78,7 @@ public class CellSegregation extends Cell {
         System.out.println();
     }
 
+    //indexes through the grid to find the next empty and unclaimed location
     private void findAndSetNewLocation() {
         int tempRow = myRow;
         int tempCol;
@@ -124,6 +128,7 @@ public class CellSegregation extends Cell {
         }
     }
 
+    //checks if the cell is currently empty and it not yet claimed for the following cycle
     private boolean isEmpty(Cell c){
         if(c.getState().equals(EMPTY)){
             //makes sure it's not already claimed
@@ -134,6 +139,7 @@ public class CellSegregation extends Cell {
         return false;
     }
 
+    //checks if it the cell is available and if it is, sets that as its next location
     private boolean foundAndSetNextLoc(int row, int col){
         Cell temp = myGrid[row][col];
         if(isEmpty(temp)){
@@ -144,6 +150,7 @@ public class CellSegregation extends Cell {
         return false;
     }
 
+    //calculates the satisfaction of the cell
     private void calcSatisfaction() {
         double numPop1 = 0;
         double numPop2 = 0;

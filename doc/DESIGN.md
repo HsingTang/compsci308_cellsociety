@@ -19,9 +19,10 @@ The simulation models eventually implemented include: Spread of Fire, Game of Li
   The user action is received by UI (visualization), who communicates with Cell (simulation) directly to update the cell state. The configuration end has no knowledge about any of these changes.
 
 ### **Project Structure:**
-* Simulation (Cell classes, Neighbors, etc.):  
-  **[HIGH LEVEL DESCRIPTION]**
-    
+* Simulation (Cell classes, Neighbor classes):  
+  This part of the project consists of an abstract cell class that can be extended for each new simualtion added. When a cell is created, it has its state information, its indexes for its location within the Cell grid, and any numerical parameters necessary to the specific simulation passed through its constructor. The Simulation class (configuration part of the project) then calls for the cell to locate its neighbors and provides the Cell grid as well as the indexes of the desired neighbors.  
+  An abstract Neighbor superclass was constructed such that it can be extended for new neighbors as new shapes are added. The Cell creates an instance of the necessary Neighbor class and then uses that class to set the Cell's neighbors.  
+  After the Neighbors are set, the cell waits to be called upon by the Simulation class to first set its next state, using the method that was specifically written in the concrete implementation of Cell, and then is called again by the Simulation class to update its current state to its next state.
 * Configuration (Simulation, XMLParser, XMLAlert):  
   The configuration part consists of Simulation (despite the name of this class, it's still more on the configuration side), XMLParser and XMLAlert. Simulation class extends Application and is therefore the entry point of the whole program, and in the constructor it calls readConfig() to read in general configuration data, such as valid model types, associated number of states and required initialization parameters.  
   In the start() method (inherited from Application), Simulation invokes method for initializing the program's opening scene where user can select a specific simulation model type. This step would initialize an IntroScene object, which would notify Simulation once the user clicks on any simulation model's button. 

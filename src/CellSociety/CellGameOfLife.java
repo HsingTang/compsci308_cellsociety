@@ -2,7 +2,10 @@ package CellSociety;
 
 import java.util.ArrayList;
 
-
+/**
+ * @author Carrie Hunner
+ * This is a cell concrete implementation that uses the rules of the Game of Life simulation.
+ */
 public class CellGameOfLife extends Cell {
 
     private final String DEAD = "Dead";
@@ -11,8 +14,6 @@ public class CellGameOfLife extends Cell {
     private int numNeighborsAlive;
 
     /**
-     * @author Carrie Hunner (clh87)
-     *
      * @param row int index of the row of the cell in a grid of cells that will be passed through
      *            when setting neighbors
      * @param col int index of the column of the cell in a grid of cells that will be passed through when]
@@ -59,6 +60,7 @@ public class CellGameOfLife extends Cell {
         }
     }
 
+    //determines how many neighbors are alive
     private void findNumNeighborsAlive(){
         numNeighborsAlive = 0;
         for(Cell c : myNeighbors){

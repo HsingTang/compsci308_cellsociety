@@ -3,6 +3,11 @@ package CellSociety;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * @author Carrie Hunner
+ * This is a cell concrete implementation that uses the rules of the Fire simulation.
+ */
+
 public class CellFire extends Cell {
 
     private final String BURNING = "Burning";
@@ -14,8 +19,6 @@ public class CellFire extends Cell {
     private double myProbBurning;
 
     /**
-     * @author Carrie Hunner (clh87)
-     *
      * @param row int index of the row of the cell in a grid of cells that will be passed through
      *            when setting neighbors
      * @param col int index of the column of the cell in a grid of cells that will be passed through when]
@@ -37,6 +40,9 @@ public class CellFire extends Cell {
         myProbBurning = myParams.get(0);
     }
 
+    /**
+     * initializes the states
+     */
     @Override
     protected void initializeStatesList() {
         myStates.add(BURNING);

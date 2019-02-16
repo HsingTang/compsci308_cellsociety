@@ -2,6 +2,13 @@ package CellSociety.Neighbors;
 
 import CellSociety.Cell;
 
+/**
+ * @author Carrie Hunner
+ * This class handles finding the neighbors for a triangular cell.
+ *
+ * After the Neighbors class is instantiated, the initializeAndSetEdgeType method
+ * needs to be called.
+ */
 public class NeighborsTriangle extends Neighbors {
     private boolean isPointingUp;
 
@@ -15,10 +22,18 @@ public class NeighborsTriangle extends Neighbors {
     private static final int[] upTop =  {1, 0, -1};
 
 
+    /**
+     * Sets all of the instance variables for the Neighbor class.
+     * @param row   int of the row index of the current cell
+     * @param col   int of the cell index of the current cell
+     * @param grid  2D cell array grid of all the cells
+     */
     public NeighborsTriangle(int row, int col, Cell[][] grid) {
         super(row, col, grid);
     }
 
+    //finds all possible neighbors and creates a map of them with their indexes being the key and
+    //their row and columns coordinates being in an arraylist in the value
     @Override
     protected void setIndexMap() {
         setOrientation();
@@ -39,6 +54,7 @@ public class NeighborsTriangle extends Neighbors {
 
     }
 
+    //cycles through a row and adds the neighbors to the hashmap of neighbors
     private int addNeighbors(int index, int[] dCol, int row){
         for(int k = 0; k < dCol.length; k++){
             int tempCol = myCol + dCol[k];
