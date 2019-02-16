@@ -11,12 +11,11 @@ import CellSociety.Cell;
  */
 public class NeighborsTriangle extends Neighbors {
     private boolean isPointingUp;
-
-    //these are all static because the design.cs website was setting alerts
+    //downward oriented
     private static final int[] downTop= {-2, -1, 0, 1, 2};
     private static final int[] downCenter = {-2, -1, 1, 2};
     private static final int[] downBottom = {-1, 0, 1};
-
+    //upward oriented
     private static final int[] upBottom = {2, 1, 0, -1, -2};
     private static final int[] upCenter = {2, 1, -1, -2};
     private static final int[] upTop =  {1, 0, -1};
@@ -38,8 +37,6 @@ public class NeighborsTriangle extends Neighbors {
     protected void setIndexMap() {
         setOrientation();
         int index = -1;
-
-
         if(isPointingUp){
             index = addNeighbors(index, upBottom, myRow + 1);
             index = addNeighbors(index, upCenter, myRow);
@@ -50,8 +47,6 @@ public class NeighborsTriangle extends Neighbors {
             index = addNeighbors(index, downCenter, myRow);
             addNeighbors(index, downBottom, myRow + 1);
         }
-
-
     }
 
     //cycles through a row and adds the neighbors to the hashmap of neighbors
@@ -74,5 +69,4 @@ public class NeighborsTriangle extends Neighbors {
             isPointingUp = false;
         }
     }
-
 }
