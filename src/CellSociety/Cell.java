@@ -1,14 +1,8 @@
 package CellSociety;
-//look into enum
-
-import CellSociety.Neighbors.Neighbors;
 import CellSociety.Neighbors.NeighborsSquare;
 import CellSociety.Neighbors.NeighborsTriangle;
-import javafx.scene.Scene;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.SynchronousQueue;
 
 /**
  * @author Carrie Hunner
@@ -30,9 +24,8 @@ public abstract class Cell {
     protected Cell[][] myGrid;
     protected List<String> myStates;
 
-    private final String SQUARE = "Square";
-    private final String TRIANGLE = "Triangle";
-
+    private static final String SQUARE = "Square";
+    private static final String TRIANGLE = "Triangle";
     protected int myNumUserCalls;
 
     /**
@@ -85,7 +78,6 @@ public abstract class Cell {
             //likely occurs when user switches state
             throw new IllegalStateException("Next State never initialized");
         }
-
     }
 
 
@@ -97,33 +89,20 @@ public abstract class Cell {
     //Note: it will be set in each implementation so the concrete classes can choose if they want to call
     //a method for 4 or 8 neighbors, or they can call another method entirely.
     public void findNeighbors(Cell[][] cell, String shapeType, String edgeType, List<Integer> neighborIndexes){
-        //System.out.println("Made it to find Neighbors");
         myGrid = cell;
         switch(shapeType){
             case SQUARE:
-                ////System.out.println("Made it to start of square shape");
                 NeighborsSquare squareNeighbors = new NeighborsSquare(myRow, myCol, myGrid);
-                ////System.out.println("Made it past constructing square neighbors");
                 squareNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
-                ////System.out.println("Made it past initializing edges and indexes");
-                ////System.out.println("Trying to print Neighbors list size");
-                ////System.out.println(squareNeighbors.getNeighborsList().size());
                 myNeighbors =  squareNeighbors.getNeighborsList();
-                ////System.out.println("Made it to end of square shape");
                 return;
             case TRIANGLE:
                 NeighborsTriangle triangleNeighbors = new NeighborsTriangle(myRow, myCol, myGrid);
                 triangleNeighbors.initializeEdgeAndIndexes(edgeType, neighborIndexes);
                 myNeighbors = triangleNeighbors.getNeighborsList();
-                ////System.out.println("Made it to triangle shape");
                 return;
         }
-        //System.out.println(shapeType);
         throw new IllegalArgumentException("Unknown Shape Type");
-    }
-
-    private boolean isSelf(int tempRow, int tempCol) {
-        return tempRow == myRow && tempCol == myCol;
     }
 
     /**
@@ -153,7 +132,6 @@ public abstract class Cell {
     public void userSwitchState(){
         myNumUserCalls++;
         int rem = myNumUserCalls % myStates.size();
-
         if(myStates.get(rem).equals(myCurrentState)){
             myNumUserCalls++;
             userSwitchState();
