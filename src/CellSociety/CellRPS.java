@@ -5,6 +5,10 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Random;
 
+/**
+ * @author Carrie Hunner
+ * This is a cell concrete implementation that uses the rules of the RPS simulation.
+ */
 public class CellRPS extends Cell implements Comparator<String> {
     private final String WHITE = "White";
     private final String RED = "Red";
@@ -22,7 +26,6 @@ public class CellRPS extends Cell implements Comparator<String> {
      *                     setting the neighbors
      * @param initialState String indicating the initial state of the cell
      * @param parameters   ArrayList of doubles containing any extra parameters needed e.g. probability
-     * @author Carrie Hunner (clh87)
      */
     CellRPS(int row, int col, String initialState, ArrayList<Double> parameters) {
         super(row, col, initialState, parameters);
@@ -30,6 +33,7 @@ public class CellRPS extends Cell implements Comparator<String> {
         myUneatenNeighbors = new ArrayList<>();
     }
 
+    //adds all possible states to a list
     @Override
     protected void initializeStatesList() {
         myStates.add(WHITE);

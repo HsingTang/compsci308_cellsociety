@@ -2,6 +2,10 @@ package CellSociety;
 
 import java.util.ArrayList;
 
+/**
+ * @author Carrie Hunner
+ * This is a cell concrete implementation that uses the rules of the Percolation simulation.
+ */
 public class CellPercolation extends Cell {
     private final String OPEN  = "Open";
     private final String BLOCKED = "Blocked";
@@ -22,6 +26,7 @@ public class CellPercolation extends Cell {
         super(row, col, initialState, parameters);
     }
 
+    //add the possible states to the list
     @Override
     protected void initializeStatesList() {
         myStates.add(OPEN);
