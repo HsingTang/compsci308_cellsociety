@@ -10,10 +10,10 @@ import java.util.Random;
  * This is a cell concrete implementation that uses the rules of the RPS simulation.
  */
 public class CellRPS extends Cell implements Comparator<String> {
-    private final String WHITE = "White";
-    private final String RED = "Red";
-    private final String GREEN = "Green";
-    private final String BLUE = "Blue";
+    private static final String WHITE = "White";
+    private static final String RED = "Red";
+    private static final String GREEN = "Green";
+    private static final String BLUE = "Blue";
 
     private Random myRand;
     private ArrayList<Cell> myUneatenNeighbors;
@@ -55,30 +55,35 @@ public class CellRPS extends Cell implements Comparator<String> {
         setUneatenNeighbors();
 
         if(!myUneatenNeighbors.isEmpty()) {
-            System.out.println("Uneaten neighbor size: " + myUneatenNeighbors.size());
-            int neighborIndex = myRand.nextInt(myUneatenNeighbors.size());
-            Cell cellNeighbor = myUneatenNeighbors.get(neighborIndex);
-            String neighborState = myUneatenNeighbors.get(neighborIndex).getState();
-
-            //current cell eats neighbor
-            if (compare(myCurrentState, neighborState) == 1) {
-                myNextLoc = cellNeighbor;
-                myNextLoc.myNextState = myCurrentState;
-
-                cellNeighbor.setNextState(myCurrentState);
-                myNextState = myCurrentState;
-            }
-            //neighbor eats current cell
-            else if (compare(myCurrentState, neighborState) == -1) {
-                myNextState = cellNeighbor.getState();
-            }
-            else {
-                myNextState = myCurrentState;
-            }
+            handleNeighbor();
+            return;
         }
-        else{
+        myNextState = myCurrentState;
+    }
+
+    private void handleNeighbor() {
+        int neighborIndex = myRand.nextInt(myUneatenNeighbors.size());
+        Cell cellNeighbor = myUneatenNeighbors.get(neighborIndex);
+        String neighborState = myUneatenNeighbors.get(neighborIndex).getState();
+        //current cell eats neighbor
+        if (compare(myCurrentState, neighborState) == 1) {
+            cellEatsNeighbor(cellNeighbor);
+        }
+        //neighbor eats current cell
+        else if (compare(myCurrentState, neighborState) == -1) {
+            myNextState = cellNeighbor.getState();
+        }
+        else {
             myNextState = myCurrentState;
         }
+    }
+
+    private void cellEatsNeighbor(Cell cellNeighbor) {
+        myNextLoc = cellNeighbor;
+        myNextLoc.myNextState = myCurrentState;
+
+        cellNeighbor.setNextState(myCurrentState);
+        myNextState = myCurrentState;
     }
 
     //determines what neighbors
@@ -88,10 +93,6 @@ public class CellRPS extends Cell implements Comparator<String> {
                 myUneatenNeighbors.add(c);
             }
         }
-    }
-
-    private void setNextLoc(Cell cell){
-        myNextLoc = cell;
     }
 
     /**
@@ -106,9 +107,8 @@ public class CellRPS extends Cell implements Comparator<String> {
         HashSet<String> states = new HashSet<>();
         states.add(s1);
         states.add(s2);
-
         //checks if the same
-        if(s1.equals(s2)){
+        if(states.size()==1){
             return 0;
         }
 
