@@ -1,5 +1,4 @@
-DESIGN
-===============
+
 # Design Goals
 The purpose of this project is to implement a program that can simulate several different cell automation models based on configuration details provided in XML source files.  
 The simulation models eventually implemented include: Spread of Fire, Game of Life, Percolation, Segregation, WATOR, and Rock Paper Scissors.  
@@ -31,7 +30,18 @@ The simulation models eventually implemented include: Spread of Fire, Game of Li
   After the grid has been updated, Simulation would then notify UI to update its visualization. The specific rules for determining a cell's next state and the procedures for UI to update its visualization are all internally implemented in Cell and UI classes, and the configuration part (i.e. Simulation, XMLParser, XMLAlert classes) has completely no knowledge about those details. 
   Simulation also has several methods for controlling the flow of simulation (running, pausing, speeding up/down, etc.), which are public and can be invoked by UI if any user action occurs.
 * Visualization (IntroScene, UI):  
-  **[HIGH LEVEL DESCRIPTION]**
+  The visualization consists of the UI and IntroScene classes, which inherit Scene. The IntroScene contains
+  a splash page from which the user can select a button that brings up a specific simulation. The types of simulations that
+  the user can choose from include Fire, Game of Life, Percolation, Rock Paper Scissors, Segregation, and WaTor World. Each button
+  calls a method from Simulation class to configure the Cells for each specific simulation. 
+  After the user selects a simulation, the UI scene is displayed in Simulation. The UI scene contains a grid of cells that can be square or triangle shaped and
+  keeps track of current Cell states through a 2d array of Cells that are passed into the UI class from Simulation. The UI also
+  contains information about the corresponding color of each state, passed from the Simulation class. Using this information
+  UI creates a Polygon for a Cell at that location, filled with the color corresponding to its state.
+  The UI class has 2 public methods, drawGraph and drawGrid that are called by the Simulation class every time the simulation updates, so the
+  graph of cell states and grid of cells displayed are updated. The UI class also calls userSwitchState from the 
+  Cell class so that the user can click on a cell displayed in the grid and change the cell state. 
+  
 
 # Adding New Features
 ### Adding another simulation model:
@@ -49,7 +59,11 @@ There is an abstract Neighbors superclass that can be extended. Once extended, o
 * **Simulation & XMLParser:**  
 The XMLParser reads in the cell shape by parsing text content within the tag 'CellShape' in a model's configuration file, and passes this piece of information to Simulation, who passes it down to UI and cells at their initialization call.  
 Thus, in order for a new cell shape to take effect, the string specifying this shape must be provided within the 'CellShape' tag inside the source configuration file.
-
+* **UI:**
+The UI contains a switch for different cases of cell shapes. Based on the specific type of cell shape specified and passed
+in from the Simulation class through the UI constructor, the UI calculates coordinate values of each Polygon that is displayed, which
+represents a Cell. Each created Polygon is treated the same regardless of shape - they are added to the root, 
+they change fill color based on underlying Cell state, and change state when clicked. 
 
 ### Adding a New Edge Type:
 * **Neighbors:**  
@@ -78,9 +92,9 @@ A lot of the methods for the cell class are the same, such as: findNeighbors(), 
 * **Abstract Superclass for Neighbor:**  
 This was a harder decison. The benefits were, that regardless of the shape, there are several methods that would be the same. However, in each concrete implementation, there is only one method that is actually written. This made it hard to justify the necessity for a new class for each shape. However, no other option that wouldn't involve large amounts of duplicate code or adding the methods directly to the cell class were thought of, and so an abstract superclass was made. This worked well and makes it easy to add new shapes in terms of locating a cell's neighbors.
 
-
 # Assumptions or Decision
 * **Burning Simulation:** a cell will check if it should catch on fire once for every burning neighbor it has. This means that more burning neighbors increases the chance of a tree catching. This was decided because in a real forest fire situation, more fire nearby would also increase the likelihood of catching.
 * **WATOR Simulation:** It was assumed that each cell could only house a maximum of one animal per step. This mimics reality, as two things cannot exist in the same space. Additionally, had more than one animal been allowed, it would become exceedingly difficult to keep track of all who was housed in a cell and how to handle the movements of each inhabitant. Thus, for simplicity and attempting to remain realistic, cells can only host one animal.
 * **Segregation:** The rules for the movement of a cell, when unsatisfied, were left rather vague. As a result, it was decided that when a cell became dissatisfied, it would scroll from its starting location down each row until it either found an empty cell or looped all the way to its starting coordinates. If it made it back to where it began, the cell would not move, as there were no empty spaces that hadn't been claimed by other cells. This was a fairly easy way to ensure that the cell would only check each other cell once, as opposed to being completely random. While this does result in the first few steps displaying extremely large groups moving to the bottom and then the top of the grid, it quickly disperses and still results in a successful simulation.
 * **Rocks Paper Scissors:** If, when a cell is checked to set its next state, the next state has already been set, it is assumed that it was "eaten" by a neighbor and it is not able to affect its neighbors in this step. Also, white is considered to be able to be "eaten" by any other cell, whether white tries to "eat" another color or is attempted to be "eaten" by another color, it always loses. Lastly, the "gradient" component of the simulation was not added due to time constraints, however it would be easy to add in the future. Within the CellRPS class a gradient variable would need to be created and incremented and decremented as appropriate, and then the XML file would need to add a parameter and the UI would need to add a parameter slider. All of these are extremely doable with our current structure.
+
