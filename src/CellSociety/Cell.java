@@ -58,7 +58,6 @@ public abstract class Cell {
      */
     abstract public void findNextState();
 
-
     /**
      * @return String corresponding to the cell's current state
      */

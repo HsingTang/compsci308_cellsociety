@@ -10,6 +10,7 @@ public class CellSegregation extends Cell {
     private static final String GROUP1 = "Group1";
     private static final String GROUP2 = "Group2";
     private static final String EMPTY = "Empty";
+    private static final int THRESHOLD_INDEX = 0;
 
     private double myThreshold;
     private double mySatisfaction;
@@ -33,7 +34,7 @@ public class CellSegregation extends Cell {
      */
     @Override
     protected void setParams(){
-        myThreshold = myParams.get(0);
+        myThreshold = myParams.get(THRESHOLD_INDEX);
     }
 
 
@@ -72,24 +73,23 @@ public class CellSegregation extends Cell {
     }
 
     //indexes through the grid to find the next empty and unclaimed location
+    //starts at current location, and goes to the bottom of the grid from left to right,
+    //top to bottom. Then it starts at the top of the grid and scrolls until the initial lccation is found.
     private void findAndSetNewLocation() {
         int tempRow = myRow;
-        int tempCol;
 
         //dealing with getting to the end of the current row
-        for(tempCol = myCol; tempCol < myGrid[0].length; tempCol++){
-            if(foundAndSetNextLoc(tempRow, tempCol)){
-                return;
-            }
-        }
+        if(scrollThroughToBounds(myRow, myRow+1, myGrid[0].length)) return;
         //scrolls to end of grid
         if (scrollThroughToBounds(tempRow, myGrid.length, myGrid[0].length)) return;
         //scrolls from top to bottom
         if(scrollThroughToBounds(0, myRow, myCol)) return;
-
         myNextState = myCurrentState;
     }
 
+    //scroll through grid from input row and col 0
+    //up until row and column bounds
+    //checking if a new location can be set
     private boolean scrollThroughToBounds(int row, int rowBound, int colBound) {
         int tempCol;
         for(row += 1; row < rowBound; row++){
@@ -111,7 +111,7 @@ public class CellSegregation extends Cell {
     }
 
     private boolean notClaimed(Cell c) {
-        return c.getNextState().equals("") || c.getNextState().equals(EMPTY);
+        return (c.getNextState().equals("") || c.getNextState().equals(EMPTY));
     }
 
     //checks if it the cell is available and if it is, sets that as its next location
