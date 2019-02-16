@@ -7,9 +7,9 @@ import java.util.ArrayList;
  * This is a cell concrete implementation that uses the rules of the Percolation simulation.
  */
 public class CellPercolation extends Cell {
-    private final String OPEN  = "Open";
-    private final String BLOCKED = "Blocked";
-    private final String PERCOLATED = "Percolated";
+    private static final String OPEN  = "Open";
+    private static final String BLOCKED = "Blocked";
+    private static final String PERCOLATED = "Percolated";
 
 
     /**
@@ -56,9 +56,7 @@ public class CellPercolation extends Cell {
                 myNextState = PERCOLATED;
                 break;
             }
-            else{
-                myNextState = OPEN;
-            }
+            myNextState = OPEN;
         }
     }
 }
