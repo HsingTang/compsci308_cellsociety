@@ -43,17 +43,17 @@ public class CellGameOfLife extends Cell {
         findNumNeighborsAlive();
             switch(myCurrentState){
                 case DEAD:
-                    if(numNeighborsAlive == 3){
+                    if(numNeighborsAlive == THRESHOLD_ALIVE){
                         myNextState = ALIVE;
                     }
                 case ALIVE:
-                    if(numNeighborsAlive < 2){
+                    if(numNeighborsAlive < THRESHOLD_DEAD){
                         myNextState = DEAD;
                     }
-                    else if(numNeighborsAlive <= 3){
+                    else if(numNeighborsAlive <= THRESHOLD_ALIVE){
                         myNextState = ALIVE;
                     }
-                    else if(numNeighborsAlive > 3){
+                    else if(numNeighborsAlive > THRESHOLD_ALIVE){
                         myNextState = DEAD;
                     }
             }
