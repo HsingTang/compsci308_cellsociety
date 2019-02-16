@@ -271,6 +271,7 @@ public class UI extends Scene {
                     myCoordinates[i] = calcXCoordinateSquare(col, row, i);
                 }
                 else if (shape.equals(TRIANGLE)){
+                    myCoordinates[i] = calcXCoordinateTriangle(col, row, i);
                 }
             }
             else {
