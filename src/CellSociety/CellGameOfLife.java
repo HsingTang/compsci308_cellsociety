@@ -41,21 +41,31 @@ public class CellGameOfLife extends Cell {
     @Override
     public void findNextState() {
         findNumNeighborsAlive();
-        for(String s : myStates){
-            switch(s){
+            switch(myCurrentState){
                 case DEAD:
-                    handleDead();
-                    break;
+                    if(numNeighborsAlive == 3){
+                        myNextState = ALIVE;
+                    }
                 case ALIVE:
-                    handleAlive();
-                    break;
+                    if(numNeighborsAlive < 2){
+                        myNextState = DEAD;
+                    }
+                    else if(numNeighborsAlive <= 3){
+                        myNextState = ALIVE;
+                    }
+                    else if(numNeighborsAlive > 3){
+                        myNextState = DEAD;
+                    }
             }
-        }
     }
+
 
     private void handleDead() {
         if(numNeighborsAlive == THRESHOLD_ALIVE){
             myNextState = ALIVE;
+        }
+        else{
+            myNextState = DEAD;
         }
     }
 
