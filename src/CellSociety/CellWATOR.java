@@ -13,6 +13,10 @@ public class CellWATOR extends Cell {
     private static final String FISH = "Fish";
     private static final String SHARK = "Shark";
     private static final String EMPTY = "Empty";
+    private static final int FISH_REPRO_INDEX = 0;
+    private static final int SHARK_REPRO_INDEX = 1;
+    private static final int SHARK_ENERGY_INDEX = 2;
+    private static final int SHARK_EATING_INDEX = 3;
 
     private double myFishReproTime;
     private double mySharkEnergy;
@@ -55,11 +59,11 @@ public class CellWATOR extends Cell {
     //sets the parameters of the simulation
     @Override
     protected void setParams(){
-        myFishReproTime = myParams.get(0);
-        mySharkReproTime = myParams.get(1);
+        myFishReproTime = myParams.get(FISH_REPRO_INDEX);
+        mySharkReproTime = myParams.get(SHARK_REPRO_INDEX);
 
-        myNewSharkEnergy = myParams.get(2);
-        mySharkEatingEnergy = myParams.get(3);
+        myNewSharkEnergy = myParams.get(SHARK_ENERGY_INDEX);
+        mySharkEatingEnergy = myParams.get(SHARK_EATING_INDEX);
     }
 
     //adds all possible states to a list
@@ -108,24 +112,29 @@ public class CellWATOR extends Cell {
             case SHARK:
                 findFishNeighbors();
                 findEmptyNeighbors();
-
-                //checks if died
-                if (sharkDied()) return;
-                //eating fish
-                if(!myFishNeighbors.isEmpty()){
-                    moveToFishNeighbor();
-                }
-                else if(!myEmptyNeighbors.isEmpty()){
-                    moveToEmptyNeighbor();
-                }
-                else{
-                    sharkStays();
-                }
+                handleShark();
                 return;
             case EMPTY:
                 if(myNextState.equals("")){
                     myNextState = EMPTY;
                 }
+        }
+    }
+
+    private void handleShark() {
+        //checks if died
+        if (sharkDied()){
+            return;
+        }
+        //eating fish
+        if(!myFishNeighbors.isEmpty()){
+            moveToFishNeighbor();
+        }
+        else if(!myEmptyNeighbors.isEmpty()){
+            moveToEmptyNeighbor();
+        }
+        else{
+            sharkStays();
         }
     }
 
