@@ -427,9 +427,10 @@ public class UI extends Scene {
 
     private List<Slider> paramSliders(){
         List<Slider> sliders = new ArrayList<>();
-        for(Double param: parametersList){
+        for(int i = 0; i < parametersList.size(); i++){
+            int paramIndex = i;
             Slider slider = createGenericSlider();
-            slider.valueProperty().addListener(e -> parametersList.set(parametersList.indexOf(param), slider.getValue()));
+            slider.valueProperty().addListener(e -> parametersList.set(paramIndex, slider.getValue()));
             sliders.add(slider);
         }
         return sliders;
