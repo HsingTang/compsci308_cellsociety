@@ -179,9 +179,10 @@ public class Simulation extends Application {
      * Expected to be called from IntroScene after user has selected a simulation model.
      */
     public void startSimulation(){
-        initSimulation();
-        initUI();
-        initTimeline();
+        if(initSimulation()) {
+            initUI();
+            initTimeline();
+        }
     }
 
 
@@ -220,9 +221,10 @@ public class Simulation extends Application {
     public void resetSimulation(){
         this.myTimeline.pause();
         resetDelay();
-        initSimulation();
-        initUI();
-        initTimeline();
+        if(initSimulation()) {
+            initUI();
+            initTimeline();
+        }
     }
 
 
@@ -233,11 +235,16 @@ public class Simulation extends Application {
      */
     public void switchSimulation(String newSimType){
         this.myTimeline.stop();
+        String oldSimType = this.SIM_TYPE;
         this.setSimType(newSimType);
-        initSimulation();
-        initUI();
-        resetDelay();
-        initTimeline();
+        if(initSimulation()) {
+            initUI();
+            resetDelay();
+            initTimeline();
+        }else{
+            this.myTimeline.play();
+            this.setSimType(oldSimType);
+        }
     }
 
 
@@ -306,34 +313,49 @@ public class Simulation extends Application {
      * Any Exception that occurs at XMLParser or Configurator will be thrown out and
      * get handled here by popping up a corresponding alert dialogue box.
      */
-    private void initSimulation(){
+    private boolean initSimulation(){
         try{
             myGrid = myConfig.initGrid();
         }catch (CellIdxException e){
             cellIdxAlert.showAlert();
+            return false;
         }catch (CellInfoException e){
             cellInfoAlert.showAlert();
+            return false;
         }catch (CellSpecException e){
             cellConfigAlert.showAlert();
+            return false;
         }catch (SpecErrException e){
             configErrAlert.showAlert();
+            return false;
         }catch (GridErrException e){
             gridErrAlert.showAlert();
+            return false;
         }catch (ModelErrException e){
             modelErrAlert.showAlert();
+            return false;
         }catch (NeighborErrException e){
             neighborErrAlert.showAlert();
+            return false;
         }catch (ParamErrException e){
             paramErrAlert.showAlert();
+            return false;
         }catch (StateErrException e){
             stateErrAlert.showAlert();
+            return false;
         }catch (SAXException e){
             SAXAlert.showAlert();
+            return false;
         }catch (IOException e){
             XMLFileNotFoundAlert.showAlert();
+            return false;
         }catch (ParserConfigurationException e){
             parserConfigAlert.showAlert();
+            return false;
         }
+        this.myWidth = myConfig.getWidth();
+        this.myHeight = myConfig.getHeight();
+        return true;
     }
 
 

@@ -1,26 +1,26 @@
 <Simulation>
-    <Type>Fire</Type>
+
     <Title>Fire_01</Title>
     <Author>Hsingchih Tang</Author>
-    <Width>70</Width>
-    <Height>70</Height>
+    <Width>50</Width>
+    <Height>60</Height>
     <SpecifiedConfig>false</SpecifiedConfig>
     <NeighborStyle>0;1;3;5;7</NeighborStyle>
-    <CellShape>Triangle</CellShape>
+    <CellShape>Square</CellShape>
     <State>
         <StateName>Burning</StateName>
         <StateImage>Red</StateImage>
-        <StatePercentage>0.2</StatePercentage>
+        <StatePercentage>0.1</StatePercentage>
     </State>
     <State>
         <StateName>Tree</StateName>
         <StateImage>Green</StateImage>
-        <StatePercentage>0.7</StatePercentage>
+        <StatePercentage>0.8</StatePercentage>
     </State>
     <State>
         <StateName>Empty</StateName>
-        <StateImage>Yellow</StateImage>
+        <StateImage>Blue</StateImage>
         <StatePercentage>0.1</StatePercentage>
     </State>
-    <Parameter>0.75</Parameter>
+    <Parameter>0.4</Parameter>
 </Simulation>

@@ -5,8 +5,8 @@
     <Width>3</Width>
     <Height>3</Height>
     <SpecifiedConfig>true</SpecifiedConfig>
-    <CellShape>Triangle</CellShape>
-    <EdgeStyle>Finite</EdgeStyle>
+    <CellShape>Square</CellShape>
+    <EdgeStyle>Toroidal</EdgeStyle>
     <NeighborStyle>0;1;2;3;4;5;6;7</NeighborStyle>
     <State>
         <StateName>White</StateName>
@@ -27,7 +27,7 @@
     <Cell>
         <Row>0</Row>
         <Col>0</Col>
-        <CellState>Red</CellState>
+        <CellState>White</CellState>
     </Cell>
     <Cell>
         <Row>0</Row>
@@ -37,12 +37,12 @@
     <Cell>
         <Row>0</Row>
         <Col>2</Col>
-        <CellState>Green</CellState>
+
     </Cell>
     <Cell>
         <Row>1</Row>
         <Col>0</Col>
-        <CellState>Blue</CellState>
+        <CellState>White</CellState>
     </Cell>
     <Cell>
         <Row>1</Row>
@@ -57,7 +57,7 @@
     <Cell>
         <Row>2</Row>
         <Col>0</Col>
-        <CellState>Green</CellState>
+        <CellState>Blue</CellState>
     </Cell>
     <Cell>
         <Row>2</Row>
