@@ -33,8 +33,8 @@ public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 775;
     private static final int WINDOW_WIDTH = 700;
     private static final Paint BACKGROUND_FILL = Color.WHITE;
-    private static final int GRID_HEIGHT = 415;
-    private static final int GRID_WIDTH = 415;
+    public final int GRID_HEIGHT = 415;
+    public final int GRID_WIDTH = 415;
 
     private static final int VBOX_BUFFER_TOP = 15;
     private static final int VBOX_BUFFER_SIDE = 30;
@@ -48,8 +48,8 @@ public class UI extends Scene {
     private static final int LINECHART_MAX_HEIGHT = 350;
 
 
-    private final int GRID_ROW_NUM;
-    private final int GRID_COL_NUM;
+    public final int GRID_ROW_NUM;
+    public final int GRID_COL_NUM;
     private final ObservableList<String> SIM_OPTIONS;
 
     private final static int NUM_SQUARE_COORDINATES = 8;
@@ -150,7 +150,7 @@ public class UI extends Scene {
             case "Triangle":
                 numCoordinates = NUM_TRIANGLE_COORDINATES;
                 CELL_HEIGHT = GRID_HEIGHT/GRID_ROW_NUM;
-                CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM * 2;
+                CELL_WIDTH = GRID_WIDTH/GRID_COL_NUM;
                 myStartingCoordinatesUpEven = new Integer[]{
                         CELL_WIDTH/2, 0,
                         0, CELL_HEIGHT,
@@ -427,9 +427,10 @@ public class UI extends Scene {
 
     private List<Slider> paramSliders(){
         List<Slider> sliders = new ArrayList<>();
-        for(Double param: parametersList){
+        for(int i = 0; i < parametersList.size(); i++){
+            int paramIndex = i;
             Slider slider = createGenericSlider();
-            slider.valueProperty().addListener(e -> parametersList.set(parametersList.indexOf(param), slider.getValue()));
+            slider.valueProperty().addListener(e -> parametersList.set(paramIndex, slider.getValue()));
             sliders.add(slider);
         }
         return sliders;
@@ -448,4 +449,5 @@ public class UI extends Scene {
         });
         return switchSimulationDropdown;
     }
+
 }
