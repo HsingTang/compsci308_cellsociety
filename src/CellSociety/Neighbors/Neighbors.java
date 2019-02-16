@@ -55,15 +55,11 @@ abstract public class Neighbors {
     public void initializeEdgeAndIndexes(String edgeType, List<Integer> neighborIndexes){
         if(isValidEdgeType(edgeType)){
             myEdgeType = edgeType;
-            //System.out.println(myEdgeType + ": is a valid edge type");
         }
         else{
             throw new IllegalArgumentException("Not a valid edgetype");
         }
-
         myNeighborIndexes = neighborIndexes;
-        //System.out.println("Printing neighborIndex size");
-        //System.out.println(myNeighborIndexes.size());
     }
 
     /**
@@ -72,10 +68,7 @@ abstract public class Neighbors {
      */
     public List<Cell> getNeighborsList(){
         setIndexMap();
-        ////System.out.println("set index map");
         setDesiredNeighbors();
-        ////System.out.println("set desired neighbors");
-
         return myNeighbors;
     }
 
@@ -83,10 +76,8 @@ abstract public class Neighbors {
     private boolean isValidEdgeType(String edgeType){
         switch (edgeType){
             case FINITE:
-                ////System.out.println("Edgetype = " + edgeType);
                 return true;
             case TOROIDAL:
-                ////System.out.println("Edgetype = " + edgeType);
                 return true;
         }
         return false;
@@ -105,21 +96,13 @@ abstract public class Neighbors {
 
     //deals with edges, finite and toroidal
     protected void handleEdgesAndAddCoords(Integer key, int tempRow, int tempCol) {
-        ////System.out.println("\t Checking bounds (" + (tempRow + myRow) + ", " + (tempCol + myCol) + ")");
         if (inBounds(tempRow, tempCol)) {
-            ////System.out.println("\t \t was in bounds");
-            ////System.out.println("\t \t Index Number: " + key);
-            ////System.out.println("\t was in bounds");
             ArrayList<Integer> temp = new ArrayList<>();
             temp.add(tempRow);
             temp.add(tempCol);
-
             myIndexMap.put(key, temp);
-            //////System.out.println("My Neighbor Row: " + tempRow + " Col: " + tempCol);
         } else {
-            ////System.out.println("\t Was not in bounds");
             if (myEdgeType.equals(TOROIDAL)) {
-                ////System.out.println("Made it to Toroidal part ofhandling edges");
                 myIndexMap.put(key, findToroidalCoords(tempRow, tempCol));
             }
         }
@@ -129,30 +112,25 @@ abstract public class Neighbors {
     private ArrayList<Integer> findToroidalCoords(int row, int col) {
         int wrappedRow;
         int wrappedCol;
-
-        if (row >= myGrid.length) {
-            wrappedRow = row - myGrid.length;
-        } else if (row < 0) {
-            wrappedRow = myGrid.length + row;
-        } else {
-            wrappedRow = row;
-        }
-        ////System.out.println("\t\tWrapped the row to: " + wrappedRow);
-
-        if (col >= myGrid[0].length) {
-            wrappedCol = col - myGrid[0].length;
-        } else if (col < 0) {
-            wrappedCol = myGrid[0].length + col;
-        } else {
-            wrappedCol = col;
-        }
-        ////System.out.println("\t\tWrapped the col");
-
+        wrappedRow = getWrappedIndex(row, myGrid.length);
+        wrappedCol = getWrappedIndex(col, myGrid[0].length);
         ArrayList<Integer> coords = new ArrayList<>();
         coords.add(wrappedRow);
         coords.add(wrappedCol);
-        ////System.out.println("\t \t Added Neighbor (" + wrappedRow + ", " + wrappedCol + ")");
         return coords;
+    }
+
+    //return a wrapped index for toroidal edges
+    private int getWrappedIndex(int index, int maxSize) {
+        int wrappedIndex;
+        if (index >= maxSize) {
+            wrappedIndex = index - maxSize;
+        } else if (index < 0) {
+            wrappedIndex = maxSize + index;
+        } else {
+            wrappedIndex = index;
+        }
+        return wrappedIndex;
     }
 
     //sets up the map of all possible neighbors for the shape type
@@ -160,14 +138,11 @@ abstract public class Neighbors {
 
     //finds the desired neighbors in the index map and adds them to a list
     private void setDesiredNeighbors(){
-        //System.out.println("Cell Row: " + myRow + " Col: " + myCol);
         for (Integer index : myNeighborIndexes) {
             if (myIndexMap.containsKey(index)) {
                 ArrayList<Integer> coords = myIndexMap.get(index);
                 int row = coords.get(0);
                 int col = coords.get(1);
-                //System.out.println("\t index: " + index + "(" + row + ", " + col + ")");
-
                 myNeighbors.add(myGrid[row][col]);
             }
         }
