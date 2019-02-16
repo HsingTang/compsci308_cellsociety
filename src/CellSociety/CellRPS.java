@@ -111,7 +111,6 @@ public class CellRPS extends Cell implements Comparator<String> {
         if(states.size()==1){
             return 0;
         }
-
         if(states.contains(RED) && states.contains(BLUE)){
             if(s1.equals(RED)){
                 return 1;
