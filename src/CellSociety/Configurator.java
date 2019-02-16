@@ -20,7 +20,7 @@ import static java.lang.Math.ceil;
  *
  * Code Refactoring:
  * This is a new class split from the original Simulation class, and serves as the pure back-end of the whole project.
- * None of its mothods implements front-end effects (in this project, accomplished via JavaFX), so this class
+ * None of its methods implements front-end effects (in this project, accomplished via JavaFX), so this class
  * can be completely closed and still be compatible to different front-ends.
  *
  * Any parsing exception or file mal-formatting issue will be thrown out to Simulation class, who handles the Exceptions
