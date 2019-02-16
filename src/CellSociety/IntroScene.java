@@ -147,25 +147,8 @@ public class IntroScene extends Scene {
                 super.show(window);
             }
         });
-        if (file.toString().equals(
-                mySimulation.GOL_XML)
-            || file.toString().equals(mySimulation.WATOR_XML)
-            || file.toString().equals(mySimulation.FIRE_XML)
-                || file.toString().equals(mySimulation.SEG_XML)
-                || file.toString().equals(mySimulation.PERC_XML
-    )){
             mySimulation.setSimType(file.toString());
             mySimulation.startSimulation();
-        }
-        else {
-            badDataAlert();
-        }
     }
 
-    private void badDataAlert(){
-        Alert badAlert = new Alert(Alert.AlertType.ERROR);
-        badAlert.setTitle(myResources.getString("BadDataAlert"));
-        badAlert.setContentText(myResources.getString("ChooseAnotherFile"));
-        badAlert.showAndWait();
-    }
 }
