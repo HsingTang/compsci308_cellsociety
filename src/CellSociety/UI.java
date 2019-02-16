@@ -33,8 +33,8 @@ public class UI extends Scene {
     private static final int WINDOW_HEIGHT = 775;
     private static final int WINDOW_WIDTH = 700;
     private static final Paint BACKGROUND_FILL = Color.WHITE;
-    private static final int GRID_HEIGHT = 415;
-    private static final int GRID_WIDTH = 415;
+    public final int GRID_HEIGHT = 415;
+    public final int GRID_WIDTH = 415;
 
     private static final int VBOX_BUFFER_TOP = 15;
     private static final int VBOX_BUFFER_SIDE = 30;
@@ -62,8 +62,8 @@ public class UI extends Scene {
     private static final String WATOR = "WaTor";
     private static final String RPS = "RPS";
 
-    private final int GRID_ROW_NUM;
-    private final int GRID_COL_NUM;
+    public final int GRID_ROW_NUM;
+    public final int GRID_COL_NUM;
     private final ObservableList<String> SIM_OPTIONS;
 
     private final static int NUM_SQUARE_COORDINATES = 8;
@@ -453,4 +453,5 @@ public class UI extends Scene {
         });
         return switchSimulationDropdown;
     }
+
 }

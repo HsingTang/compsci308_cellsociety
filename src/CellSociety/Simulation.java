@@ -140,15 +140,18 @@ public class Simulation extends Application {
      * A private method that's expected to be called from switchSimulation() or resetSimulation()
      * Initialize the grid of cells of a specific concrete cell class and set each cell's initial state
      * Then pipeline to the next step of creating UI scene for displaying visualization
+     * Terminate the initialization process if readXML() returns false
      */
     private void initGrid() throws Exception{
+        boolean parsingSuccess = false;
         try{
-            readXML();
+            parsingSuccess = readXML();
         }
         catch (Exception e){
             myParser.parserConfigAlert.showAlert();
             throw e;
         }
+        if(!parsingSuccess) return;
         myGrid = new Cell[myHeight][myWidth];
         initStateList();
         for (int i = 0; i < myGrid.length; i++) {
