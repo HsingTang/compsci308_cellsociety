@@ -10,9 +10,9 @@ import java.util.Random;
 
 public class CellFire extends Cell {
 
-    private final String BURNING = "Burning";
-    private final String TREE = "Tree";
-    private final String EMPTY = "Empty";
+    private static final String BURNING = "Burning";
+    private static final String TREE = "Tree";
+    private static final String EMPTY = "Empty";
 
     private Random myRand;
 
@@ -79,5 +79,4 @@ public class CellFire extends Cell {
             myNextState = TREE;
         }
     }
-
 }
